@@ -8,6 +8,8 @@
 
 加载任意仓库链接，即可浏览 Markdown 文件、Release 版本、原文件代码，并支持翻译、深浅色主题、代理切换等功能。
 
+提醒：以下功能介绍仅供参考，请以实际为准
+
 [![MIT License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![No Build](https://img.shields.io/badge/build-none-brightgreen.svg)](#)
 [![Single File](https://img.shields.io/badge/single--file-yes-orange.svg)](#)
@@ -36,6 +38,8 @@
 ## 📦 三种版本对比
 
 仓库提供三个独立版本，均为单文件 HTML，可独立部署。你可以根据使用场景选择最合适的一个。
+
+功能请以实际为准，以下表格仅供参考：
 
 | 功能 | 简约版 | 全能版 | 全能翻译版 |
 |---|:---:|:---:|:---:|
@@ -262,4 +266,5 @@ A：可以。响应式设计已适配手机，竖屏下侧边栏会变成抽屉�
 
 如果这个工具帮到了你，欢迎给一个 ⭐ Star！
 
+**同时欢迎反馈：173232426@qq.com**
 </div>
