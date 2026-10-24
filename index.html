@@ -5,9 +5,15 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="theme-color" content="#f4f6f9">
 <title>GitHub 仓库浏览器 · 全能版</title>
+<link rel="manifest" id="pwaManifest">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' rx='4' fill='%232f81f7'/%3E%3C/svg%3E">
 <script src="https://cdn.jsdelivr.net/npm/marked@12.0.2/marked.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/dompurify@3.1.6/dist/purify.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/lib/common.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github.min.css" id="hljsLight">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@11.9.0/styles/github-dark.min.css" id="hljsDark" disabled>
 <style>
@@ -107,7 +113,6 @@
     }
   }
 
-  /* ============ 顶栏 ============ */
   .topbar{
     display:flex; align-items:center; gap:8px; flex-wrap:wrap;
     padding:10px 16px;
@@ -190,6 +195,7 @@
   .ghost.ok{color:var(--ok-fg); background:var(--ok-bg); border-color:var(--ok-bd);}
   .ghost.icon-only{padding:7px 8px;}
   .ghost svg{display:block; flex:0 0 auto;}
+  .ghost.active{background:var(--accent-soft); color:var(--accent); border-color:var(--accent-border);}
 
   .progress-bar{
     position:fixed; top:0; left:0; height:2px; width:0;
@@ -212,6 +218,7 @@
     transition:all .15s; word-break:break-all; max-width:100%;
   }
   .chip:hover{color:var(--accent); background:var(--accent-soft); border-color:var(--accent-border); transform:translateY(-1px);}
+  .chip.pages{border-color:var(--accent-border); color:var(--accent);}
 
   .status{flex:0 0 auto; font-size:13px; transition:.2s; font-weight:500;}
   .status:not(:empty){display:flex; align-items:center; gap:9px; padding:8px 16px; border-bottom:1px solid transparent;}
@@ -227,7 +234,6 @@
   .status.error::before{background-color:var(--err-fg); background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16' fill='white'><path d='M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.75.75 0 1 1 1.06 1.06L9.06 8l3.22 3.22a.75.75 0 1 1-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 0 1-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z'/></svg>");}
   .status.loading::before{background:transparent; width:14px; height:14px; border:2px solid currentColor; border-top-color:transparent; border-radius:50%; animation:spin .7s linear infinite;}
 
-  /* ============ 主布局 ============ */
   .layout{
     flex:1 1 auto; min-height:0; display:grid;
     grid-template-columns:330px minmax(0,1fr); gap:12px; padding:12px 16px;
@@ -333,6 +339,8 @@
   .li-name{font-weight:500; word-break:break-word; overflow-wrap:anywhere; line-height:1.35;}
   .li-dir{font-size:10.5px; color:var(--muted-2); word-break:break-word; overflow-wrap:anywhere;}
   .li-date{font-size:10.5px; color:var(--muted-2); word-break:break-word; overflow-wrap:anywhere;}
+  .li-tags{display:flex; flex-wrap:wrap; gap:3px; margin-top:2px;}
+  .li-tag{font-size:9.5px; padding:0 5px; border-radius:99px; background:var(--accent-soft); color:var(--accent); border:1px solid var(--accent-border); line-height:15px;}
   .li-actions{display:flex; align-items:center; gap:2px; flex:0 0 auto; opacity:0;
     transition:opacity .15s; margin-top:-1px;}
   .list-item:hover .li-actions,.list-item:focus-within .li-actions{opacity:1;}
@@ -388,7 +396,6 @@
   }
   .sidebar-footer .ghost{flex:1; justify-content:center; font-size:12px;}
 
-  /* ============ 查看器 ============ */
   .viewer{display:flex; flex-direction:column; min-height:0; overflow:hidden; min-width:0;
     background:var(--panel); border:1px solid var(--border); border-radius:var(--radius-lg);
     box-shadow:var(--shadow-sm); position:relative;}
@@ -475,6 +482,7 @@
     min-width:0; overflow-wrap:anywhere; word-break:break-word;
     -webkit-overflow-scrolling:touch;
     overscroll-behavior:contain;
+    position:relative;
   }
   .md-body.source-mode{
     white-space:pre-wrap; font-family:ui-monospace,Menlo,Consolas,monospace;
@@ -518,6 +526,18 @@
   .toc-link.lv-h6{padding-left:46px; font-size:11px; color:var(--muted-2);}
   .toc-link.active{color:var(--accent); border-left-color:var(--accent) !important; background:var(--accent-soft);}
 
+  .toc-node{position:relative;}
+  .toc-node > .toc-row{display:flex; align-items:center;}
+  .toc-toggle{
+    width:16px; height:16px; flex:0 0 auto; display:grid; place-items:center;
+    cursor:pointer; color:var(--muted-2); background:transparent; border:none; padding:0;
+    transition:transform .15s;
+  }
+  .toc-toggle svg{width:9px; height:9px; fill:currentColor; display:block;}
+  .toc-node.collapsed > .toc-row > .toc-toggle{transform:rotate(-90deg);}
+  .toc-node.collapsed > .toc-children{display:none;}
+  .toc-children{list-style:none; margin:0; padding:0;}
+
   .skeleton{padding:32px 40px; min-height:60vh;}
   .sk-line{height:13px; background:linear-gradient(90deg, var(--panel-2) 25%, var(--panel-3) 50%, var(--panel-2) 75%);
     background-size:200% 100%; animation:shimmer 1.4s infinite; border-radius:5px; margin-bottom:12px;}
@@ -538,7 +558,6 @@
   @keyframes fadeIn{from{opacity:0}to{opacity:1}}
   @keyframes fadeUp{from{opacity:0; transform:translateY(8px);} to{opacity:1; transform:none;}}
 
-  /* ============ Markdown ============ */
   .md-body h1,.md-body h2,.md-body h3,.md-body h4,.md-body h5,.md-body h6{
     margin:26px 0 14px; font-weight:600; line-height:1.3; scroll-margin-top:14px; position:relative;
     word-break:break-word; overflow-wrap:anywhere;}
@@ -588,7 +607,7 @@
   .md-body th,.md-body td{padding:6px 13px; border:1px solid var(--border);}
   .md-body th{font-weight:600; background:var(--panel-2);}
   .md-body tr:nth-child(2n) td{background:var(--zebra);}
-  .md-body img{max-width:100%; border-radius:var(--radius-sm); height:auto;}
+  .md-body img{max-width:100%; border-radius:var(--radius-sm); height:auto; cursor:zoom-in;}
   .md-body input[type=checkbox]{margin-right:.45em; vertical-align:middle;}
   .md-body kbd{display:inline-block; padding:2px 7px; font-size:11px; line-height:1.4;
     color:var(--text); background:var(--panel-2); border:1px solid var(--border);
@@ -610,7 +629,171 @@
   .heading-anchor svg{width:13px; height:13px; fill:currentColor; display:block;}
   @media (max-width: 700px){ .heading-anchor{display:none;} }
 
-  /* ============ 翻译 ============ */
+  /* 代码行号与折叠 */
+  .code-wrap.line-numbers pre code{display:block;}
+  .code-wrap .code-lines{counter-reset:line;}
+  .code-wrap .code-lines .ln{
+    display:block; padding-left:3.2em; position:relative;
+  }
+  .code-wrap .code-lines .ln::before{
+    counter-increment:line; content:counter(line);
+    position:absolute; left:0; width:2.6em; text-align:right;
+    color:var(--muted-2); opacity:.55; user-select:none; padding-right:.6em;
+    border-right:1px solid var(--border-soft); cursor:pointer;
+  }
+  .code-wrap .code-lines .ln:hover::before{color:var(--accent); opacity:1;}
+  .code-wrap .code-lines .ln.hl{background:var(--accent-soft);}
+  .code-fold-btn{
+    position:absolute; bottom:6px; right:9px; z-index:3;
+    padding:2px 8px; font-size:10.5px; font-weight:500;
+    color:var(--muted); background:var(--btn-bg); border:1px solid var(--border);
+    border-radius:var(--radius-sm); cursor:pointer; opacity:.9;
+  }
+  .code-fold-btn:hover{color:var(--text); background:var(--btn-bg-hover);}
+  .code-wrap.folded pre{max-height:220px; overflow:hidden;}
+  .code-wrap.folded::after{
+    content:''; position:absolute; left:0; right:0; bottom:26px; height:60px;
+    background:linear-gradient(transparent, var(--code-bg)); pointer-events:none;
+    border-radius:0 0 var(--radius) var(--radius);
+  }
+
+  /* Mermaid / 图表 */
+  .mermaid-block{
+    position:relative; margin:0 0 14px; padding:14px; text-align:center;
+    background:var(--panel-2); border:1px solid var(--border-soft); border-radius:var(--radius);
+    overflow:auto;
+  }
+  .mermaid-block svg{max-width:100%; height:auto;}
+  .mermaid-block .mm-err{color:var(--err-fg); font-size:12px; text-align:left; white-space:pre-wrap;}
+
+  /* KaTeX */
+  .katex{font-size:1.05em;}
+  .katex-display{margin:14px 0; overflow-x:auto; overflow-y:hidden; padding:2px 0;}
+
+  /* 图片灯箱 */
+  .lightbox{
+    position:fixed; inset:0; z-index:400; background:rgba(0,0,0,.9);
+    display:flex; align-items:center; justify-content:center; padding:24px;
+    animation:fadeIn .15s; backdrop-filter:blur(6px);
+  }
+  .lightbox img{max-width:92vw; max-height:88vh; object-fit:contain; border-radius:8px;
+    box-shadow:0 20px 60px rgba(0,0,0,.6); user-select:none;}
+  .lb-btn{
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:44px; height:44px; border-radius:50%; border:none; cursor:pointer;
+    background:rgba(255,255,255,.14); color:#fff; display:grid; place-items:center;
+    font-size:22px; transition:background .15s;
+  }
+  .lb-btn:hover{background:rgba(255,255,255,.28);}
+  .lb-prev{left:18px;} .lb-next{right:18px;}
+  .lb-close{top:18px; right:18px; transform:none;}
+  .lb-caption{
+    position:absolute; bottom:16px; left:50%; transform:translateX(-50%);
+    color:#ddd; font-size:12px; background:rgba(0,0,0,.5); padding:4px 12px; border-radius:99px;
+    max-width:80vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;
+  }
+
+  /* 文档内查找条 */
+  .doc-find{
+    position:absolute; top:8px; right:16px; z-index:60;
+    display:flex; align-items:center; gap:6px; padding:6px 8px;
+    background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+    box-shadow:var(--shadow-md);
+  }
+  .doc-find input{width:180px; padding:5px 9px; font-size:12.5px;}
+  .doc-find .df-count{font-size:11px; color:var(--muted); min-width:50px; text-align:center; white-space:nowrap;}
+  .doc-find button{
+    width:26px; height:26px; display:grid; place-items:center; border:none;
+    background:transparent; color:var(--muted); cursor:pointer; border-radius:5px;
+  }
+  .doc-find button:hover{background:var(--btn-bg-hover); color:var(--text);}
+  .doc-find button svg{width:13px; height:13px; fill:currentColor;}
+  mark.doc-hit{background:var(--warn-bg); color:var(--text); border-radius:3px; padding:0 1px;}
+  mark.doc-hit.current{background:var(--accent); color:#fff;}
+
+  /* 选中文字浮动按钮 */
+  .sel-pop{
+    position:fixed; z-index:350; display:flex; gap:2px; padding:3px;
+    background:var(--panel); border:1px solid var(--border); border-radius:8px;
+    box-shadow:var(--shadow-md); animation:fadeUp .12s;
+  }
+  .sel-pop button{
+    padding:4px 9px; font-size:11.5px; font-weight:500; cursor:pointer;
+    background:transparent; border:none; border-radius:5px; color:var(--text-soft);
+    display:inline-flex; align-items:center; gap:4px; white-space:nowrap;
+  }
+  .sel-pop button:hover{background:var(--accent-soft); color:var(--accent);}
+
+  /* 本地高亮 */
+  .user-hl{background:rgba(255,214,0,.45); border-radius:2px; padding:0 1px;
+    box-shadow:0 0 0 1px rgba(255,214,0,.35) inset;}
+  html[data-theme="dark"] .user-hl{background:rgba(255,214,0,.28);}
+  .user-hl.has-note{background:rgba(130,80,223,.25); box-shadow:0 0 0 1px rgba(130,80,223,.5) inset;}
+
+  /* 专注模式 */
+  body.focus-mode .topbar,
+  body.focus-mode .candidates,
+  body.focus-mode .status,
+  body.focus-mode .sidebar,
+  body.focus-mode .toc-panel,
+  body.focus-mode .viewer-head,
+  body.focus-mode .viewer-tabs{display:none !important;}
+  body.focus-mode .layout{padding:0; gap:0; grid-template-columns:minmax(0,1fr);}
+  body.focus-mode .viewer{border:none; border-radius:0; box-shadow:none;}
+  body.focus-mode .viewer-body{grid-template-columns:minmax(0,1fr);}
+  body.focus-mode .md-body{padding:40px max(32px, 10vw) 80px; max-width:980px; margin:0 auto;}
+  .focus-exit{
+    position:fixed; top:14px; right:16px; z-index:120;
+    padding:6px 12px; font-size:11.5px; color:var(--muted);
+    background:var(--panel); border:1px solid var(--border); border-radius:99px;
+    box-shadow:var(--shadow-sm); opacity:.7;
+  }
+
+  /* 快捷键面板 */
+  .kbd-list{display:grid; grid-template-columns:1fr 1fr; gap:8px 20px;}
+  .kbd-row{display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding:6px 0; border-bottom:1px dashed var(--border-soft); font-size:12.5px;}
+  .kbd-row:last-child{border-bottom:none;}
+  .kbd-keys{display:flex; gap:4px; flex:0 0 auto;}
+  .kbd-keys kbd{
+    padding:2px 7px; font-size:11px; color:var(--text); background:var(--panel-2);
+    border:1px solid var(--border); border-bottom-width:2px; border-radius:5px;
+    font-family:ui-monospace,Menlo,Consolas,monospace; white-space:nowrap;
+  }
+  @media (max-width: 640px){ .kbd-list{grid-template-columns:1fr;} }
+
+  /* 速率面板 */
+  .rate-panel{position:fixed; top:52px; right:16px; z-index:80; width:250px;
+    background:var(--panel); border:1px solid var(--border); border-radius:var(--radius);
+    box-shadow:var(--shadow-md); padding:12px 14px; font-size:12px; animation:fadeUp .15s;}
+  .rate-row{display:flex; justify-content:space-between; gap:10px; padding:3px 0;}
+  .rate-row .k{color:var(--muted);}
+  .rate-row .v{font-family:ui-monospace,monospace; font-weight:600;}
+  .rate-bar{height:5px; border-radius:3px; background:var(--panel-3); overflow:hidden; margin-top:6px;}
+  .rate-bar > i{display:block; height:100%; background:var(--ok-fg); transition:width .3s, background-color .3s;}
+
+  /* 批注/标签输入 */
+  .mini-form{display:flex; flex-direction:column; gap:10px;}
+  .mini-form label{font-size:12px; color:var(--muted);}
+  .tag-picker{display:flex; flex-wrap:wrap; gap:6px; margin-top:6px;}
+  .tag-picker button{
+    padding:3px 10px; font-size:11.5px; border-radius:99px; cursor:pointer;
+    background:var(--panel-2); border:1px solid var(--border); color:var(--text-soft);
+  }
+  .tag-picker button.on{background:var(--accent-soft); border-color:var(--accent-border); color:var(--accent);}
+
+  /* 分享卡片 */
+  .share-card-preview{width:100%; max-width:520px; margin:0 auto 12px; border-radius:var(--radius);
+    border:1px solid var(--border); overflow:hidden; display:block;}
+
+  /* 外部链接域名提示 */
+  .md-body a[data-ext]::after{
+    content:attr(data-ext); margin-left:4px; font-size:10px; opacity:.55;
+    color:var(--muted-2); font-weight:400; vertical-align:middle;
+  }
+  .md-body a[data-ext]:hover::after{opacity:.9; color:var(--accent);}
+
+  /* 翻译 */
   .trans-target{
     display:block;
     margin:4px 0 8px;
@@ -635,7 +818,6 @@
     .trans-target{padding:4px 10px; font-size:.92em; margin:3px 0 6px;}
   }
 
-  /* 翻译引擎卡片 */
   .engine-grid{
     display:grid;
     grid-template-columns:repeat(auto-fill,minmax(170px,1fr));
@@ -695,7 +877,6 @@
   .tag.proxy{background:var(--warn-bg);color:var(--warn-fg);border:1px solid var(--warn-bd);}
   .tag.key{background:var(--accent-soft);color:var(--accent);border:1px solid var(--accent);}
 
-  /* 翻译配置字段 */
   .trans-config-box{
     margin-top:12px;
     padding:12px 14px;
@@ -731,7 +912,6 @@
     line-height:1.5;margin:0;
   }
 
-  /* 翻译分组块 */
   .trans-section{
     margin-top:14px;
     padding:12px 14px;
@@ -753,7 +933,6 @@
   .trans-section .seg{flex-wrap:wrap;}
   .trans-section .seg button{flex:1 1 auto;justify-content:center;}
 
-  /* 翻译语言行 */
   .trans-lang-row{
     display:grid;
     grid-template-columns:1fr 1fr;
@@ -764,7 +943,6 @@
     .trans-lang-row{grid-template-columns:1fr;}
   }
 
-  /* 测试结果 */
   .trans-test-row{
     display:flex;align-items:center;gap:10px;flex-wrap:wrap;
   }
@@ -779,7 +957,6 @@
   }
   #transTestResult:empty{display:none;}
 
-  /* 底部提示紧凑化 */
   .modal-tip.compact{
     margin-top:14px;
     padding-top:10px;
@@ -800,7 +977,6 @@
     .trans-config-box{padding:10px 12px;}
   }
 
-  /* Release 附件 */
   .release-assets{
     margin:0 0 20px; padding:12px 16px;
     background:var(--panel-2); border:1px solid var(--border-soft);
@@ -843,7 +1019,6 @@
   .release-assets .asset-dl:hover{background:var(--accent); color:#fff; border-color:var(--accent);}
   .release-assets .asset-dl svg{width:11px; height:11px; fill:currentColor;}
 
-  /* GitHub Alerts */
   .md-alert{margin:0 0 14px; padding:9px 16px; border-left:.25em solid; border-radius:var(--radius-sm);}
   .md-alert > :last-child{margin-bottom:0;}
   .md-alert-title{display:flex; align-items:center; gap:7px; font-size:13.5px; font-weight:600; line-height:1.4; margin-bottom:4px;}
@@ -859,7 +1034,6 @@
   .md-alert-warning .md-alert-title{color:var(--alert-warn-fg);}
   .md-alert-caution .md-alert-title{color:var(--alert-cau-fg);}
 
-  /* ============ 模态框 ============ */
   .modal-mask{position:fixed; inset:0; z-index:200; background:var(--mask);
     display:flex; align-items:center; justify-content:center; padding:16px;
     animation:fadeIn .18s; backdrop-filter:blur(4px); -webkit-backdrop-filter:blur(4px);}
@@ -941,7 +1115,6 @@
   .modal-note{margin:0 0 16px; padding:10px 13px; font-size:12.5px; line-height:1.7;
     color:var(--warn-fg); background:var(--warn-bg); border:1px solid var(--warn-bd); border-radius:var(--radius-sm);}
 
-  /* 代理 */
   .proxy-list{display:grid; gap:8px;}
   .proxy-item{
     display:flex; align-items:flex-start; gap:10px;
@@ -960,8 +1133,11 @@
     background:var(--panel); border:1px solid var(--border); color:var(--muted);}
   .proxy-badge.recommended{background:var(--ok-bg); border-color:var(--ok-bd); color:var(--ok-fg);}
   .proxy-desc{font-size:11.5px; color:var(--muted); margin-top:3px; line-height:1.55;}
+  .proxy-speed{font-size:10.5px; margin-top:4px; color:var(--muted-2); font-family:ui-monospace,monospace;}
+  .proxy-speed.fast{color:var(--ok-fg);}
+  .proxy-speed.slow{color:var(--warn-fg);}
+  .proxy-speed.fail{color:var(--err-fg);}
 
-  /* 分支下载 */
   .branch-grid{max-height:300px; overflow-y:auto; border:1px solid var(--border-soft);
     border-radius:var(--radius); padding:8px; background:var(--panel-2); -webkit-overflow-scrolling:touch;}
   .branch-grid label{display:flex; align-items:center; gap:8px; padding:8px 9px;
@@ -1067,7 +1243,6 @@
 
   .sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0;}
 
-  /* ============ 响应式 ============ */
   @media (min-width: 901px){
     .sidebar-backdrop{display:none !important;}
     .sidebar{padding-bottom:0;}
@@ -1122,9 +1297,11 @@
     .topbar{gap:6px;}
     #sidebarToggleBtn{order:1;}
     .brand{order:0; flex:0 0 auto;}
-    #cmdBtn,#zipBtn,#settingsBtn,#themeBtn{order:3;}
+    #cmdBtn,#zipBtn,#recentBtn,#settingsBtn,#themeBtn,#focusBtn,#shareCardBtn{order:3;}
     .trans-target{padding:4px 10px; font-size:.92em; margin:3px 0 6px;}
     .toc-panel{display:none;}
+    .doc-find{right:8px; left:8px;}
+    .doc-find input{flex:1; width:auto;}
   }
   @media (orientation: portrait) and (max-width: 900px){
     .viewer-head{padding:9px 12px;}
@@ -1146,6 +1323,7 @@
     .modal{padding:18px 14px 14px;}
     .settings-tabs{margin:0 -14px 14px; padding:0 12px;}
     .engine-grid{grid-template-columns:1fr 1fr;gap:6px;}
+    .rate-panel{right:8px; left:8px; width:auto;}
   }
   @media (hover: none){
     .list-item{padding:10px;}
@@ -1163,6 +1341,14 @@
         var l = document.getElementById('hljsLight'); if(l) l.setAttribute('disabled','');
         var d = document.getElementById('hljsDark'); if(d) d.removeAttribute('disabled');
       }
+      /* PWA manifest（内联 data URI） */
+      var manifest = {
+        name:'GitHub 仓库浏览器', short_name:'GH 浏览器',
+        start_url:'.', display:'standalone', background_color:'#f4f6f9', theme_color:'#2f81f7',
+        icons:[{ src:"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='40' fill='%232f81f7'/%3E%3C/svg%3E", sizes:'192x192', type:'image/svg+xml' }]
+      };
+      var mEl = document.getElementById('pwaManifest');
+      if(mEl) mEl.href = 'data:application/manifest+json,' + encodeURIComponent(JSON.stringify(manifest));
     }catch(e){}
   })();
 </script>
@@ -1194,9 +1380,9 @@
         <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"/></svg>
       </span>
       <input id="repoInput" type="text" spellcheck="false" autocomplete="off" aria-label="GitHub 仓库地址"
-             placeholder="GitHub 仓库链接或 owner/repo">
+             placeholder="GitHub 仓库链接、owner/repo 或 xxx.github.io">
     </div>
-    <button id="pasteBtn" class="ghost" title="读取剪贴板并提取链接">
+    <button id="pasteBtn" class="ghost" title="读取剪贴板并提取链接（支持 GitHub.io）">
       <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4 1.5H3a2 2 0 0 0-2 2V14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V3.5a2 2 0 0 0-2-2h-1v1h1a1 1 0 0 1 1 1V14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1h1Z"/><path d="M9.5 1a.5.5 0 0 1 .5.5v1a.5.5 0 0 1-.5.5h-3a.5.5 0 0 1-.5-.5v-1a.5.5 0 0 1 .5-.5Z"/></svg>
       <span class="th-label">提取</span>
     </button>
@@ -1206,8 +1392,17 @@
   <button id="cmdBtn" class="ghost icon-only" title="命令面板 (Ctrl+K)" aria-label="命令面板">
     <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M6.5 1a.75.75 0 0 1 .75.75V6h4.25a.75.75 0 0 1 0 1.5H7.25v4.25a.75.75 0 0 1-1.5 0V7.5H1.5a.75.75 0 0 1 0-1.5h4.25V1.75A.75.75 0 0 1 6.5 1Z"/></svg>
   </button>
+  <button id="focusBtn" class="ghost icon-only" title="专注模式 (F)" aria-label="专注模式">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v2.5a.75.75 0 0 0 1.5 0v-2.5a.25.25 0 0 1 .25-.25h2.5a.75.75 0 0 0 0-1.5Zm12.5 0a.75.75 0 0 0 0 1.5h2.5a.25.25 0 0 1 .25.25v2.5a.75.75 0 0 0 1.5 0v-2.5A1.75 1.75 0 0 0 14.25 1ZM.75 11.5a.75.75 0 0 0-.75.75v2.5A1.75 1.75 0 0 0 1.75 16h2.5a.75.75 0 0 0 0-1.5h-2.5a.25.25 0 0 1-.25-.25v-2.5a.75.75 0 0 0-.75-.75Zm14.5 0a.75.75 0 0 0-.75.75v2.5a.25.25 0 0 1-.25.25h-2.5a.75.75 0 0 0 0 1.5h2.5A1.75 1.75 0 0 0 16 14.75v-2.5a.75.75 0 0 0-.75-.75Z"/></svg>
+  </button>
+  <button id="shareCardBtn" class="ghost icon-only" title="生成分享卡片" aria-label="分享卡片">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3.75 13.5a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5ZM12.25 6.75a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5ZM12.25 13.5a2.25 2.25 0 1 0 0-4.5 2.25 2.25 0 0 0 0 4.5Zm-6.25-4.5 4.5-2.25m-4.5 2.25 4.5 2.25" stroke="currentColor" stroke-width="1.5" fill="none"/></svg>
+  </button>
   <button id="zipBtn" class="ghost icon-only" title="下载 ZIP" aria-label="下载 ZIP">
     <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M1.75 1A1.75 1.75 0 0 0 0 2.75v10.5C0 14.216.784 15 1.75 15h12.5A1.75 1.75 0 0 0 16 13.25V2.75A1.75 1.75 0 0 0 14.25 1Z"/></svg>
+  </button>
+  <button id="recentBtn" class="ghost icon-only" title="最近加载的仓库" aria-label="最近加载的仓库">
+    <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM1.5 8a6.5 6.5 0 1 0 13 0 6.5 6.5 0 0 0-13 0Zm7-3.25v2.992l2.028.812a.75.75 0 0 1-.557 1.392l-2.5-1A.751.751 0 0 1 7 8.25v-3.5a.75.75 0 0 1 1.5 0Z"/></svg>
   </button>
   <button id="settingsBtn" class="ghost icon-only" title="设置" aria-label="设置">
     <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0a8.2 8.2 0 0 1 .701.031C9.444.095 9.99.645 10.16 1.29l.288 1.107c.018.066.079.158.212.224.231.114.454.243.668.386.123.082.233.09.299.071l1.103-.303c.644-.176 1.392.021 1.82.63.27.385.506.792.704 1.218.315.675.111 1.422-.364 1.891l-.814.806c-.049.048-.098.147-.088.294.016.257.016.515 0 .772-.01.147.038.246.088.294l.814.806c.475.469.679 1.216.364 1.891a7.977 7.977 0 0 1-.704 1.217c-.428.61-1.176.807-1.82.63l-1.102-.302c-.067-.019-.177-.011-.3.071a5.909 5.909 0 0 1-.668.386c-.133.066-.194.158-.211.224l-.29 1.106c-.168.646-.715 1.196-1.458 1.26a8.006 8.006 0 0 1-1.402 0c-.743-.064-1.289-.614-1.458-1.26l-.289-1.106c-.017-.066-.078-.158-.211-.224a5.938 5.938 0 0 1-.668-.386c-.123-.082-.233-.09-.3-.071l-1.102.302c-.644.176-1.392-.021-1.82-.63a8.012 8.012 0 0 1-.704-1.218c-.315-.675-.111-1.422.363-1.891l.815-.806c.05-.048.098-.147.088-.294a6.214 6.214 0 0 1 0-.772c.01-.147-.038-.246-.088-.294l-.815-.806C.635 6.045.431 5.298.746 4.623a7.92 7.92 0 0 1 .704-1.217c.428-.61 1.176-.807 1.82-.63l1.102.302c.067.019.177.011.3-.071.214-.143.437-.272.668-.386.133-.066.194-.158.211-.224l.29-1.106C6.009.645 6.556.095 7.299.03 7.53.01 7.764 0 8 0Z"/></svg>
@@ -1274,7 +1469,7 @@
       <button id="favFilterBtn" class="ghost icon-only" title="仅显示收藏" aria-label="仅显示收藏" aria-pressed="false">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 .25a.75.75 0 0 1 .673.418l1.882 3.815 4.21.612a.75.75 0 0 1 .416 1.279l-3.046 2.97.719 4.192a.75.75 0 0 1-1.088.791L8 12.347l-3.766 1.98a.75.75 0 0 1-1.088-.79l.72-4.194L.818 6.374a.75.75 0 0 1 .416-1.28l4.21-.611L7.327.668A.75.75 0 0 1 8 .25Z"/></svg>
       </button>
-      <button id="searchBtn" class="ghost icon-only" title="全文搜索 (Ctrl+F)" aria-label="全文搜索">
+      <button id="searchBtn" class="ghost icon-only" title="全文搜索 (Ctrl+Shift+F)" aria-label="全文搜索">
         <svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M10.68 11.74a6 6 0 0 1-7.922-8.982 6 6 0 0 1 8.982 7.922l3.04 3.04a.749.749 0 0 1-.326 1.275.749.749 0 0 1-.734-.215ZM11.5 7a4.499 4.499 0 1 0-8.997 0A4.499 4.499 0 0 0 11.5 7Z"/></svg>
       </button>
       <button id="releaseFilterBtn" class="ghost icon-only" title="显示全部版本 / 仅稳定版" hidden>
@@ -1286,7 +1481,6 @@
 
     <div class="sidebar-footer" id="sidebarFooter" hidden>
       <button class="ghost" id="compareBtn" title="对比两个 Release">🔄 对比</button>
-      <button class="ghost" id="recentBtn" title="最近加载的仓库">🕘 最近</button>
     </div>
   </aside>
 
@@ -1315,10 +1509,22 @@
         <ul class="toc-list" id="tocList"></ul>
       </aside>
     </div>
+
+    <!-- 文档内查找条 -->
+    <div class="doc-find" id="docFindBar" hidden>
+      <input id="docFindInput" type="text" spellcheck="false" placeholder="在本文档中查找…" aria-label="文档内查找">
+      <span class="df-count" id="docFindCount">0/0</span>
+      <button id="docFindPrev" title="上一个 (Shift+Enter)" aria-label="上一个">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 3.5 2.5 9h11L8 3.5Z"/></svg>
+      </button>
+      <button id="docFindNext" title="下一个 (Enter)" aria-label="下一个">
+        <svg viewBox="0 0 16 16" fill="currentColor"><path d="M8 12.5 13.5 7h-11L8 12.5Z"/></svg>
+      </button>
+      <button id="docFindClose" title="关闭 (Esc)" aria-label="关闭">✕</button>
+    </div>
   </section>
 </main>
 
-<!-- 全文搜索 -->
 <div id="searchPanel" class="search-panel" hidden>
   <div class="search-head">
     <div class="input-wrap">
@@ -1345,7 +1551,6 @@
   </div>
 </div>
 
-<!-- 命令面板 -->
 <div id="cmdMask" class="cmd-mask" hidden role="dialog" aria-modal="true" aria-label="命令面板">
   <div class="cmd-panel">
     <div class="cmd-input-row">
@@ -1366,13 +1571,13 @@
     <div class="settings-tabs" id="settingsTabs" role="tablist">
       <button class="settings-tab active" data-st="general" role="tab">通用</button>
       <button class="settings-tab" data-st="appearance" role="tab">外观</button>
+      <button class="settings-tab" data-st="reading" role="tab">阅读</button>
       <button class="settings-tab" data-st="translation" role="tab">🌐 翻译</button>
       <button class="settings-tab" data-st="token" role="tab">Token</button>
       <button class="settings-tab" data-st="proxy" role="tab">代理</button>
       <button class="settings-tab" data-st="data" role="tab">数据</button>
     </div>
 
-    <!-- 通用 -->
     <div class="settings-panel" data-sp="general">
       <div class="setting-row">
         <div class="setting-label">TOC 目录
@@ -1407,9 +1612,16 @@
           <input type="checkbox" id="stableOnlyToggle"> 仅显示正式版
         </label>
       </div>
+      <div class="setting-row">
+        <div class="setting-label">外链显示域名
+          <small>正文中的外部链接后面显示目标域名，防钓鱼</small>
+        </div>
+        <label class="check-row" style="font-size:12.5px;">
+          <input type="checkbox" id="extDomainToggle" checked> 启用
+        </label>
+      </div>
     </div>
 
-    <!-- 外观 -->
     <div class="settings-panel" data-sp="appearance" hidden>
       <div class="setting-row">
         <div class="setting-label">主题
@@ -1437,18 +1649,68 @@
       </div>
     </div>
 
-    <!-- 翻译 -->
-    <div class="settings-panel" data-sp="translation" hidden>
+    <div class="settings-panel" data-sp="reading" hidden>
+      <div class="setting-row">
+        <div class="setting-label">阅读位置记忆
+          <small>重新打开文件时回到上次滚动位置</small>
+        </div>
+        <label class="check-row" style="font-size:12.5px;">
+          <input type="checkbox" id="scrollMemoryToggle" checked> 启用
+        </label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">Mermaid 图表
+          <small>渲染 ```mermaid 代码块为流程图</small>
+        </div>
+        <label class="check-row" style="font-size:12.5px;">
+          <input type="checkbox" id="mermaidToggle" checked> 启用
+        </label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">KaTeX 公式
+          <small>渲染 $...$ 与 $$...$$ 数学公式</small>
+        </div>
+        <label class="check-row" style="font-size:12.5px;">
+          <input type="checkbox" id="katexToggle" checked> 启用
+        </label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">代码行号
+          <small>为代码块添加行号，点击行号复制该行</small>
+        </div>
+        <label class="check-row" style="font-size:12.5px;">
+          <input type="checkbox" id="lineNumbersToggle" checked> 启用
+        </label>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">代码折叠阈值
+          <small>超过该行数的代码块默认折叠</small>
+        </div>
+        <select id="codeFoldThreshold" style="font-size:12px;padding:5px 26px 5px 8px;">
+          <option value="0">不折叠</option>
+          <option value="20">20 行</option>
+          <option value="30" selected>30 行</option>
+          <option value="50">50 行</option>
+          <option value="80">80 行</option>
+        </select>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">本地离线缓存
+          <small>已读文件内容存入本机，弱网/离线可继续阅读</small>
+        </div>
+        <label class="check-row" style="font-size:12.5px;">
+          <input type="checkbox" id="offlineCacheToggle" checked> 启用
+        </label>
+      </div>
+    </div>
 
-      <!-- 1. 引擎选择 -->
+    <div class="settings-panel" data-sp="translation" hidden>
       <div class="engine-group-wrap">
         <div id="engineGroups"></div>
       </div>
 
-      <!-- 2. 引擎专属配置 -->
       <div class="trans-config-box" id="engineConfigFields"></div>
 
-      <!-- 3. 语言 -->
       <div class="trans-lang-row">
         <div class="trans-field">
           <label class="trans-field-label" for="transSource">源语言</label>
@@ -1460,7 +1722,6 @@
         </div>
       </div>
 
-      <!-- 4. 显示模式 -->
       <div class="trans-section" style="margin-top:12px;">
         <div class="trans-section-title">
           显示模式
@@ -1472,7 +1733,6 @@
         </div>
       </div>
 
-      <!-- 5. 请求方式 -->
       <div class="trans-section" id="transProxyRow">
         <div class="trans-section-title">
           翻译请求方式
@@ -1485,7 +1745,6 @@
           <button data-tproxy="local">本地代理</button>
         </div>
 
-        <!-- 公共代理选择 -->
         <div id="transCorsProxyRow" hidden style="margin-top:10px;">
           <div class="trans-field">
             <label class="trans-field-label" for="transCorsProxy">
@@ -1510,7 +1769,6 @@
           </div>
         </div>
 
-        <!-- 本地代理地址 -->
         <div id="transLocalRow" hidden style="margin-top:10px;">
           <div class="trans-field">
             <label class="trans-field-label" for="transLocalUrl">本地代理地址</label>
@@ -1522,7 +1780,6 @@
         </div>
       </div>
 
-      <!-- 6. 测试 -->
       <div class="trans-section">
         <div class="trans-section-title">
           测试翻译
@@ -1534,17 +1791,12 @@
         </div>
       </div>
 
-      <!-- 7. 说明 -->
       <p class="modal-tip compact">
         💡 翻译只处理正文文本节点，代码块、链接、图片、附件列表保持不变。
-        查看器头部的「翻译」按钮可一键翻译当前文档，再次点击恢复原文。<br>
-        <b>Google / Yandex / MyMemory / LibreTranslate</b> 可直连（视网络环境而定）。
-        <b>百度 / Bing / 有道</b> 需通过公共代理或本地代理转发请求。
-        <b>DeepL / OpenAI</b> 需要 API Key，请求方式视服务而定。
+        查看器头部的「翻译」按钮可一键翻译当前文档，再次点击恢复原文。
       </p>
     </div>
 
-    <!-- Token -->
     <div class="settings-panel" data-sp="token" hidden>
       <p class="modal-note">
         受浏览器安全策略限制，GitHub 不允许其登录页被嵌入其他网页，也无法在纯前端安全地完成 OAuth 换取 Token。
@@ -1580,15 +1832,14 @@
           <div id="tokenSavedHint" class="saved-hint" hidden>
             <span class="hi">✓</span><span>本机已保存 Token，下次打开自动填入。</span>
           </div>
+          <div id="tokenInfo" style="margin-top:10px;"></div>
         </li>
       </ol>
       <p class="modal-tip">
-        🔒 Token 使用 AES-GCM（随机盐 + PBKDF2 200k 迭代）加密后保存在本机 localStorage，不会上传到任何服务器。<br>
-        此加密仅防止明文被直接读取，不能防止同域 XSS 脚本窃取。公开仓库无需 Token；填写 Token 可将 API 限额从 60 次/小时提升至 5000 次/小时。
+        🔒 Token 使用 AES-GCM（随机盐 + PBKDF2 200k 迭代）加密后保存在本机 localStorage，不会上传到任何服务器。
       </p>
     </div>
 
-    <!-- 代理 -->
     <div class="settings-panel" data-sp="proxy" hidden>
       <p class="muted" style="margin:0 0 12px; font-size:12.5px; line-height:1.6;">
         当所在地区访问 GitHub 受限或遇到限流时，可切换代理源获取仓库原始内容（raw 文件、图片等）。
@@ -1597,11 +1848,11 @@
       <div class="proxy-list" id="proxyList"></div>
       <div style="display:flex; gap:8px; margin-top:14px; align-items:center; flex-wrap:wrap;">
         <button class="step-btn" id="proxyTestBtn" type="button">🧪 测试当前代理</button>
+        <button class="step-btn primary" id="proxyAutoBtn" type="button">⚡ 自动测速并切换</button>
         <span id="proxyTestResult" class="muted" style="font-size:12px;"></span>
       </div>
     </div>
 
-    <!-- 数据 -->
     <div class="settings-panel" data-sp="data" hidden>
       <div class="setting-row">
         <div class="setting-label">收藏数量</div>
@@ -1612,8 +1863,16 @@
         <span class="setting-value" id="recentCount">0</span>
       </div>
       <div class="setting-row">
+        <div class="setting-label">本地批注 / 高亮</div>
+        <span class="setting-value" id="hlCount">0</span>
+      </div>
+      <div class="setting-row">
+        <div class="setting-label">离线已缓存文件</div>
+        <span class="setting-value" id="offlineCount">0</span>
+      </div>
+      <div class="setting-row">
         <div class="setting-label">清除所有本机数据
-          <small>包括 Token、翻译配置、收藏、主题偏好、最近仓库等</small>
+          <small>包括 Token、翻译配置、收藏、主题偏好、最近仓库、批注等</small>
         </div>
         <button class="step-btn danger" id="clearAllBtn" type="button">全部清除</button>
       </div>
@@ -1621,7 +1880,7 @@
   </div>
 </div>
 
-<!-- ZIP 下载 -->
+<!-- ZIP -->
 <div id="zipModal" class="modal-mask" hidden role="dialog" aria-modal="true" aria-label="下载 ZIP">
   <div class="modal" style="max-width:560px;">
     <button class="modal-close" id="zipClose" aria-label="关闭">✕</button>
@@ -1645,7 +1904,7 @@
   </div>
 </div>
 
-<!-- Release 对比 -->
+<!-- 对比 -->
 <div id="compareModal" class="modal-mask" hidden role="dialog" aria-modal="true" aria-label="Release 对比">
   <div class="modal" role="dialog">
     <button class="modal-close" id="compareClose" aria-label="关闭">✕</button>
@@ -1683,8 +1942,87 @@
     <button class="modal-close" id="recentClose" aria-label="关闭">✕</button>
     <h3>最近加载的仓库</h3>
     <div id="recentList"></div>
+    <button class="step-btn danger" id="recentClear" type="button" style="margin-top:14px; width:100%; justify-content:center;">🗑 清空历史记录</button>
   </div>
 </div>
+
+<!-- 快捷键帮助 -->
+<div id="shortcutsModal" class="modal-mask" hidden role="dialog" aria-modal="true" aria-label="快捷键">
+  <div class="modal" style="max-width:560px;">
+    <button class="modal-close" id="shortcutsClose" aria-label="关闭">✕</button>
+    <h3>快捷键</h3>
+    <div class="kbd-list" id="kbdList"></div>
+  </div>
+</div>
+
+<!-- 批注/高亮输入 -->
+<div id="annotModal" class="modal-mask" hidden role="dialog" aria-modal="true" aria-label="批注">
+  <div class="modal" style="max-width:460px;">
+    <button class="modal-close" id="annotClose" aria-label="关闭">✕</button>
+    <h3>添加高亮批注</h3>
+    <div class="mini-form">
+      <div style="font-size:12px;color:var(--muted);">选中文字：</div>
+      <div id="annotText" style="font-size:13px;padding:8px 10px;background:var(--panel-2);border-radius:6px;line-height:1.6;max-height:100px;overflow:auto;"></div>
+      <label for="annotNote">备注（可选）</label>
+      <textarea id="annotNote" rows="3" placeholder="给这段文字写点备注…" style="font-size:13px;resize:vertical;"></textarea>
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button class="step-btn" id="annotCancel" type="button">取消</button>
+        <button class="step-btn primary" id="annotSave" type="button">保存高亮</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 分享卡片 -->
+<div id="shareCardModal" class="modal-mask" hidden role="dialog" aria-modal="true" aria-label="分享卡片">
+  <div class="modal" style="max-width:560px;">
+    <button class="modal-close" id="shareCardClose" aria-label="关闭">✕</button>
+    <h3>分享卡片</h3>
+    <canvas id="shareCardCanvas" class="share-card-preview" width="1040" height="585"></canvas>
+    <div style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;">
+      <button class="step-btn" id="shareCardCopy" type="button">📋 复制链接</button>
+      <button class="step-btn primary" id="shareCardDownload" type="button">⬇ 下载图片</button>
+    </div>
+  </div>
+</div>
+
+<!-- 收藏分组 -->
+<div id="bmTagModal" class="modal-mask" hidden role="dialog" aria-modal="true" aria-label="收藏标签">
+  <div class="modal" style="max-width:420px;">
+    <button class="modal-close" id="bmTagClose" aria-label="关闭">✕</button>
+    <h3>收藏分组标签</h3>
+    <div class="mini-form">
+      <label>为当前文件选择标签（可多选，回车添加新标签）</label>
+      <div class="tag-picker" id="bmTagPicker"></div>
+      <div class="paste-row">
+        <input id="bmTagNew" type="text" placeholder="输入新标签，回车添加" style="font-size:13px;">
+        <button class="step-btn" id="bmTagAdd" type="button">添加</button>
+      </div>
+      <div style="display:flex;gap:8px;justify-content:flex-end;">
+        <button class="step-btn" id="bmTagCancel" type="button">取消</button>
+        <button class="step-btn primary" id="bmTagSave" type="button">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 图片灯箱 -->
+<div id="imgLightbox" class="lightbox" hidden role="dialog" aria-modal="true" aria-label="图片预览">
+  <button class="lb-btn lb-prev" id="lbPrev" aria-label="上一张">‹</button>
+  <img id="lbImg" alt="">
+  <button class="lb-btn lb-next" id="lbNext" aria-label="下一张">›</button>
+  <button class="lb-btn lb-close" id="lbClose" aria-label="关闭">✕</button>
+  <div class="lb-caption" id="lbCaption"></div>
+</div>
+
+<!-- 选中文字浮动按钮 -->
+<div id="selPop" class="sel-pop" hidden></div>
+
+<!-- 专注模式退出提示 -->
+<button class="focus-exit" id="focusExit" hidden>专注模式 · 按 F / Esc 退出</button>
+
+<!-- 速率面板 -->
+<div id="ratePanel" class="rate-panel" hidden></div>
 
 <div class="progress-bar" id="globalProgress"></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
@@ -1695,7 +2033,7 @@
    ========================================================= */
 const LS = {
   THEME:'gh-browser-theme', REPO:'gh-browser-last-repo', TOKEN:'gh-browser-token',
-  BOOKMARKS:'gh-browser-bookmarks', FONT:'gh-browser-font', LH:'gh-browser-lh',
+  BOOKMARKS:'gh-browser-bookmarks', BM_TAGS:'gh-browser-bm-tags', FONT:'gh-browser-font', LH:'gh-browser-lh',
   RECENT:'gh-browser-recent', VIEW:'gh-browser-view', TOC:'gh-browser-toc',
   SEEN_REL:'gh-browser-seen-releases', PROXY:'gh-browser-proxy',
   AUTO_README:'gh-browser-auto-readme', STABLE_ONLY:'gh-browser-stable-only',
@@ -1708,7 +2046,17 @@ const LS = {
   TRANS_LOCAL_URL:'gh-browser-trans-local-url',
   TRANS_CORS_PROXY:'gh-browser-trans-cors-proxy',
   TRANS_CORS_CUSTOM:'gh-browser-trans-cors-custom',
-  TRANS_CFG:'gh-browser-trans-cfg'
+  TRANS_CFG:'gh-browser-trans-cfg',
+  SCROLL:'gh-browser-scroll', SCROLL_MEM:'gh-browser-scroll-mem',
+  TOC_COLLAPSE:'gh-browser-toc-collapse',
+  EXT_DOMAIN:'gh-browser-ext-domain',
+  MERMAID:'gh-browser-mermaid', KATEX:'gh-browser-katex',
+  LINE_NUM:'gh-browser-line-num', FOLD_TH:'gh-browser-fold-th',
+  OFFLINE:'gh-browser-offline-cache',
+  OFFLINE_DATA:'gh-browser-offline-data',
+  HIGHLIGHTS:'gh-browser-highlights',
+  FOCUS:'gh-browser-focus',
+  PROXY_SPEED:'gh-browser-proxy-speed'
 };
 
 const CORS_PROXIES = {
@@ -1749,7 +2097,7 @@ const PROXIES = {
 };
 
 /* =========================================================
-   翻译引擎（多引擎）
+   翻译引擎
    ========================================================= */
 const ENGINES = {
   off: { id:'off', group:'', name:'关闭翻译', desc:'不使用翻译功能', badge:'', badgeType:'',
@@ -2002,6 +2350,132 @@ const ENGINES = {
     }
   },
 
+  lingva: {
+    id:'lingva', group:'其他引擎', name:'Lingva Translate',
+    desc:'Google 开源替代 · 可换实例', badge:'直连', badgeType:'direct',
+    needs:['lingvaEndpoint'],
+    langs:['auto','zh-CN','zh-TW','en','ja','ko','fr','de','es','ru','pt','it','ar','th','vi','id','tr','nl','pl','uk','el','cs','sv','da','fi','no','hu','ro','he'],
+    async test(text, from, to, cfg, ctx){
+      const base = (cfg.lingvaEndpoint || 'https://lingva.ml').trim().replace(/\/+$/, '');
+      const map = { 'auto':'auto', 'zh-CN':'zh', 'zh-TW':'zh_HANT' };
+      const sl = map[from] || from;
+      const tl = map[to] || to;
+      const url = `${base}/api/v1/${encodeURIComponent(sl)}/${encodeURIComponent(tl)}/${encodeURIComponent(text)}`;
+      const res = await transFetch(url, undefined, ctx);
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      if(data.error) throw new Error(typeof data.error === 'string' ? data.error : 'Lingva 返回错误');
+      return data.translation || '';
+    }
+  },
+
+  apertium: {
+    id:'apertium', group:'其他引擎', name:'Apertium',
+    desc:'开源规则引擎 · 语言对有限', badge:'直连', badgeType:'direct',
+    needs:['apertiumEndpoint'],
+    langs:['en','es','fr','de','pt','ca','gl','it','ru','eu','zh','ja','ko','ar','hi','id','ms','nl','pl','ro','sv','uk'],
+    async test(text, from, to, cfg, ctx){
+      const base = (cfg.apertiumEndpoint || 'https://apertium.org/apy').trim().replace(/\/+$/, '');
+      const sl = from === 'auto' ? 'en' : from;
+      const body = new URLSearchParams({ langpair: `${sl}|${to}`, q: text, markUnknown: 'no' });
+      const res = await transFetch(base + '/translate', {
+        method:'POST',
+        headers:{'Content-Type':'application/x-www-form-urlencoded'},
+        body: body.toString()
+      }, ctx);
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      if(data.responseStatus && String(data.responseStatus) !== '200'){
+        throw new Error(data.responseDetails || ('Apertium ' + data.responseStatus));
+      }
+      return data.responseData?.translatedText || '';
+    }
+  },
+
+  deeplx: {
+    id:'deeplx', group:'其他引擎', name:'DeepLX（自部署）',
+    desc:'DeepL 免费代理端点', badge:'直连', badgeType:'direct',
+    needs:['deeplxEndpoint'],
+    langs:['auto','zh-CN','zh-TW','en','ja','ko','fr','de','es','ru','pt','it','ar','tr','pl','nl','uk'],
+    async test(text, from, to, cfg, ctx){
+      const ep = (cfg.deeplxEndpoint || 'http://localhost:1188/translate').trim();
+      const mapL = l => {
+        if(l === 'auto') return 'auto';
+        if(l === 'zh-CN' || l === 'zh-TW') return 'ZH';
+        if(l === 'en') return 'EN';
+        return l.toUpperCase().split('-')[0];
+      };
+      const body = { text, source_lang: mapL(from), target_lang: mapL(to) };
+      const res = await transFetch(ep, {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(body)
+      }, ctx);
+      if(!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      if(data.code && String(data.code) !== '200') throw new Error('DeepLX ' + data.code + ': ' + (data.message || ''));
+      return data.data || data.translation || data.translatedText || '';
+    }
+  },
+
+  azure: {
+    id:'azure', group:'云服务引擎', name:'Azure 翻译',
+    desc:'微软云 API · 需订阅密钥', badge:'需 Key', badgeType:'key',
+    needs:['azureKey','azureRegion','azureEndpoint'],
+    langs:['auto','zh-Hans','zh-Hant','en','ja','ko','fr','de','es','ru','pt','it','ar','th','vi','id','tr','nl','pl','uk','el','cs','sv','da','fi','no','hu','ro','he'],
+    async test(text, from, to, cfg, ctx){
+      if(!cfg.azureKey) throw new Error('请填写 Azure 订阅密钥');
+      const base = (cfg.azureEndpoint || 'https://api.cognitive.microsofttranslator.com').trim().replace(/\/+$/, '');
+      const params = new URLSearchParams({ 'api-version':'3.0', to });
+      if(from && from !== 'auto') params.set('from', from);
+      const headers = {
+        'Ocp-Apim-Subscription-Key': cfg.azureKey.trim(),
+        'Content-Type':'application/json'
+      };
+      if(cfg.azureRegion) headers['Ocp-Apim-Subscription-Region'] = cfg.azureRegion.trim();
+      const res = await transFetch(base + '/translate?' + params.toString(), {
+        method:'POST', headers, body: JSON.stringify([{ Text: text }])
+      }, ctx);
+      if(!res.ok){
+        let m = 'HTTP ' + res.status;
+        try{ const e = await res.json(); if(e.error?.message) m += ': ' + e.error.message; }catch(e){}
+        throw new Error(m);
+      }
+      const data = await res.json();
+      return data?.[0]?.translations?.[0]?.text || '';
+    }
+  },
+
+  caiyun: {
+    id:'caiyun', group:'云服务引擎', name:'彩云小译',
+    desc:'高质量 · 需 Token', badge:'需 Key', badgeType:'key',
+    needs:['caiyunToken'],
+    langs:['auto','zh','en','ja'],
+    async test(text, from, to, cfg, ctx){
+      if(!cfg.caiyunToken) throw new Error('请填写彩云小译 Token');
+      const sl = from === 'auto' ? 'auto' : from;
+      const body = {
+        source: [text],
+        trans_type: sl + '2' + to,
+        request_id: 'gh-browser-' + Date.now(),
+        detect: sl === 'auto'
+      };
+      const res = await transFetch('https://api.interpreter.caiyunai.com/v1/translator', {
+        method:'POST',
+        headers:{ 'content-type':'application/json', 'x-authorization':'token ' + cfg.caiyunToken.trim() },
+        body: JSON.stringify(body)
+      }, ctx);
+      if(!res.ok){
+        let m = 'HTTP ' + res.status;
+        try{ const e = await res.json(); if(e.message) m += ': ' + e.message; }catch(e){}
+        throw new Error(m);
+      }
+      const data = await res.json();
+      if(data.error) throw new Error(typeof data.error === 'string' ? data.error : '彩云返回错误');
+      return Array.isArray(data.target) ? data.target.join('\n') : (data.target || '');
+    }
+  },
+
   openai: {
     id:'openai', group:'其他引擎', name:'OpenAI 兼容 LLM',
     desc:'OpenAI/DeepSeek/Ollama', badge:'需 Key', badgeType:'key',
@@ -2054,7 +2528,14 @@ const CONFIG_FIELDS = {
   libreKey: { label:'API Key（可选）', type:'password' },
   openaiBase: { label:'Base URL', type:'text', placeholder:'https://api.openai.com/v1', default:'https://api.openai.com/v1', hint:'DeepSeek: https://api.deepseek.com/v1' },
   openaiKey: { label:'API Key', type:'password', placeholder:'sk-...' },
-  openaiModel: { label:'模型名', type:'text', placeholder:'gpt-4o-mini', default:'gpt-4o-mini' }
+  openaiModel: { label:'模型名', type:'text', placeholder:'gpt-4o-mini', default:'gpt-4o-mini' },
+  lingvaEndpoint: { label:'Lingva 实例地址', type:'text', placeholder:'https://lingva.ml', default:'https://lingva.ml', hint:'可替换为 https://lingva.garudalinux.org 等公共实例' },
+  apertiumEndpoint: { label:'Apertium 服务地址', type:'text', placeholder:'https://apertium.org/apy', default:'https://apertium.org/apy', hint:'注意：只支持有限的语言对，其余组合会报错' },
+  deeplxEndpoint: { label:'DeepLX 端点', type:'text', placeholder:'http://localhost:1188/translate', default:'http://localhost:1188/translate', hint:'自部署 DeepLX 后填写，浏览器需允许跨域访问' },
+  azureKey: { label:'Azure 订阅密钥', type:'password', placeholder:'xxxxxxxxxxxxxxxx' },
+  azureRegion: { label:'Azure 区域', type:'text', placeholder:'global 或 eastasia', default:'global', hint:'创建资源时选择的区域，如 eastasia、global' },
+  azureEndpoint: { label:'Azure 端点', type:'text', default:'https://api.cognitive.microsofttranslator.com' },
+  caiyunToken: { label:'彩云小译 Token', type:'password', placeholder:'your-token' }
 };
 
 const LANG_NAMES = {
@@ -2063,7 +2544,8 @@ const LANG_NAMES = {
   'es':'西班牙语','spa':'西班牙语','ru':'俄语','pt':'葡萄牙语','it':'意大利语','ar':'阿拉伯语','th':'泰语',
   'vi':'越南语','id':'印尼语','tr':'土耳其语','nl':'荷兰语','pl':'波兰语','uk':'乌克兰语','cht':'繁体中文',
   'el':'希腊语','sv':'瑞典语','da':'丹麦语','fi':'芬兰语','no':'挪威语','cs':'捷克语','ro':'罗马尼亚语',
-  'hu':'匈牙利语','he':'希伯来语'
+  'hu':'匈牙利语','he':'希伯来语','ca':'加泰罗尼亚语','gl':'加利西亚语','eu':'巴斯克语','hi':'印地语',
+  'ms':'马来语','zh_HANT':'繁体中文'
 };
 const langName = c => LANG_NAMES[c] || c;
 
@@ -2079,11 +2561,13 @@ const state = {
   current: null,
   tabs: [], activeTabIdx: -1,
   bookmarks: new Set(),
+  bookmarkTags: {},
   favFilter: false,
   viewMode:'flat', sortMode:'path', tab:'files',
   cache: new Map(),
   searchDeep: false,
   tocVisible: true,
+  tocCollapsed: {},
   autoReadme: true,
   repoInfo: null,
   recent: [],
@@ -2091,6 +2575,17 @@ const state = {
   proxy: 'github',
   zipSelected: new Set(),
   sidebarOpen: true,
+  focusMode: false,
+  extDomain: true,
+  mermaid: true,
+  katex: true,
+  lineNumbers: true,
+  foldThreshold: 30,
+  offlineCache: true,
+  scrollMemory: true,
+  rateInfo: { limit:null, remaining:null, reset:null, used:null },
+  highlights: {},
+  proxySpeed: {},
   translation: {
     engine: 'off',
     sourceLang: 'auto',
@@ -2124,7 +2619,8 @@ const ICON = {
   arrow:'<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg>',
   close:'<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M3.72 3.72a.75.75 0 0 1 1.06 0L8 6.94l3.22-3.22a.75.75 0 1 1 1.06 1.06L9.06 8l3.22 3.22a.75.75 0 1 1-1.06 1.06L8 9.06l-3.22 3.22a.75.75 0 0 1-1.06-1.06L6.94 8 3.72 4.78a.75.75 0 0 1 0-1.06Z"/></svg>',
   pages:'<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0a8 8 0 1 1 0 16A8 8 0 0 1 8 0ZM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5Z"/></svg>',
-  trans:'<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 1a.75.75 0 0 1 .75.75v.5h4.5v-.5a.75.75 0 0 1 1.5 0v.5h1.5A1.75 1.75 0 0 1 14.5 4v8.5A1.75 1.75 0 0 1 12.75 14h-9.5A1.75 1.75 0 0 1 1.5 12.5V4c0-.966.784-1.75 1.75-1.75h1.5v-.5A.75.75 0 0 1 4.5 1Zm-1.75 3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V4.75a.25.25 0 0 0-.25-.25Zm5.5 1.75a.75.75 0 0 1 .75.75v.5a3.25 3.25 0 0 1 2.5 3.25v2.5a.75.75 0 0 1-1.5 0v-2.5a1.75 1.75 0 0 0-1-1.58v1.58a.75.75 0 0 1-1.5 0v-1.58a1.75 1.75 0 0 0-1 1.58v2.5a.75.75 0 0 1-1.5 0v-2.5a3.25 3.25 0 0 1 2.5-3.25v-.5a.75.75 0 0 1 .75-.75Z"/></svg>'
+  trans:'<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M4.5 1a.75.75 0 0 1 .75.75v.5h4.5v-.5a.75.75 0 0 1 1.5 0v.5h1.5A1.75 1.75 0 0 1 14.5 4v8.5A1.75 1.75 0 0 1 12.75 14h-9.5A1.75 1.75 0 0 1 1.5 12.5V4c0-.966.784-1.75 1.75-1.75h1.5v-.5A.75.75 0 0 1 4.5 1Zm-1.75 3.5a.25.25 0 0 0-.25.25v8.5c0 .138.112.25.25.25h9.5a.25.25 0 0 0 .25-.25V4.75a.25.25 0 0 0-.25-.25Zm5.5 1.75a.75.75 0 0 1 .75.75v.5a3.25 3.25 0 0 1 2.5 3.25v2.5a.75.75 0 0 1-1.5 0v-2.5a1.75 1.75 0 0 0-1-1.58v1.58a.75.75 0 0 1-1.5 0v-1.58a1.75 1.75 0 0 0-1 1.58v2.5a.75.75 0 0 1-1.5 0v-2.5a3.25 3.25 0 0 1 2.5-3.25v-.5a.75.75 0 0 1 .75-.75Z"/></svg>',
+  hl:'<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M11.5 1a.75.75 0 0 1 .75.75v2.5h2.5a.75.75 0 0 1 0 1.5h-2.5v2.5a.75.75 0 0 1-1.5 0v-2.5h-2.5a.75.75 0 0 1 0-1.5h2.5v-2.5A.75.75 0 0 1 11.5 1ZM2 4.75A.75.75 0 0 1 2.75 4h4.5a.75.75 0 0 1 0 1.5h-4.5A.75.75 0 0 1 2 4.75Zm0 3.5A.75.75 0 0 1 2.75 7.5h6.5a.75.75 0 0 1 0 1.5h-6.5A.75.75 0 0 1 2 8.25Zm0 3.5a.75.75 0 0 1 .75-.75h2.5a.75.75 0 0 1 0 1.5h-2.5a.75.75 0 0 1-.75-.75Z"/></svg>'
 };
 
 /* =========================================================
@@ -2166,10 +2662,6 @@ function progressDone(){
   el.style.width = '100%';
   setTimeout(() => { el.style.width = '0'; }, 300);
 }
-function progressSet(pct){
-  clearInterval(progressTimer);
-  $('#globalProgress').style.width = pct + '%';
-}
 function debounce(fn, wait){
   let t;
   return (...args) => { clearTimeout(t); t = setTimeout(() => fn(...args), wait); };
@@ -2201,7 +2693,24 @@ const device = {
 };
 
 /* =========================================================
-   MD5（用于百度 / 有道签名）
+   GitHub Pages 链接 → 仓库
+   ========================================================= */
+function parseGitHubPagesUrl(input){
+  if(!input) return null;
+  const s = String(input).trim();
+  const m = s.match(/^(?:https?:\/\/)?([A-Za-z0-9](?:[A-Za-z0-9-]{0,38})?)\.github\.io(?:\/([^\s?#]*))?(?:[?#].*)?$/i);
+  if(!m) return null;
+  const owner = m[1];
+  const rest = (m[2] || '').replace(/\/+$/, '');
+  const first = rest.split('/')[0] || '';
+  if(!first || /\.(?:html?|php|aspx?|jsp|js|css|json|xml|txt|png|jpe?g|gif|svg|ico|webp|pdf|zip|md)$/i.test(first)){
+    return { owner, repo: owner + '.github.io', isPages: true };
+  }
+  return { owner, repo: first.replace(/\.git$/i, ''), isPages: true };
+}
+
+/* =========================================================
+   MD5
    ========================================================= */
 const md5 = (function(){
   function safeAdd(x,y){const l=(x&0xffff)+(y&0xffff);const m=(x>>16)+(y>>16)+(l>>16);return(m<<16)|(l&0xffff);}
@@ -2356,9 +2865,6 @@ async function translateText(text, from, to, ctx){
   return engine.test(text, from, to, cfg.config, ctx);
 }
 
-/* =========================================================
-   翻译缓存（LRU，3000 条）
-   ========================================================= */
 const translationCache = new Map();
 const TRANS_CACHE_MAX = 3000;
 function transCacheGet(key){
@@ -2378,26 +2884,18 @@ function transCacheSet(key, v){
 }
 function transCacheKey(text, from, to){
   const cfg = state.translation.config || {};
-  const fp = `${state.translation.engine}|${cfg.openaiModel || ''}|${cfg.openaiBase || ''}|${cfg.deeplEndpoint || ''}|${cfg.libreEndpoint || ''}`;
+  const fp = `${state.translation.engine}|${cfg.openaiModel || ''}|${cfg.openaiBase || ''}|${cfg.deeplEndpoint || ''}|${cfg.libreEndpoint || ''}|${cfg.lingvaEndpoint || ''}|${cfg.apertiumEndpoint || ''}|${cfg.deeplxEndpoint || ''}|${cfg.azureRegion || ''}|${cfg.azureEndpoint || ''}`;
   return `${fp}\u0000${from}\u0000${to}\u0000${text}`;
 }
 
 /* =========================================================
-   加密（Token）
+   加密
    ========================================================= */
 async function getCryptoKeyV2(salt){
   const enc = new TextEncoder();
   const km = await crypto.subtle.importKey('raw', enc.encode('gh-browser-v2'), 'PBKDF2', false, ['deriveKey']);
   return crypto.subtle.deriveKey(
     { name:'PBKDF2', salt, iterations: 200000, hash:'SHA-256' },
-    km, { name:'AES-GCM', length:256 }, false, ['encrypt','decrypt']
-  );
-}
-async function getCryptoKeyV1(){
-  const enc = new TextEncoder();
-  const km = await crypto.subtle.importKey('raw', enc.encode('gh-browser-v1'), 'PBKDF2', false, ['deriveKey']);
-  return crypto.subtle.deriveKey(
-    { name:'PBKDF2', salt: enc.encode('gh-browser-salt'), iterations: 100000, hash:'SHA-256' },
     km, { name:'AES-GCM', length:256 }, false, ['encrypt','decrypt']
   );
 }
@@ -2435,17 +2933,98 @@ async function decryptToken(s){
       return new TextDecoder().decode(plain);
     }catch(e){ return ''; }
   }
-  if(s.startsWith('v1:')){
-    try{
-      const parts = s.split(':');
-      const key = await getCryptoKeyV1();
-      const plain = await crypto.subtle.decrypt(
-        { name:'AES-GCM', iv: b64dec(parts[1]) }, key, b64dec(parts[2])
-      );
-      return new TextDecoder().decode(plain);
-    }catch(e){ return ''; }
-  }
   return s;
+}
+
+/* =========================================================
+   离线缓存（localStorage）
+   ========================================================= */
+function offlineKey(owner, repo, branch, path){
+  return `${owner}/${repo}/${branch}/${path}`;
+}
+function loadOfflineData(){
+  const d = lsGet(LS.OFFLINE_DATA, {});
+  return (d && typeof d === 'object') ? d : {};
+}
+function saveOffline(owner, repo, branch, path, text){
+  if(!state.offlineCache) return;
+  try{
+    const d = loadOfflineData();
+    d[offlineKey(owner, repo, branch, path)] = { text, ts: Date.now() };
+    const keys = Object.keys(d);
+    if(keys.length > 200){
+      keys.sort((a,b) => d[a].ts - d[b].ts);
+      for(let i = 0; i < keys.length - 200; i++) delete d[keys[i]];
+    }
+    lsSet(LS.OFFLINE_DATA, d);
+  }catch(e){}
+}
+function getOffline(owner, repo, branch, path){
+  const d = loadOfflineData();
+  const rec = d[offlineKey(owner, repo, branch, path)];
+  return rec ? rec.text : null;
+}
+function offlineCount(){ return Object.keys(loadOfflineData()).length; }
+
+/* =========================================================
+   本地高亮 / 批注
+   ========================================================= */
+function hlKey(){ return `${state.owner}/${state.repo}/${state.branch}/${state.current?.path || ''}`; }
+function loadHighlights(){
+  const d = lsGet(LS.HIGHLIGHTS, {});
+  state.highlights = (d && typeof d === 'object') ? d : {};
+}
+function saveHighlights(){ lsSet(LS.HIGHLIGHTS, state.highlights); }
+function getCurrentHighlights(){
+  const k = hlKey();
+  if(!state.highlights[k]) state.highlights[k] = [];
+  return state.highlights[k];
+}
+function hlCount(){
+  let n = 0;
+  for(const k in state.highlights) n += state.highlights[k].length;
+  return n;
+}
+function applyHighlights(container){
+  if(!state.current || state.current.type !== 'file') return;
+  const list = getCurrentHighlights();
+  if(!list.length) return;
+  /* 简单方案：在文本节点中查找匹配片段并包裹 mark */
+  for(const h of list){
+    if(!h.text) continue;
+    try{ highlightText(container, h.text, h.note); }catch(e){}
+  }
+}
+function highlightText(container, needle, note){
+  if(!needle || needle.length < 2) return;
+  const walker = document.createTreeWalker(container, NodeFilter.SHOW_TEXT, {
+    acceptNode(node){
+      const p = node.parentElement;
+      if(!p) return NodeFilter.FILTER_REJECT;
+      if(p.closest('pre, code, script, style, .trans-target, .user-hl')) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const nodes = [];
+  let n;
+  while((n = walker.nextNode())) nodes.push(n);
+  for(const node of nodes){
+    const idx = node.nodeValue.indexOf(needle);
+    if(idx === -1) continue;
+    const range = document.createRange();
+    range.setStart(node, idx);
+    range.setEnd(node, idx + needle.length);
+    const mark = document.createElement('mark');
+    mark.className = 'user-hl' + (note ? ' has-note' : '');
+    if(note) mark.title = note;
+    try{
+      range.surroundContents(mark);
+    }catch(e){ return; }
+    mark.addEventListener('click', () => {
+      if(note) toast('批注：' + note, 4000);
+    });
+    return; /* 每个片段只高亮第一个匹配，避免过度 */
+  }
 }
 
 /* =========================================================
@@ -2468,7 +3047,9 @@ function collectTextNodes(root){
           p.classList.contains('trans-orig') ||
           p.classList.contains('code-lang') ||
           p.classList.contains('copy-btn') ||
-          p.classList.contains('release-assets')
+          p.classList.contains('release-assets') ||
+          p.classList.contains('mermaid-block') ||
+          p.classList.contains('user-hl')
         )){
           return NodeFilter.FILTER_REJECT;
         }
@@ -2737,6 +3318,17 @@ function applyFontSettings(){
 }
 
 /* =========================================================
+   专注模式
+   ========================================================= */
+function toggleFocus(){
+  state.focusMode = !state.focusMode;
+  document.body.classList.toggle('focus-mode', state.focusMode);
+  $('#focusExit').hidden = !state.focusMode;
+  $('#focusBtn').classList.toggle('active', state.focusMode);
+  lsSet(LS.FOCUS, state.focusMode);
+}
+
+/* =========================================================
    侧边栏
    ========================================================= */
 function isMobileLayout(){ return device.isMobile(); }
@@ -2849,15 +3441,23 @@ function buildRawUrl(owner, repo, branch, path){
 }
 function renderProxyList(){
   const box = $('#proxyList');
-  box.innerHTML = Object.values(PROXIES).map(p => `
+  box.innerHTML = Object.values(PROXIES).map(p => {
+    const sp = state.proxySpeed[p.id];
+    let spHtml = '';
+    if(sp){
+      const cls = sp.ok ? (sp.ms < 800 ? 'fast' : 'slow') : 'fail';
+      spHtml = `<div class="proxy-speed ${cls}">${sp.ok ? '✓ ' + sp.ms + 'ms' : '✗ 失败'}</div>`;
+    }
+    return `
     <label class="proxy-item ${state.proxy === p.id ? 'selected' : ''}" data-proxy="${p.id}">
       <input type="radio" name="proxy" value="${p.id}" ${state.proxy === p.id ? 'checked' : ''}>
       <span class="proxy-info">
         <span class="proxy-name">${escapeHtml(p.name)}${p.badge ? ` <span class="proxy-badge recommended">${escapeHtml(p.badge)}</span>` : ''}</span>
         <span class="proxy-desc">${escapeHtml(p.desc)}</span>
+        ${spHtml}
       </span>
-    </label>
-  `).join('');
+    </label>`;
+  }).join('');
   box.querySelectorAll('.proxy-item').forEach(el => {
     el.addEventListener('click', () => {
       state.proxy = el.dataset.proxy;
@@ -2866,6 +3466,45 @@ function renderProxyList(){
       toast('已切换代理：' + PROXIES[state.proxy].name);
     });
   });
+}
+async function testProxy(id, path){
+  const p = PROXIES[id];
+  if(!p) return { ok:false, ms:0 };
+  const url = p.buildRaw(state.owner, state.repo, state.branch, path);
+  try{
+    const t0 = performance.now();
+    const ctrl = new AbortController();
+    const tid = setTimeout(() => ctrl.abort(), 6000);
+    const res = await fetch(url, { signal: ctrl.signal });
+    clearTimeout(tid);
+    const t1 = performance.now();
+    return { ok: res.ok, ms: Math.round(t1 - t0) };
+  }catch(e){
+    return { ok:false, ms:0 };
+  }
+}
+async function autoPickProxy(){
+  if(!state.owner){ toast('请先加载仓库'); return; }
+  const testPath = state.mdFiles[0] || state.allFiles[0];
+  if(!testPath){ toast('没有可测试的文件'); return; }
+  setStatus('正在测速所有代理…', 'loading');
+  const ids = Object.keys(PROXIES);
+  const results = await Promise.all(ids.map(id => testProxy(id, testPath)));
+  ids.forEach((id, i) => { state.proxySpeed[id] = results[i]; });
+  let best = null, bestMs = Infinity;
+  ids.forEach((id, i) => {
+    if(results[i].ok && results[i].ms < bestMs){ best = id; bestMs = results[i].ms; }
+  });
+  renderProxyList();
+  if(best){
+    state.proxy = best;
+    lsSet(LS.PROXY, best);
+    renderProxyList();
+    setStatus(`已自动切换到最快的代理：${PROXIES[best].name}（${bestMs}ms）`, 'ok');
+    toast(`自动选择：${PROXIES[best].name}（${bestMs}ms）`);
+  } else {
+    setStatus('所有代理测试失败，保持当前设置', 'error');
+  }
 }
 
 /* =========================================================
@@ -2929,6 +3568,16 @@ function isMarkdown(path){
 /* =========================================================
    API
    ========================================================= */
+function updateRateInfo(res){
+  const r = state.rateInfo;
+  const limit = res.headers.get('x-ratelimit-limit');
+  const remaining = res.headers.get('x-ratelimit-remaining');
+  const reset = res.headers.get('x-ratelimit-reset');
+  if(limit) r.limit = Number(limit);
+  if(remaining) r.remaining = Number(remaining);
+  if(reset) r.reset = Number(reset);
+  if(r.limit && r.remaining != null) r.used = r.limit - r.remaining;
+}
 function authHeaders(extra){
   const h = Object.assign({ 'Accept':'application/vnd.github+json' }, extra || {});
   if(state.token) h['Authorization'] = 'Bearer ' + state.token;
@@ -2936,6 +3585,7 @@ function authHeaders(extra){
 }
 async function api(path){
   const res = await fetch('https://api.github.com' + path, { headers: authHeaders() });
+  updateRateInfo(res);
   if(!res.ok){
     let msg;
     if(res.status === 404) msg = '资源不存在（404）';
@@ -2956,13 +3606,20 @@ async function fetchFileText(path){
   if(state.cache.has(path)) return state.cache.get(path);
   if(isBinary(path)) throw new Error('二进制文件请使用下载按钮');
   const { owner, repo, branch, token } = state;
+  /* 离线缓存优先 */
+  if(state.offlineCache){
+    const off = getOffline(owner, repo, branch, path);
+    if(off != null){ state.cache.set(path, off); return off; }
+  }
   if(token){
     try{
       const url = `https://api.github.com/repos/${owner}/${repo}/contents/${path.split('/').map(encodeURIComponent).join('/')}?ref=${encodeURIComponent(branch)}`;
       const res = await fetch(url, { headers: { 'Authorization':'Bearer ' + token, 'Accept':'application/vnd.github.raw' } });
+      updateRateInfo(res);
       if(res.ok){
         const text = await res.text();
         state.cache.set(path, text);
+        saveOffline(owner, repo, branch, path, text);
         return text;
       }
     }catch(e){}
@@ -2976,6 +3633,7 @@ async function fetchFileText(path){
   if(!res.ok) throw new Error(`获取文件内容失败（${res.status}）`);
   const text = await res.text();
   state.cache.set(path, text);
+  saveOffline(owner, repo, branch, path, text);
   return text;
 }
 
@@ -3025,7 +3683,7 @@ function md2html(md){
     return '<pre><code>' + escapeHtml(text) + '</code></pre>';
   }
   const raw = marked.parse(text, { gfm:true, breaks:false });
-  return DOMPurify.sanitize(raw, { ADD_ATTR:['target','rel'] });
+  return DOMPurify.sanitize(raw, { ADD_ATTR:['target','rel'], ADD_TAGS:['math','semantics','annotation','mrow','mi','mo','mn','ms','mtext','msup','msub','mfrac','msqrt','mroot','mtable','mtr','mtd','munder','mover','munderover','mspace','mpadded','mphantom','menclose','mfenced','mstyle','merror','mprescripts','none'] });
 }
 
 function resolveInternalLink(href, currentPath, baseDir){
@@ -3049,6 +3707,14 @@ function resolveInternalLink(href, currentPath, baseDir){
     }
     return null;
   }
+  m = href.match(/^https?:\/\/([A-Za-z0-9-]+)\.github\.io\/([^\/]+)\/(.+?)(?:#.*)?$/i);
+  if(m){
+    const [_, o, r, p] = m;
+    if(o.toLowerCase() === state.owner.toLowerCase() && r.toLowerCase() === state.repo.toLowerCase()){
+      return { path: decodeURIComponent(p), branch: state.branch };
+    }
+    return null;
+  }
   if(/^https?:/i.test(href) || href.startsWith('//')) return null;
 
   let decoded;
@@ -3069,6 +3735,150 @@ function resolveInternalLink(href, currentPath, baseDir){
   const path = stack.join('/');
   if(state.allFilesSet.has(path)) return { path, branch: state.branch };
   return null;
+}
+
+/* 代码块增强：行号 / 折叠 */
+function enhanceCodeBlock(pre, wrap){
+  if(!pre || pre.dataset.enhanced) return;
+  pre.dataset.enhanced = '1';
+  const code = pre.querySelector('code');
+  if(!code) return;
+  const lines = code.textContent.split('\n');
+  const foldTh = state.foldThreshold;
+
+  if(state.lineNumbers){
+    wrap.classList.add('line-numbers');
+    const codeLines = document.createElement('div');
+    codeLines.className = 'code-lines';
+    lines.forEach((line, i) => {
+      const ln = document.createElement('span');
+      ln.className = 'ln';
+      ln.textContent = line || ' ';
+      ln.dataset.line = i + 1;
+      ln.addEventListener('click', (e) => {
+        if(e.target === ln || e.target.tagName === 'SPAN'){
+          copyText(line).then(ok => toast(ok ? `已复制第 ${i+1} 行` : '复制失败'));
+        }
+      });
+      codeLines.appendChild(ln);
+    });
+    const parent = code.parentNode;
+    parent.replaceChild(codeLines, code);
+    /* 保持 pre 内部只有 codeLines */
+    /* 但 hljs 高亮已完成，这里会丢失高亮颜色 —— 折中方案：用 innerHTML 保留 */
+    codeLines.innerHTML = lines.map((line, i) => {
+      const escaped = code.innerHTML.split('\n')[i] || '';
+      return `<span class="ln" data-line="${i+1}">${escaped || ' '}</span>`;
+    }).join('');
+    codeLines.addEventListener('click', (e) => {
+      const ln = e.target.closest('.ln');
+      if(!ln) return;
+      const n = Number(ln.dataset.line);
+      if(n) copyText(lines[n-1] || '').then(ok => toast(ok ? `已复制第 ${n} 行` : '复制失败'));
+    });
+  }
+
+  if(foldTh > 0 && lines.length > foldTh){
+    wrap.classList.add('folded');
+    const fb = document.createElement('button');
+    fb.type = 'button';
+    fb.className = 'code-fold-btn';
+    fb.textContent = `展开全部 ${lines.length} 行`;
+    fb.addEventListener('click', () => {
+      wrap.classList.toggle('folded');
+      fb.textContent = wrap.classList.contains('folded') ? `展开全部 ${lines.length} 行` : '折叠';
+    });
+    wrap.appendChild(fb);
+  }
+}
+
+/* Mermaid 渲染 */
+async function renderMermaidBlocks(container){
+  if(!state.mermaid) return;
+  const blocks = container.querySelectorAll('pre > code.language-mermaid, pre > code.lang-mermaid');
+  if(!blocks.length) return;
+  if(typeof mermaid === 'undefined') return;
+  try{ mermaid.initialize({ startOnLoad:false, theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default' }); }catch(e){}
+  for(const code of blocks){
+    const pre = code.parentNode;
+    const wrap = pre.parentNode;
+    const src = code.textContent;
+    const box = document.createElement('div');
+    box.className = 'mermaid-block';
+    box.innerHTML = '<div style="color:var(--muted);font-size:12px;">正在渲染图表…</div>';
+    try{
+      const { svg } = await mermaid.render('mm' + Math.random().toString(36).slice(2), src);
+      box.innerHTML = svg;
+    }catch(err){
+      box.innerHTML = '<div class="mm-err">Mermaid 渲染失败：' + escapeHtml(err.message || String(err)) + '</div>';
+    }
+    if(wrap && wrap.classList.contains('code-wrap')) wrap.replaceWith(box);
+    else pre.replaceWith(box);
+  }
+}
+
+/* KaTeX 渲染（后处理 $...$ 与 $$...$$） */
+function renderKatexBlocks(container){
+  if(!state.katex || typeof renderMathInElement === 'undefined') return;
+  try{
+    renderMathInElement(container, {
+      delimiters: [
+        { left:'$$', right:'$$', display:true },
+        { left:'\\[', right:'\\]', display:true },
+        { left:'$', right:'$', display:false },
+        { left:'\\(', right:'\\)', display:false }
+      ],
+      throwOnError:false,
+      ignoredClasses:['code-wrap','code-lines','trans-target','mermaid-block','user-hl']
+    });
+  }catch(e){}
+}
+
+/* 外部链接域名提示 */
+function applyExtDomainHints(container){
+  if(!state.extDomain) return;
+  container.querySelectorAll('a[target="_blank"]').forEach(a => {
+    if(a.closest('.release-assets')) return;
+    if(a.dataset.ext) return;
+    try{
+      const u = new URL(a.href);
+      if(/^(github\.com|raw\.githubusercontent\.com|api\.github\.com)$/i.test(u.hostname)) return;
+      a.dataset.ext = u.hostname;
+    }catch(e){}
+  });
+}
+
+/* 图片画廊 */
+const gallery = { list:[], idx:0 };
+function setupImageLightbox(container){
+  container.querySelectorAll('img').forEach(img => {
+    if(img.dataset.lbBound) return;
+    img.dataset.lbBound = '1';
+    img.addEventListener('click', (e) => {
+      e.preventDefault();
+      const imgs = Array.from(container.querySelectorAll('img'));
+      gallery.list = imgs.map(x => ({ src: x.src, alt: x.alt || '' }));
+      gallery.idx = imgs.indexOf(img);
+      openLightbox();
+    });
+  });
+}
+function openLightbox(){
+  if(!gallery.list.length) return;
+  const item = gallery.list[gallery.idx];
+  if(!item) return;
+  $('#lbImg').src = item.src;
+  $('#lbCaption').textContent = item.alt || (gallery.idx+1) + ' / ' + gallery.list.length;
+  $('#imgLightbox').hidden = false;
+}
+function closeLightbox(){ $('#imgLightbox').hidden = true; }
+function lbPrev(){ if(gallery.idx > 0){ gallery.idx--; openLightbox(); } }
+function lbNext(){ if(gallery.idx < gallery.list.length-1){ gallery.idx++; openLightbox(); } }
+
+/* 应用本地高亮 */
+function applyCurrentHighlights(container){
+  if(!state.current || state.current.type !== 'file') return;
+  applyHighlights(container);
 }
 
 function postProcess(container, baseDir, currentPath){
@@ -3190,7 +4000,25 @@ function postProcess(container, baseDir, currentPath){
       });
     });
     wrap.appendChild(btn);
+
+    /* 行号 + 折叠 */
+    enhanceCodeBlock(pre, wrap);
   });
+
+  /* 图片画廊 */
+  setupImageLightbox(container);
+
+  /* KaTeX */
+  renderKatexBlocks(container);
+
+  /* Mermaid（异步） */
+  renderMermaidBlocks(container);
+
+  /* 本地高亮 */
+  applyCurrentHighlights(container);
+
+  /* 外部链接域名 */
+  applyExtDomainHints(container);
 }
 
 function renderPlainFile(text, path){
@@ -3219,6 +4047,7 @@ function renderPlainFile(text, path){
     </p>
   `;
   const wrap = body.querySelector('.code-wrap');
+  const pre = wrap.querySelector('pre');
   const btn = document.createElement('button');
   btn.type = 'button';
   btn.className = 'copy-btn';
@@ -3234,6 +4063,7 @@ function renderPlainFile(text, path){
     });
   });
   wrap.appendChild(btn);
+  enhanceCodeBlock(pre, wrap);
 }
 
 /* =========================================================
@@ -3398,11 +4228,14 @@ function renderFlatItem(p){
   const fav = state.bookmarks.has(p);
   const icon = isMarkdown(p) ? ICON.md : ICON.file;
   const size = state.fileSizeMap[p];
+  const tags = (state.bookmarkTags[p] || []).slice(0, 3);
+  const tagHtml = tags.length ? `<span class="li-tags">${tags.map(t => `<span class="li-tag">${escapeHtml(t)}</span>`).join('')}</span>` : '';
   return `<div class="list-item${active ? ' active' : ''}" data-type="file" data-path="${escapeAttr(p)}" role="option" aria-selected="${active?'true':'false'}" tabindex="0">
     <span class="li-icon">${icon}</span>
     <span class="li-content">
       <span class="li-name">${escapeHtml(name)}</span>
       <span class="li-dir">${escapeHtml(dir)}${dir && size ? ' · ' : ''}${size ? formatSize(size) : ''}</span>
+      ${tagHtml}
     </span>
     <span class="li-actions">
       <button type="button" class="li-btn li-star${fav ? ' on' : ''}" data-star="${escapeAttr(p)}" title="${fav ? '取消收藏' : '收藏'}" aria-label="收藏">${ICON.star}</button>
@@ -3584,6 +4417,29 @@ function renderViewerTabs(){
 }
 
 /* =========================================================
+   阅读位置记忆
+   ========================================================= */
+function scrollKey(path){
+  return `${state.owner}/${state.repo}/${state.branch}/${path}`;
+}
+function saveScroll(path, top){
+  if(!state.scrollMemory) return;
+  const d = lsGet(LS.SCROLL, {});
+  d[scrollKey(path)] = top;
+  const keys = Object.keys(d);
+  if(keys.length > 300){
+    /* 简单裁剪：保留最近 300 条 */
+    for(let i = 0; i < keys.length - 300; i++) delete d[keys[i]];
+  }
+  lsSet(LS.SCROLL, d);
+}
+function getScroll(path){
+  if(!state.scrollMemory) return 0;
+  const d = lsGet(LS.SCROLL, {});
+  return d[scrollKey(path)] || 0;
+}
+
+/* =========================================================
    查看器
    ========================================================= */
 function viewerPlaceholder(){
@@ -3592,7 +4448,7 @@ function viewerPlaceholder(){
     <div class="placeholder">
       <div class="ph-icon">📄</div>
       <div class="ph-title">开始浏览</div>
-      <div class="ph-text">在上方输入 GitHub 仓库地址（或点击「提取」从剪贴板识别），加载后会自动打开仓库根目录的 README 文件。</div>
+      <div class="ph-text">在上方输入 GitHub 仓库地址或 GitHub Pages 链接（例如 https://username.github.io/repo），加载后会自动打开仓库根目录的 README 文件。</div>
     </div>`;
   $('#tocPanel').hidden = true;
   resetReadProgress();
@@ -3642,10 +4498,13 @@ function bindScroll(){
   const body = $('#mdBody');
   if(body._bound) return;
   body._bound = true;
-  body.addEventListener('scroll', () => {
+  body.addEventListener('scroll', debounce(() => {
     updateReadProgress();
     updateTOCActive();
-  }, { passive:true });
+    if(state.current && state.current.type === 'file'){
+      saveScroll(state.current.path, body.scrollTop);
+    }
+  }, 250), { passive:true });
 }
 function updateHash(){
   if(!state.owner) return;
@@ -3654,6 +4513,26 @@ function updateHash(){
   if(c && c.type === 'file') hash += c.path;
   else if(c && c.type === 'release') hash += `releases/${state.releases[c.index]?.tag_name || ''}`;
   history.replaceState(null, '', hash);
+}
+
+/* 阅读时间 / 字数估算 */
+function estimateReading(text){
+  const cjk = (text.match(/[\u4e00-\u9fa5]/g) || []).length;
+  const words = (text.match(/[A-Za-z0-9]+/g) || []).length;
+  const total = cjk + words;
+  const minutes = Math.max(1, Math.round(total / 300));
+  return { total, minutes, cjk, words };
+}
+
+/* 文档导航（按 docs/ 或当前目录排序） */
+function findDocNeighbors(path){
+  const dir = path.includes('/') ? path.slice(0, path.lastIndexOf('/')) : '';
+  const list = state.mdFiles.filter(p => {
+    const d = p.includes('/') ? p.slice(0, p.lastIndexOf('/')) : '';
+    return d === dir;
+  }).sort();
+  const idx = list.indexOf(path);
+  return { prev: idx > 0 ? list[idx-1] : null, next: idx >= 0 && idx < list.length-1 ? list[idx+1] : null, list };
 }
 
 async function openFile(path, btn, isTabSwitch){
@@ -3696,27 +4575,47 @@ async function openFile(path, btn, isTabSwitch){
 
     $('#viewerHead').hidden = false;
     $('#viewerTitle').textContent = path;
-    $('#viewerMeta').innerHTML =
+
+    const est = estimateReading(text);
+    let metaHtml =
       `<span>${escapeHtml(state.owner + '/' + state.repo)}</span>` +
       `<span class="sep">·</span>` +
       `<span>分支 ${escapeHtml(state.branch)}</span>` +
       `<span class="sep">·</span>` +
-      `<span>${formatSize(new Blob([text]).size)}</span>`;
+      `<span>${formatSize(new Blob([text]).size)}</span>` +
+      `<span class="sep">·</span>` +
+      `<span>约 ${est.minutes} 分钟</span>` +
+      `<span class="sep">·</span>` +
+      `<span>${est.total} 字</span>`;
+    $('#viewerMeta').innerHTML = metaHtml;
 
     const inBm = state.bookmarks.has(path);
+    const neighbors = findDocNeighbors(path);
     $('#viewerActions').innerHTML = `
       <button type="button" class="action${inBm ? ' on' : ''}" id="bmBtn">${inBm ? '★ 已收藏' : '☆ 收藏'}</button>
+      ${inBm ? '<button type="button" class="action" id="bmTagBtn">🏷 标签</button>' : ''}
+      ${neighbors.prev ? '<button type="button" class="action" id="docPrevBtn" title="上一篇">‹ 上一篇</button>' : ''}
+      ${neighbors.next ? '<button type="button" class="action" id="docNextBtn" title="下一篇">下一篇 ›</button>' : ''}
       ${isMd ? '<button type="button" class="action" id="srcBtn" title="切换原始 / 渲染">&lt;/&gt;</button>' : ''}
       ${isMd ? '<button type="button" class="action" id="translateBtn" title="翻译当前文档">' + ICON.trans + ' 翻译</button>' : ''}
+      <button type="button" class="action" id="hlBtn" title="为选中文字添加高亮/批注">${ICON.hl} 高亮</button>
       <button type="button" class="action" id="copyUrlBtn" title="复制分享链接">${ICON.link} 链接</button>
       <button type="button" class="action" id="qrBtn" title="生成二维码">📱</button>
       <button type="button" class="action" id="dlBtn" title="下载">${ICON.download} 下载</button>
     `;
     $('#bmBtn').addEventListener('click', () => toggleBookmark(path));
+    const bmTagBtn = $('#bmTagBtn');
+    if(bmTagBtn) bmTagBtn.addEventListener('click', () => openBmTagModal(path));
+    const docPrevBtn = $('#docPrevBtn');
+    if(docPrevBtn) docPrevBtn.addEventListener('click', () => openFile(neighbors.prev, null));
+    const docNextBtn = $('#docNextBtn');
+    if(docNextBtn) docNextBtn.addEventListener('click', () => openFile(neighbors.next, null));
     const srcBtn = $('#srcBtn');
     if(srcBtn) srcBtn.addEventListener('click', () => toggleSourceMode());
     const transBtn = $('#translateBtn');
     if(transBtn) transBtn.addEventListener('click', toggleDocumentTranslation);
+    const hlBtn = $('#hlBtn');
+    if(hlBtn) hlBtn.addEventListener('click', () => openAnnotationFromSelection());
     $('#copyUrlBtn').addEventListener('click', () => {
       const url = `${location.origin}${location.pathname}#${state.owner}/${state.repo}/${state.branch}/${path}`;
       copyText(url).then(ok => toast(ok ? '链接已复制' : '复制失败'));
@@ -3745,7 +4644,13 @@ async function openFile(path, btn, isTabSwitch){
         </div>`;
       $('#tocPanel').hidden = true;
     }
-    body.scrollTop = 0;
+    /* 恢复阅读位置 */
+    const st = getScroll(path);
+    if(st > 0){
+      requestAnimationFrame(() => { body.scrollTop = st; });
+    } else {
+      body.scrollTop = 0;
+    }
     resetReadProgress();
     scrollActiveIntoView();
     updateTranslateBtn();
@@ -3835,22 +4740,60 @@ function openRelease(index, btn, isTabSwitch){
   updateTranslateBtn();
 }
 
+/* 可折叠 TOC */
 function buildTOC(){
   const body = $('#mdBody');
   const toc = $('#tocPanel');
   const tocList = $('#tocList');
-  const heads = body.querySelectorAll('h1,h2,h3,h4,h5,h6');
+  const heads = Array.from(body.querySelectorAll('h1,h2,h3,h4,h5,h6'));
   if(!heads.length){ toc.hidden = true; return; }
   toc.hidden = false;
-  tocList.innerHTML = Array.from(heads).map(h => {
-    const lv = h.tagName.toLowerCase();
-    const txt = h.textContent.replace('🔗','').trim() || '(空)';
-    return `<li><button type="button" class="toc-link lv-${lv}" data-target="${escapeAttr(h.id)}" title="${escapeAttr(txt)}">${escapeHtml(txt)}</button></li>`;
-  }).join('');
+
+  /* 按层级构建树 */
+  const root = { children:[], level:0 };
+  const stack = [root];
+  heads.forEach(h => {
+    const lv = Number(h.tagName.slice(1));
+    const node = { id:h.id, text:h.textContent.replace('🔗','').trim() || '(空)', level:lv, children:[] };
+    while(stack.length && stack[stack.length-1].level >= lv) stack.pop();
+    const parent = stack[stack.length-1] || root;
+    parent.children.push(node);
+    stack.push(node);
+  });
+
+  const collapseState = state.tocCollapsed;
+
+  function renderNode(node){
+    const hasChild = node.children.length > 0;
+    const collapsed = collapseState[node.id] === true;
+    const row = `
+      <div class="toc-row">
+        <button class="toc-toggle" data-toc-id="${escapeAttr(node.id)}" aria-label="折叠" style="${hasChild ? '' : 'visibility:hidden'}">
+          <svg viewBox="0 0 16 16" fill="currentColor"><path d="M6.22 3.22a.75.75 0 0 1 1.06 0l4.25 4.25a.75.75 0 0 1 0 1.06l-4.25 4.25a.75.75 0 0 1-1.06-1.06L9.94 8 6.22 4.28a.75.75 0 0 1 0-1.06Z"/></svg>
+        </button>
+        <button type="button" class="toc-link lv-h${node.level}" data-target="${escapeAttr(node.id)}" title="${escapeAttr(node.text)}">${escapeHtml(node.text)}</button>
+      </div>`;
+    const childHtml = hasChild ? `<ul class="toc-children">${node.children.map(renderNode).join('')}</ul>` : '';
+    return `<li class="toc-node${collapsed ? ' collapsed' : ''}" data-node-id="${escapeAttr(node.id)}">${row}${childHtml}</li>`;
+  }
+
+  tocList.innerHTML = root.children.map(renderNode).join('');
+
   tocList.querySelectorAll('.toc-link').forEach(a => {
     a.addEventListener('click', () => {
       const t = document.getElementById(a.dataset.target);
       if(t) t.scrollIntoView({ behavior:'smooth', block:'start' });
+    });
+  });
+  tocList.querySelectorAll('.toc-toggle').forEach(b => {
+    b.addEventListener('click', (e) => {
+      e.stopPropagation();
+      const id = b.dataset.tocId;
+      const node = tocList.querySelector(`.toc-node[data-node-id="${CSS.escape(id)}"]`);
+      if(!node) return;
+      node.classList.toggle('collapsed');
+      state.tocCollapsed[id] = node.classList.contains('collapsed');
+      lsSet(LS.TOC_COLLAPSE, state.tocCollapsed);
     });
   });
   updateTOCActive();
@@ -3953,6 +4896,28 @@ function updateBmCount(){
   if(el) el.textContent = state.bookmarks.size;
 }
 
+/* 收藏标签 */
+function openBmTagModal(path){
+  if(!state.bookmarks.has(path)){ toast('请先收藏该文件'); return; }
+  const picker = $('#bmTagPicker');
+  const cur = new Set(state.bookmarkTags[path] || []);
+  const allTags = new Set();
+  Object.values(state.bookmarkTags).forEach(arr => arr.forEach(t => allTags.add(t)));
+  picker.innerHTML = Array.from(allTags).map(t =>
+    `<button type="button" data-tag="${escapeAttr(t)}" class="${cur.has(t) ? 'on' : ''}">${escapeHtml(t)}</button>`
+  ).join('') || '<span class="muted" style="font-size:11.5px;">还没有标签，先添加一个吧</span>';
+  picker.querySelectorAll('button[data-tag]').forEach(b => {
+    b.addEventListener('click', () => {
+      const t = b.dataset.tag;
+      if(cur.has(t)) cur.delete(t); else cur.add(t);
+      b.classList.toggle('on');
+    });
+  });
+  $('#bmTagNew').value = '';
+  $('#bmTagModal').dataset.path = path;
+  showModal('#bmTagModal');
+}
+
 /* =========================================================
    ZIP 下载
    ========================================================= */
@@ -4050,6 +5015,7 @@ function buildCommands(){
   CMD_ITEMS.length = 0;
   CMD_ITEMS.push({ type:'cmd', title:'切换主题（自动 / 浅色 / 深色）', icon:THEME_ICONS[getThemePref()], action:() => cycleTheme() });
   CMD_ITEMS.push({ type:'cmd', title:'切换侧边栏显示', icon:'📐', action:() => toggleSidebar() });
+  CMD_ITEMS.push({ type:'cmd', title:'专注模式', icon:'🔎', action:() => toggleFocus() });
   CMD_ITEMS.push({ type:'cmd', title:'打开设置', icon:'⚙️', action:() => openSettings() });
   CMD_ITEMS.push({ type:'cmd', title:'翻译设置', icon:'🌐', action:() => { openSettings(); switchSettingsTab('translation'); } });
   CMD_ITEMS.push({ type:'cmd', title:'打开全文搜索', icon:'🔍', action:() => openSearch() });
@@ -4057,6 +5023,10 @@ function buildCommands(){
   CMD_ITEMS.push({ type:'cmd', title:'对比两个 Release', icon:'🔄', action:() => openCompare() });
   CMD_ITEMS.push({ type:'cmd', title:'查看最近加载的仓库', icon:'🕘', action:() => openRecent() });
   CMD_ITEMS.push({ type:'cmd', title:'切换代理', icon:'🌐', action:() => { openSettings(); switchSettingsTab('proxy'); } });
+  CMD_ITEMS.push({ type:'cmd', title:'自动测速并切换代理', icon:'⚡', action:() => autoPickProxy() });
+  CMD_ITEMS.push({ type:'cmd', title:'生成分享卡片', icon:'🖼', action:() => openShareCard() });
+  CMD_ITEMS.push({ type:'cmd', title:'快捷键帮助', icon:'⌨️', action:() => openShortcuts() });
+  CMD_ITEMS.push({ type:'cmd', title:'速率限制面板', icon:'📊', action:() => toggleRatePanel() });
   CMD_ITEMS.push({ type:'cmd', title:'复制当前页面的分享链接', icon:'🔗', action:() => {
     if(!state.owner) return toast('请先加载仓库');
     copyText(location.href).then(ok => toast(ok ? '已复制' : '复制失败'));
@@ -4192,6 +5162,90 @@ function runSearch(){
 }
 
 /* =========================================================
+   文档内查找
+   ========================================================= */
+let docFindState = { matches: [], idx: -1, query: '' };
+function openDocFind(){
+  if(!state.current){ toast('请先打开一个文档'); return; }
+  $('#docFindBar').hidden = false;
+  const v = $('#docFindInput').value;
+  if(v) runDocFind(v);
+  setTimeout(() => { $('#docFindInput').focus(); $('#docFindInput').select(); }, 30);
+}
+function closeDocFind(){
+  $('#docFindBar').hidden = true;
+  clearDocHighlights();
+  docFindState = { matches: [], idx: -1, query: '' };
+}
+function clearDocHighlights(){
+  const body = $('#mdBody');
+  body.querySelectorAll('mark.doc-hit').forEach(m => {
+    const parent = m.parentNode;
+    if(!parent) return;
+    while(m.firstChild) parent.insertBefore(m.firstChild, m);
+    parent.removeChild(m);
+    parent.normalize();
+  });
+}
+function runDocFind(query){
+  clearDocHighlights();
+  docFindState = { matches: [], idx: -1, query };
+  if(!query) { $('#docFindCount').textContent = '0/0'; return; }
+  const body = $('#mdBody');
+  const walker = document.createTreeWalker(body, NodeFilter.SHOW_TEXT, {
+    acceptNode(node){
+      const p = node.parentElement;
+      if(!p) return NodeFilter.FILTER_REJECT;
+      if(p.closest('pre, code, script, style, .trans-target, .user-hl, .mermaid-block')) return NodeFilter.FILTER_REJECT;
+      return NodeFilter.FILTER_ACCEPT;
+    }
+  });
+  const nodes = [];
+  let n;
+  while((n = walker.nextNode())) nodes.push(n);
+  const lower = query.toLowerCase();
+  for(const node of nodes){
+    const text = node.nodeValue;
+    const lowerText = text.toLowerCase();
+    let from = 0;
+    while(true){
+      const idx = lowerText.indexOf(lower, from);
+      if(idx === -1) break;
+      const range = document.createRange();
+      range.setStart(node, idx);
+      range.setEnd(node, idx + query.length);
+      const mark = document.createElement('mark');
+      mark.className = 'doc-hit';
+      try{ range.surroundContents(mark); }catch(e){ break; }
+      docFindState.matches.push(mark);
+      from = idx + query.length;
+      break; /* 每个文本节点只高亮第一个匹配，简化 */
+    }
+  }
+  if(docFindState.matches.length){
+    docFindState.idx = 0;
+    highlightCurrentDocMatch();
+  }
+  $('#docFindCount').textContent = `${docFindState.matches.length ? docFindState.idx+1 : 0}/${docFindState.matches.length}`;
+}
+function highlightCurrentDocMatch(){
+  docFindState.matches.forEach((m, i) => m.classList.toggle('current', i === docFindState.idx));
+  const cur = docFindState.matches[docFindState.idx];
+  if(cur) cur.scrollIntoView({ behavior:'smooth', block:'center' });
+  $('#docFindCount').textContent = `${docFindState.idx+1}/${docFindState.matches.length}`;
+}
+function docFindNext(){
+  if(!docFindState.matches.length) return;
+  docFindState.idx = (docFindState.idx + 1) % docFindState.matches.length;
+  highlightCurrentDocMatch();
+}
+function docFindPrev(){
+  if(!docFindState.matches.length) return;
+  docFindState.idx = (docFindState.idx - 1 + docFindState.matches.length) % docFindState.matches.length;
+  highlightCurrentDocMatch();
+}
+
+/* =========================================================
    Release 对比
    ========================================================= */
 function openCompare(){
@@ -4247,6 +5301,198 @@ function openRecent(){
 }
 
 /* =========================================================
+   分享卡片
+   ========================================================= */
+function openShareCard(){
+  if(!state.current){ toast('请先打开一个文档'); return; }
+  const title = state.current.type === 'release' ? (state.releases[state.current.index]?.tag_name || 'Release') : (state.current.path.split('/').pop());
+  const repo = state.owner + '/' + state.repo;
+  const url = `${location.origin}${location.pathname}#${state.owner}/${state.repo}/${state.branch}/${state.current.path || ''}`;
+  const canvas = $('#shareCardCanvas');
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  const dark = document.documentElement.getAttribute('data-theme') === 'dark';
+  /* 背景 */
+  const grad = ctx.createLinearGradient(0, 0, W, H);
+  if(dark){
+    grad.addColorStop(0, '#0d1117'); grad.addColorStop(1, '#161b22');
+  } else {
+    grad.addColorStop(0, '#ffffff'); grad.addColorStop(1, '#f0f4f9');
+  }
+  ctx.fillStyle = grad; ctx.fillRect(0, 0, W, H);
+  /* 装饰圆 */
+  ctx.fillStyle = 'rgba(47,129,247,.12)';
+  ctx.beginPath(); ctx.arc(W - 120, 80, 200, 0, Math.PI*2); ctx.fill();
+  ctx.fillStyle = 'rgba(130,80,223,.10)';
+  ctx.beginPath(); ctx.arc(120, H - 60, 160, 0, Math.PI*2); ctx.fill();
+  /* 图标 */
+  ctx.fillStyle = '#2f81f7';
+  ctx.beginPath(); ctx.roundRect ? ctx.roundRect(60, 60, 80, 80, 18) : ctx.rect(60, 60, 80, 80); ctx.fill();
+  ctx.fillStyle = '#fff'; ctx.font = 'bold 44px -apple-system, "Segoe UI", sans-serif';
+  ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText('G', 100, 102);
+  /* 文本 */
+  ctx.textAlign = 'left'; ctx.textBaseline = 'alphabetic';
+  ctx.fillStyle = dark ? '#e6edf3' : '#1f2328';
+  ctx.font = '600 44px -apple-system, "Segoe UI", "PingFang SC", sans-serif';
+  wrapText(ctx, title, 60, 220, W - 120, 54, 2);
+  ctx.fillStyle = dark ? '#8b949e' : '#656d76';
+  ctx.font = '26px -apple-system, "Segoe UI", "PingFang SC", sans-serif';
+  ctx.fillText(repo, 60, 340);
+  ctx.font = '22px -apple-system, "Segoe UI", "PingFang SC", sans-serif';
+  ctx.fillText('GitHub 仓库浏览器 · ' + new Date().toLocaleDateString('zh-CN'), 60, H - 60);
+  /* 域名 */
+  ctx.fillStyle = '#2f81f7';
+  ctx.font = '20px -apple-system, "Segoe UI", sans-serif';
+  ctx.fillText(location.hostname, W - 60 - ctx.measureText(location.hostname).width, H - 60);
+  showModal('#shareCardModal');
+  /* 绑定按钮 */
+  $('#shareCardCopy').onclick = () => copyText(url).then(ok => toast(ok ? '链接已复制' : '复制失败'));
+  $('#shareCardDownload').onclick = () => {
+    canvas.toBlob(blob => {
+      if(blob) downloadBlob('gh-share-card.png', blob);
+    }, 'image/png');
+  };
+}
+function wrapText(ctx, text, x, y, maxWidth, lineHeight, maxLines){
+  const words = String(text).split('');
+  let line = '', lines = [];
+  for(const ch of words){
+    const test = line + ch;
+    if(ctx.measureText(test).width > maxWidth && line){
+      lines.push(line); line = ch;
+      if(lines.length >= maxLines){ line = line.slice(0, 20) + '…'; break; }
+    } else {
+      line = test;
+    }
+  }
+  if(line) lines.push(line);
+  lines.forEach((l, i) => ctx.fillText(l, x, y + i * lineHeight));
+}
+
+/* =========================================================
+   快捷键帮助
+   ========================================================= */
+const SHORTCUTS = [
+  ['Ctrl / ⌘ + K', '命令面板'],
+  ['Ctrl / ⌘ + F', '文档内查找'],
+  ['Ctrl / ⌘ + Shift + F', '全局全文搜索'],
+  ['F', '专注模式'],
+  ['?', '快捷键帮助'],
+  ['/ ', '聚焦文件筛选'],
+  ['j / k', '上下切换文件'],
+  ['Enter / 空格', '打开选中文件'],
+  ['Esc', '关闭弹窗 / 退出专注'],
+  ['g h', '回到首页占位'],
+  ['Ctrl / ⌘ + 点击图片', '打开灯箱'],
+  ['点击代码行号', '复制该行'],
+  ['Shift + Enter', '文档查找上一个'],
+  ['Enter', '文档查找下一个']
+];
+function openShortcuts(){
+  $('#kbdList').innerHTML = SHORTCUTS.map(([k, d]) => `
+    <div class="kbd-row">
+      <span>${escapeHtml(d)}</span>
+      <span class="kbd-keys">${k.split(' + ').map(x => `<kbd>${escapeHtml(x)}</kbd>`).join('+')}</span>
+    </div>`).join('');
+  showModal('#shortcutsModal');
+}
+
+/* =========================================================
+   速率面板
+   ========================================================= */
+function toggleRatePanel(){
+  const el = $('#ratePanel');
+  if(!el.hidden){ el.hidden = true; return; }
+  renderRatePanel();
+  el.hidden = false;
+}
+function renderRatePanel(){
+  const el = $('#ratePanel');
+  const r = state.rateInfo;
+  if(r.limit == null){
+    el.innerHTML = `<div style="font-size:12px;color:var(--muted);">尚未获取速率信息，加载仓库后会显示。</div>`;
+    return;
+  }
+  const remain = r.remaining ?? 0;
+  const pct = r.limit ? Math.round(remain / r.limit * 100) : 0;
+  const resetTxt = r.reset ? new Date(r.reset * 1000).toLocaleTimeString('zh-CN') : '—';
+  let color = 'var(--ok-fg)';
+  if(pct < 20) color = 'var(--err-fg)';
+  else if(pct < 50) color = 'var(--warn-fg)';
+  el.innerHTML = `
+    <div style="font-weight:600;font-size:12.5px;margin-bottom:8px;display:flex;align-items:center;justify-content:space-between;">
+      <span>GitHub API 速率</span>
+      <button style="border:none;background:transparent;color:var(--muted);cursor:pointer;font-size:14px;" id="rateClose">✕</button>
+    </div>
+    <div class="rate-row"><span class="k">剩余</span><span class="v" style="color:${color}">${remain} / ${r.limit}</span></div>
+    <div class="rate-bar"><i style="width:${pct}%;background:${color}"></i></div>
+    <div class="rate-row" style="margin-top:6px;"><span class="k">重置</span><span class="v">${resetTxt}</span></div>
+    <div style="font-size:10.5px;color:var(--muted-2);margin-top:8px;line-height:1.5;">
+      ${state.token ? '已使用 Token，限额 5000/小时' : '未使用 Token，限额 60/小时'}
+    </div>`;
+  $('#rateClose').onclick = () => { el.hidden = true; };
+}
+
+/* =========================================================
+   选中文字浮动按钮 / 批注
+   ========================================================= */
+let selPopVisible = false;
+let pendingSel = null;
+function handleSelection(){
+  const sel = window.getSelection();
+  if(!sel || sel.rangeCount === 0 || sel.isCollapsed){
+    hideSelPop(); return;
+  }
+  const text = sel.toString().trim();
+  if(!text || text.length < 2 || text.length > 300){ hideSelPop(); return; }
+  const body = $('#mdBody');
+  const range = sel.getRangeAt(0);
+  if(!body.contains(range.commonAncestorContainer)){ hideSelPop(); return; }
+  pendingSel = text;
+  const rect = range.getBoundingClientRect();
+  const pop = $('#selPop');
+  pop.innerHTML = `
+    <button data-act="quote">🔗 引用链接</button>
+    <button data-act="hl">🖍 高亮</button>
+    <button data-act="copy">📋 复制</button>`;
+  pop.hidden = false;
+  const top = Math.max(10, rect.top - 40);
+  const left = Math.max(10, Math.min(window.innerWidth - 240, rect.left + rect.width/2 - 90));
+  pop.style.top = top + 'px';
+  pop.style.left = left + 'px';
+  selPopVisible = true;
+}
+function hideSelPop(){
+  const pop = $('#selPop');
+  if(pop && !pop.hidden){ pop.hidden = true; }
+  selPopVisible = false;
+  pendingSel = null;
+}
+function openAnnotationFromSelection(){
+  if(!pendingSel){ toast('请先在正文中选中文字'); return; }
+  $('#annotText').textContent = pendingSel;
+  $('#annotNote').value = '';
+  showModal('#annotModal');
+}
+function saveAnnotation(){
+  if(!state.current || state.current.type !== 'file'){ hideModal('#annotModal'); return; }
+  const text = $('#annotText').textContent;
+  const note = $('#annotNote').value.trim();
+  if(!text){ hideModal('#annotModal'); return; }
+  const list = getCurrentHighlights();
+  list.push({ text, note, ts: Date.now() });
+  saveHighlights();
+  hideModal('#annotModal');
+  /* 重新渲染应用高亮 */
+  const scrollTop = $('#mdBody').scrollTop;
+  rerenderCurrentDoc();
+  $('#mdBody').scrollTop = scrollTop;
+  toast('已添加高亮' + (note ? '与批注' : ''));
+  hideSelPop();
+}
+
+/* =========================================================
    翻译设置 UI
    ========================================================= */
 function renderEngineGroups(){
@@ -4283,7 +5529,6 @@ function renderEngineGroups(){
     el.addEventListener('keydown', e => { if(e.key === 'Enter' || e.key === ' '){ e.preventDefault(); activate(); } });
   });
 }
-
 function renderEngineConfigFields(){
   const engine = ENGINES[state.translation.engine];
   const box = $('#engineConfigFields');
@@ -4333,7 +5578,6 @@ function renderEngineConfigFields(){
     el.addEventListener('change', save);
   });
 }
-
 function renderTransLangSelects(){
   const engine = ENGINES[state.translation.engine] || ENGINES.off;
   const langs = engine.langs || ['auto','zh-CN','en'];
@@ -4348,7 +5592,6 @@ function renderTransLangSelects(){
     ? state.translation.targetLang
     : (tLangs.includes('zh-CN') ? 'zh-CN' : (tLangs.includes('zh') ? 'zh' : (tLangs[0] || '')));
 }
-
 function updateTransProxyRows(){
   const mode = state.translation.proxyMode;
   const corsRow = $('#transCorsProxyRow');
@@ -4368,9 +5611,18 @@ function openSettings(){
   renderTransLangSelects();
   updateBmCount();
   const rc = $('#recentCount'); if(rc) rc.textContent = state.recent.length;
+  const hc = $('#hlCount'); if(hc) hc.textContent = hlCount();
+  const oc = $('#offlineCount'); if(oc) oc.textContent = offlineCount();
   $('#stableOnlyToggle').checked = state.releasesStableOnly;
   $('#tocToggle').checked = state.tocVisible;
   $('#autoReadme').checked = state.autoReadme;
+  $('#extDomainToggle').checked = state.extDomain;
+  $('#scrollMemoryToggle').checked = state.scrollMemory;
+  $('#mermaidToggle').checked = state.mermaid;
+  $('#katexToggle').checked = state.katex;
+  $('#lineNumbersToggle').checked = state.lineNumbers;
+  $('#codeFoldThreshold').value = String(state.foldThreshold);
+  $('#offlineCacheToggle').checked = state.offlineCache;
   $$('#transModeSeg button').forEach(b => b.classList.toggle('active', b.dataset.mode === state.translation.displayMode));
   $$('#transProxySeg button').forEach(b => b.classList.toggle('active', b.dataset.tproxy === state.translation.proxyMode));
   $('#transLocalUrl').value = state.translation.localUrl;
@@ -4397,6 +5649,7 @@ async function verifyToken(token){
   if(!token) return null;
   try{
     const res = await fetch('https://api.github.com/user', { headers: { 'Authorization':'Bearer ' + token } });
+    updateRateInfo(res);
     if(!res.ok) return null;
     const data = await res.json();
     return { login: data.login, scopes: res.headers.get('x-oauth-scopes') || '' };
@@ -4418,12 +5671,13 @@ const RESERVED_OWNERS = new Set([
   'open-source','education','careers','team','non-profit','government','home','watching','stars',
   'discussions','codespaces','copilot','account','billing','personal-access-tokens','tokens',
   'sessions','keys','packages','projects','gist','gists','raw','assets','avatars','uploads',
-  'user-attachments','repositories','following','followers','starred','sponsoring'
+  'user-attachments','repositories','following','followers','starred','sponsoring',
+  'www','api','docs','help','status','pages'
 ]);
 function extractRepoLinks(text){
   if(!text) return [];
   const found = [], seen = new Set();
-  const push = (owner, repo) => {
+  const push = (owner, repo, viaPages) => {
     if(!owner || !repo) return;
     repo = String(repo).replace(/\.git$/i,'').replace(/[.,;:)\]}>'"]+$/,'');
     if(!owner || !repo) return;
@@ -4434,20 +5688,38 @@ function extractRepoLinks(text){
     const key = (owner + '/' + repo).toLowerCase();
     if(seen.has(key)) return;
     seen.add(key);
-    found.push({ owner, repo, full: `https://github.com/${owner}/${repo}`, slug: owner + '/' + repo });
+    found.push({ owner, repo, full: `https://github.com/${owner}/${repo}`, slug: owner + '/' + repo, viaPages: !!viaPages });
   };
   const httpRe = /(?:https?:\/\/)?(?:www\.)?github\.com\/([A-Za-z0-9](?:[A-Za-z0-9-]{0,38})?)\/([A-Za-z0-9_.-]+)/gi;
   let m;
-  while((m = httpRe.exec(text)) !== null) push(m[1], m[2]);
+  while((m = httpRe.exec(text)) !== null) push(m[1], m[2], false);
   const sshRe = /git@github\.com:([A-Za-z0-9._-]+)\/([A-Za-z0-9._-]+)/gi;
-  while((m = sshRe.exec(text)) !== null) push(m[1], m[2]);
+  while((m = sshRe.exec(text)) !== null) push(m[1], m[2], false);
+  const ioRe = /(?:https?:\/\/)?([A-Za-z0-9](?:[A-Za-z0-9-]{0,38})?)\.github\.io(?:\/([A-Za-z0-9_.\-]+))?/gi;
+  while((m = ioRe.exec(text)) !== null){
+    const owner = m[1];
+    const seg = (m[2] || '').replace(/[?#].*$/, '');
+    if(!seg || /\.(?:html?|php|aspx?|jsp|js|css|json|xml|txt|png|jpe?g|gif|svg|ico|webp|pdf|zip|md)$/i.test(seg)){
+      push(owner, owner + '.github.io', true);
+    } else {
+      push(owner, seg.replace(/\.git$/i,''), true);
+    }
+  }
   return found;
 }
 function renderCandidates(links){
   const box = $('#candidates');
-  if(!links || links.length <= 1){ box.innerHTML = ''; return; }
+  if(!links || links.length <= 1){
+    if(links && links.length === 1 && links[0].viaPages){
+      box.innerHTML = `<span class="cand-label">GitHub Pages 已转换：</span>` +
+        `<button type="button" class="chip pages" data-url="${escapeAttr(links[0].full)}" title="${escapeAttr(links[0].full)}">${escapeHtml(links[0].slug)}</button>`;
+    } else {
+      box.innerHTML = '';
+    }
+    return;
+  }
   box.innerHTML = '<span class="cand-label">检测到多个仓库，点击切换：</span>' +
-    links.map(l => `<button type="button" class="chip" data-url="${escapeAttr(l.full)}" title="${escapeAttr(l.full)}">${escapeHtml(l.slug)}</button>`).join('');
+    links.map(l => `<button type="button" class="chip${l.viaPages ? ' pages' : ''}" data-url="${escapeAttr(l.full)}" title="${escapeAttr(l.full)}${l.viaPages ? '（来自 GitHub Pages）' : ''}">${escapeHtml(l.slug)}${l.viaPages ? ' ⚡' : ''}</button>`).join('');
 }
 
 /* =========================================================
@@ -4457,6 +5729,10 @@ function parseRepoInput(input){
   if(!input) return null;
   let s = String(input).trim();
   if(!s) return null;
+
+  const pages = parseGitHubPagesUrl(s);
+  if(pages) return pages;
+
   const treeMatch = s.match(/^(?:https?:\/\/)?(?:www\.)?github\.com\/([^\/\s]+)\/([^\/\s]+)\/(?:tree|blob)\/([^\/\s]+)\/?(.*)$/i);
   if(treeMatch) return { owner: treeMatch[1], repo: treeMatch[2].replace(/\.git$/i,''), branch: treeMatch[3], path: treeMatch[4] || '' };
   s = s.replace(/^https?:\/\//i,'').replace(/\.git$/i,'').replace(/[\/#?]+$/,'');
@@ -4469,10 +5745,20 @@ function parseRepoInput(input){
 
 async function loadRepo(opts = {}){
   if(!opts.keepCandidates) $('#candidates').innerHTML = '';
-  const parsed = parseRepoInput($('#repoInput').value);
+  const rawInput = $('#repoInput').value;
+  const parsed = parseRepoInput(rawInput);
   if(!parsed){
-    setStatus('请输入有效的仓库地址，例如 https://github.com/microsoft/vscode 或 owner/repo', 'error');
+    setStatus('请输入有效的仓库地址，例如 https://github.com/microsoft/vscode、owner/repo 或 https://user.github.io/repo', 'error');
     return;
+  }
+
+  if(parsed.isPages){
+    const repoUrl = `https://github.com/${parsed.owner}/${parsed.repo}`;
+    $('#repoInput').value = repoUrl;
+    setStatus(`已识别 GitHub Pages 链接 → ${parsed.owner}/${parsed.repo}`, 'info');
+    if(!opts.keepCandidates){
+      $('#candidates').innerHTML = `<span class="cand-label">GitHub Pages 已转换：</span><button type="button" class="chip pages" data-url="${escapeAttr(repoUrl)}">${escapeHtml(parsed.owner + '/' + parsed.repo)}</button>`;
+    }
   }
 
   const prevOwner = state.owner, prevRepo = state.repo;
@@ -4591,6 +5877,8 @@ async function loadRepo(opts = {}){
     if(h && h.path && h.path !== initial && state.allFilesSet.has(h.path)){
       await openFile(h.path, null);
     }
+    /* 更新速率面板 */
+    if(!$('#ratePanel').hidden) renderRatePanel();
   }catch(err){
     progressDone();
     setStatus('加载失败：' + err.message, 'error');
@@ -4636,7 +5924,6 @@ function pickInitialFile(files){
   if(root.length) return root[0];
   return files[0];
 }
-
 function updateReleaseFilterBtn(){
   const b = $('#releaseFilterBtn');
   if(!b) return;
@@ -4652,6 +5939,9 @@ $('#loadBtn').addEventListener('click', () => loadRepo());
 $('#repoInput').addEventListener('keydown', e => { if(e.key === 'Enter'){ e.preventDefault(); loadRepo(); } });
 $('#fileFilter').addEventListener('input', debounce(renderList, 120));
 $('#sidebarToggleBtn').addEventListener('click', toggleSidebar);
+$('#focusBtn').addEventListener('click', toggleFocus);
+$('#focusExit').addEventListener('click', toggleFocus);
+$('#shareCardBtn').addEventListener('click', openShareCard);
 
 $('#pasteBtn').addEventListener('click', async () => {
   const btn = $('#pasteBtn');
@@ -4663,10 +5953,14 @@ $('#pasteBtn').addEventListener('click', async () => {
     const text = await navigator.clipboard.readText();
     if(!text || !text.trim()){ setStatus('剪贴板是空的。', 'error'); return; }
     const links = extractRepoLinks(text);
-    if(!links.length){ setStatus('剪贴板中没有识别到 GitHub 仓库链接。', 'error'); $('#candidates').innerHTML = ''; return; }
+    if(!links.length){ setStatus('剪贴板中没有识别到 GitHub 仓库或 GitHub Pages 链接。', 'error'); $('#candidates').innerHTML = ''; return; }
     renderCandidates(links);
     $('#repoInput').value = links[0].full;
-    setStatus(links.length === 1 ? `已提取：${links[0].full}，正在加载…` : `提取到 ${links.length} 个仓库，加载第一个`, 'ok');
+    setStatus(
+      (links[0].viaPages ? `已从 GitHub Pages 提取并转换：${links[0].slug}` : `已提取：${links[0].full}`) +
+      (links.length > 1 ? `（共 ${links.length} 个，加载第一个）` : '') + '，正在加载…',
+      'ok'
+    );
     await loadRepo({ keepCandidates:true });
   }catch(err){
     if(err && err.name === 'NotAllowedError') setStatus('读取剪贴板被拒绝。请允许剪贴板访问，或手动粘贴。', 'error');
@@ -4800,6 +6094,16 @@ $('#searchDeepBtn').addEventListener('click', async () => {
   runSearch();
 });
 
+/* 文档内查找 */
+$('#docFindInput').addEventListener('input', debounce(e => runDocFind(e.target.value), 150));
+$('#docFindInput').addEventListener('keydown', e => {
+  if(e.key === 'Enter'){ e.preventDefault(); e.shiftKey ? docFindPrev() : docFindNext(); }
+  else if(e.key === 'Escape'){ e.preventDefault(); closeDocFind(); }
+});
+$('#docFindNext').addEventListener('click', docFindNext);
+$('#docFindPrev').addEventListener('click', docFindPrev);
+$('#docFindClose').addEventListener('click', closeDocFind);
+
 /* 设置 */
 $('#settingsBtn').addEventListener('click', openSettings);
 $('#settingsClose').addEventListener('click', () => hideModal('#settingsModal'));
@@ -4832,6 +6136,49 @@ $('#tocToggle').addEventListener('change', e => {
 $('#autoReadme').addEventListener('change', e => {
   state.autoReadme = e.target.checked;
   lsSet(LS.AUTO_README, state.autoReadme);
+});
+$('#extDomainToggle').addEventListener('change', e => {
+  state.extDomain = e.target.checked;
+  lsSet(LS.EXT_DOMAIN, state.extDomain);
+  const scrollTop = $('#mdBody').scrollTop;
+  rerenderCurrentDoc();
+  $('#mdBody').scrollTop = scrollTop;
+});
+$('#scrollMemoryToggle').addEventListener('change', e => {
+  state.scrollMemory = e.target.checked;
+  lsSet(LS.SCROLL_MEM, state.scrollMemory);
+});
+$('#mermaidToggle').addEventListener('change', e => {
+  state.mermaid = e.target.checked;
+  lsSet(LS.MERMAID, state.mermaid);
+  const scrollTop = $('#mdBody').scrollTop;
+  rerenderCurrentDoc();
+  $('#mdBody').scrollTop = scrollTop;
+});
+$('#katexToggle').addEventListener('change', e => {
+  state.katex = e.target.checked;
+  lsSet(LS.KATEX, state.katex);
+  const scrollTop = $('#mdBody').scrollTop;
+  rerenderCurrentDoc();
+  $('#mdBody').scrollTop = scrollTop;
+});
+$('#lineNumbersToggle').addEventListener('change', e => {
+  state.lineNumbers = e.target.checked;
+  lsSet(LS.LINE_NUM, state.lineNumbers);
+  const scrollTop = $('#mdBody').scrollTop;
+  rerenderCurrentDoc();
+  $('#mdBody').scrollTop = scrollTop;
+});
+$('#codeFoldThreshold').addEventListener('change', e => {
+  state.foldThreshold = Number(e.target.value);
+  lsSet(LS.FOLD_TH, state.foldThreshold);
+  const scrollTop = $('#mdBody').scrollTop;
+  rerenderCurrentDoc();
+  $('#mdBody').scrollTop = scrollTop;
+});
+$('#offlineCacheToggle').addEventListener('change', e => {
+  state.offlineCache = e.target.checked;
+  lsSet(LS.OFFLINE, state.offlineCache);
 });
 $('#stableOnlyToggle').addEventListener('change', e => {
   state.releasesStableOnly = e.target.checked;
@@ -4881,18 +6228,28 @@ $('#proxyTestBtn').addEventListener('click', async () => {
     el.style.color = 'var(--err-fg)';
   }
 });
+$('#proxyAutoBtn').addEventListener('click', autoPickProxy);
 
 $('#clearAllBtn').addEventListener('click', () => {
-  if(!confirm('将清除所有本地数据（Token、翻译配置、收藏、主题偏好、最近仓库等），确认继续？')) return;
+  if(!confirm('将清除所有本地数据（Token、翻译配置、收藏、主题偏好、最近仓库、批注等），确认继续？')) return;
   Object.values(LS).forEach(k => lsDel(k));
   state.token = '';
   state.bookmarks = new Set();
+  state.bookmarkTags = {};
+  state.highlights = {};
   state.recent = [];
   state.tocVisible = true;
   state.autoReadme = true;
   state.proxy = 'github';
   state.sidebarOpen = true;
   state.releasesStableOnly = false;
+  state.extDomain = true;
+  state.scrollMemory = true;
+  state.mermaid = true;
+  state.katex = true;
+  state.lineNumbers = true;
+  state.foldThreshold = 30;
+  state.offlineCache = true;
   state.translation = {
     engine: 'off', sourceLang: 'auto', targetLang: 'zh-CN',
     displayMode: 'bilingual', proxyMode: 'auto',
@@ -4908,8 +6265,17 @@ $('#clearAllBtn').addEventListener('click', () => {
   $('#tocToggle').checked = true;
   $('#autoReadme').checked = true;
   $('#stableOnlyToggle').checked = false;
+  $('#extDomainToggle').checked = true;
+  $('#scrollMemoryToggle').checked = true;
+  $('#mermaidToggle').checked = true;
+  $('#katexToggle').checked = true;
+  $('#lineNumbersToggle').checked = true;
+  $('#codeFoldThreshold').value = '30';
+  $('#offlineCacheToggle').checked = true;
   updateBmCount();
   const rc = $('#recentCount'); if(rc) rc.textContent = 0;
+  const hc = $('#hlCount'); if(hc) hc.textContent = 0;
+  const oc = $('#offlineCount'); if(oc) oc.textContent = 0;
   renderProxyList();
   renderEngineGroups();
   renderEngineConfigFields();
@@ -5007,10 +6373,21 @@ $('#saveToken').addEventListener('click', async () => {
     setStatus('Token 已启用（未勾选记住，刷新后失效）。', 'ok');
   }
   refreshTokenSavedHint();
+  const infoEl = $('#tokenInfo');
   if(t){
     const info = await verifyToken(t);
-    if(info) setStatus(`Token 有效（@${info.login}）`, 'ok');
-    else setStatus('Token 可能无效，建议检查。', 'error');
+    if(info){
+      setStatus(`Token 有效（@${info.login}）`, 'ok');
+      const scopes = info.scopes ? info.scopes.split(',').map(s => s.trim()).filter(Boolean) : [];
+      const hasRepo = scopes.some(s => s === 'repo' || s === 'public_repo' || s === 'repo:status');
+      infoEl.innerHTML = `<div class="saved-hint"><span class="hi">✓</span><span>@${escapeHtml(info.login)} · 权限：${scopes.length ? scopes.map(escapeHtml).join(', ') : '未知'}</span></div>` +
+        (hasRepo ? '' : `<div class="modal-note" style="margin-top:8px;">当前 Token 不含 repo 权限，无法访问私有仓库。</div>`);
+    } else {
+      setStatus('Token 可能无效，建议检查。', 'error');
+      infoEl.innerHTML = '';
+    }
+  } else {
+    infoEl.innerHTML = '';
   }
 });
 $('#clearToken').addEventListener('click', () => {
@@ -5019,6 +6396,7 @@ $('#clearToken').addEventListener('click', () => {
   $('#pasteToken').value = '';
   refreshTokenSavedHint();
   setStatus('已清除 Token。', '');
+  const infoEl = $('#tokenInfo'); if(infoEl) infoEl.innerHTML = '';
 });
 $('#pasteToken').addEventListener('keydown', e => {
   if(e.key === 'Enter'){ e.preventDefault(); $('#saveToken').click(); }
@@ -5118,28 +6496,157 @@ $('#compareGo').addEventListener('click', async () => {
 $('#qrClose').addEventListener('click', () => hideModal('#qrModal'));
 $('#recentBtn').addEventListener('click', openRecent);
 $('#recentClose').addEventListener('click', () => hideModal('#recentModal'));
+$('#recentClear').addEventListener('click', () => {
+  state.recent = [];
+  lsSet(LS.RECENT, []);
+  const rc = $('#recentCount'); if(rc) rc.textContent = 0;
+  $('#recentList').innerHTML = '<div class="muted" style="padding:20px 0; text-align:center;">暂无记录</div>';
+  toast('已清空最近仓库记录');
+});
+
+$('#shortcutsClose').addEventListener('click', () => hideModal('#shortcutsModal'));
+
+/* 批注 */
+$('#annotClose').addEventListener('click', () => hideModal('#annotModal'));
+$('#annotCancel').addEventListener('click', () => hideModal('#annotModal'));
+$('#annotSave').addEventListener('click', saveAnnotation);
+
+/* 收藏标签 */
+$('#bmTagClose').addEventListener('click', () => hideModal('#bmTagModal'));
+$('#bmTagCancel').addEventListener('click', () => hideModal('#bmTagModal'));
+$('#bmTagSave').addEventListener('click', () => {
+  const path = $('#bmTagModal').dataset.path;
+  if(!path) return;
+  const tags = [];
+  $('#bmTagPicker').querySelectorAll('button[data-tag].on').forEach(b => tags.push(b.dataset.tag));
+  if(tags.length) state.bookmarkTags[path] = tags;
+  else delete state.bookmarkTags[path];
+  lsSet(LS.BM_TAGS, state.bookmarkTags);
+  hideModal('#bmTagModal');
+  renderList();
+  toast('标签已保存');
+});
+$('#bmTagAdd').addEventListener('click', () => {
+  const v = $('#bmTagNew').value.trim();
+  if(!v) return;
+  const picker = $('#bmTagPicker');
+  if(!picker.querySelector(`button[data-tag="${CSS.escape(v)}"]`)){
+    const b = document.createElement('button');
+    b.type = 'button';
+    b.dataset.tag = v;
+    b.className = 'on';
+    b.textContent = v;
+    b.addEventListener('click', () => b.classList.toggle('on'));
+    picker.appendChild(b);
+  }
+  $('#bmTagNew').value = '';
+});
+
+/* 分享卡片 */
+$('#shareCardClose').addEventListener('click', () => hideModal('#shareCardModal'));
+
+/* 灯箱 */
+$('#lbClose').addEventListener('click', closeLightbox);
+$('#lbPrev').addEventListener('click', lbPrev);
+$('#lbNext').addEventListener('click', lbNext);
+$('#imgLightbox').addEventListener('click', e => {
+  if(e.target === $('#imgLightbox')) closeLightbox();
+});
+
+/* 选中文字浮动按钮 */
+$('#selPop').addEventListener('mousedown', e => {
+  e.preventDefault();
+});
+$('#selPop').addEventListener('click', (e) => {
+  const btn = e.target.closest('button[data-act]');
+  if(!btn) return;
+  const act = btn.dataset.act;
+  if(!pendingSel) return;
+  if(act === 'copy'){
+    copyText(pendingSel).then(ok => toast(ok ? '已复制' : '复制失败'));
+    hideSelPop();
+  } else if(act === 'hl'){
+    openAnnotationFromSelection();
+  } else if(act === 'quote'){
+    if(!state.current){ hideSelPop(); return; }
+    const path = state.current.path || '';
+    const lines = state.current.text ? state.current.text.split('\n') : [];
+    let lineNo = 0;
+    for(let i = 0; i < lines.length; i++){
+      if(lines[i].includes(pendingSel.slice(0, 20))){ lineNo = i + 1; break; }
+    }
+    const link = `${location.origin}${location.pathname}#${state.owner}/${state.repo}/${state.branch}/${path}` + (lineNo ? `#L${lineNo}` : '');
+    const md = `> ${pendingSel.replace(/\n/g, '\n> ')}\n\n[来源](${link})`;
+    copyText(md).then(ok => toast(ok ? '引用已复制' : '复制失败'));
+    hideSelPop();
+  }
+});
+
+document.addEventListener('selectionchange', debounce(() => {
+  if($('#annotModal').hidden === false) return;
+  if($('#docFindBar').hidden === false) return;
+  handleSelection();
+}, 200));
+document.addEventListener('mousedown', e => {
+  if(e.target.closest('#selPop')) return;
+  if(e.target.closest('#annotModal')) return;
+  if(selPopVisible){
+    setTimeout(() => {
+      const sel = window.getSelection();
+      if(!sel || sel.isCollapsed) hideSelPop();
+    }, 100);
+  }
+});
 
 /* 全局快捷键 */
 document.addEventListener('keydown', e => {
   const tag = (e.target.tagName || '').toLowerCase();
   const isInput = tag === 'input' || tag === 'textarea' || e.target.isContentEditable;
+
+  if(e.key === 'Escape'){
+    if(!$('#imgLightbox').hidden){ closeLightbox(); return; }
+    if(!$('#cmdMask').hidden){ closeCmd(); return; }
+    if(!$('#searchPanel').hidden){ closeSearch(); return; }
+    if(!$('#docFindBar').hidden){ closeDocFind(); return; }
+    if(state.focusMode){ toggleFocus(); return; }
+    if(!$('#ratePanel').hidden){ $('#ratePanel').hidden = true; return; }
+    $$('.modal-mask').forEach(m => { if(!m.hidden) hideModal('#' + m.id); });
+    hideSelPop();
+    return;
+  }
+
   if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k'){
     e.preventDefault();
     if($('#cmdMask').hidden) openCmd(); else closeCmd();
     return;
   }
   if((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'f'){
-    if(state.mdFiles.length){ e.preventDefault(); openSearch(); }
+    if(e.shiftKey){
+      if(state.mdFiles.length){ e.preventDefault(); openSearch(); }
+    } else if(state.current){
+      e.preventDefault(); openDocFind();
+    } else if(state.mdFiles.length){
+      e.preventDefault(); openSearch();
+    }
     return;
   }
-  if(e.key === 'Escape'){
-    if(!$('#cmdMask').hidden){ closeCmd(); return; }
-    if(!$('#searchPanel').hidden){ closeSearch(); return; }
-    if(isMobileLayout() && $('#sidebar').classList.contains('open')){ closeMobileSidebar(); return; }
-    $$('.modal-mask').forEach(m => { if(!m.hidden) hideModal('#' + m.id); });
+  if(isInput){
+    if(e.key === 'Enter' && e.shiftKey && e.target.id === 'docFindInput'){
+      e.preventDefault(); docFindPrev();
+    }
     return;
   }
-  if(isInput) return;
+  if(e.key === '?'){
+    e.preventDefault();
+    if($('#shortcutsModal').hidden) openShortcuts(); else hideModal('#shortcutsModal');
+    return;
+  }
+  if(e.key === 'f' || e.key === 'F'){
+    if(!e.ctrlKey && !e.metaKey && !e.altKey){
+      e.preventDefault(); toggleFocus();
+      return;
+    }
+  }
   if(e.key === '/'){
     e.preventDefault();
     if(state.tab !== 'releases') $('#fileFilter').focus();
@@ -5179,12 +6686,15 @@ window.addEventListener('orientationchange', () => {
     const enc = localStorage.getItem(LS.TOKEN);
     if(enc){
       const t = await decryptToken(enc);
-      state.token = t || (enc.startsWith('v1:') || enc.startsWith('v2:') ? '' : enc);
+      state.token = t || '';
     }
   }catch(e){}
 
   const bms = lsGet(LS.BOOKMARKS, []);
   state.bookmarks = new Set(Array.isArray(bms) ? bms : []);
+  const bmt = lsGet(LS.BM_TAGS, {});
+  state.bookmarkTags = (bmt && typeof bmt === 'object') ? bmt : {};
+  loadHighlights();
 
   const rec = lsGet(LS.RECENT, []);
   state.recent = Array.isArray(rec) ? rec : [];
@@ -5198,9 +6708,31 @@ window.addEventListener('orientationchange', () => {
 
   state.tocVisible = lsGet(LS.TOC, true);
   $('#tocToggle').checked = state.tocVisible;
+  state.tocCollapsed = lsGet(LS.TOC_COLLAPSE, {});
 
   state.autoReadme = lsGet(LS.AUTO_README, true);
   $('#autoReadme').checked = state.autoReadme;
+
+  state.extDomain = lsGet(LS.EXT_DOMAIN, true);
+  $('#extDomainToggle').checked = state.extDomain;
+
+  state.scrollMemory = lsGet(LS.SCROLL_MEM, true);
+  $('#scrollMemoryToggle').checked = state.scrollMemory;
+
+  state.mermaid = lsGet(LS.MERMAID, true);
+  $('#mermaidToggle').checked = state.mermaid;
+
+  state.katex = lsGet(LS.KATEX, true);
+  $('#katexToggle').checked = state.katex;
+
+  state.lineNumbers = lsGet(LS.LINE_NUM, true);
+  $('#lineNumbersToggle').checked = state.lineNumbers;
+
+  state.foldThreshold = lsGet(LS.FOLD_TH, 30);
+  $('#codeFoldThreshold').value = String(state.foldThreshold);
+
+  state.offlineCache = lsGet(LS.OFFLINE, true);
+  $('#offlineCacheToggle').checked = state.offlineCache;
 
   state.releasesStableOnly = lsGet(LS.STABLE_ONLY, false);
   $('#stableOnlyToggle').checked = state.releasesStableOnly;
@@ -5208,6 +6740,7 @@ window.addEventListener('orientationchange', () => {
 
   state.proxy = lsGet(LS.PROXY, 'github');
   if(!PROXIES[state.proxy]) state.proxy = 'github';
+  state.proxySpeed = lsGet(LS.PROXY_SPEED, {});
 
   state.sidebarOpen = lsGet(LS.SIDEBAR, true);
   if(!isMobileLayout()){
@@ -5215,6 +6748,13 @@ window.addEventListener('orientationchange', () => {
   } else {
     $('#sidebar').classList.remove('open');
     $('#sidebarBackdrop').classList.remove('show');
+  }
+
+  state.focusMode = lsGet(LS.FOCUS, false);
+  if(state.focusMode){
+    document.body.classList.add('focus-mode');
+    $('#focusExit').hidden = false;
+    $('#focusBtn').classList.add('active');
   }
 
   applyFontSettings();
@@ -5235,6 +6775,8 @@ window.addEventListener('orientationchange', () => {
 
   updateBmCount();
   const rc = $('#recentCount'); if(rc) rc.textContent = state.recent.length;
+  const hc = $('#hlCount'); if(hc) hc.textContent = hlCount();
+  const oc = $('#offlineCount'); if(oc) oc.textContent = offlineCount();
 
   viewerPlaceholder();
   renderList();
@@ -5259,6 +6801,17 @@ window.addEventListener('orientationchange', () => {
       }
     }
   });
+
+  /* 初始化 Mermaid 配置 */
+  try{
+    if(typeof mermaid !== 'undefined'){
+      mermaid.initialize({
+        startOnLoad:false,
+        theme: document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'default',
+        securityLevel:'loose'
+      });
+    }
+  }catch(e){}
 })();
 </script>
 </body>
