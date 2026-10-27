@@ -3602,6 +3602,28 @@ async function api(path){
   }
   return res.json();
 }
+
+/* 分页拉取全部 Release（修复原有只拉一页的问题） */
+async function fetchAllReleases(){
+  const all = [];
+  const perPage = 100;
+  const maxPages = 50; // 保护：最多 5000 个 Release
+  for(let page = 1; page <= maxPages; page++){
+    let chunk;
+    try{
+      chunk = await api(`/repos/${state.owner}/${state.repo}/releases?per_page=${perPage}&page=${page}`);
+    }catch(e){
+      // 第一页就失败则向上抛出，否则返回已获取的部分
+      if(page === 1) throw e;
+      break;
+    }
+    if(!Array.isArray(chunk) || chunk.length === 0) break;
+    all.push(...chunk);
+    if(chunk.length < perPage) break; // 最后一页
+  }
+  return all;
+}
+
 async function fetchFileText(path){
   if(state.cache.has(path)) return state.cache.get(path);
   if(isBinary(path)) throw new Error('二进制文件请使用下载按钮');
@@ -5810,11 +5832,11 @@ async function loadRepo(opts = {}){
     if(!state.branch) state.branch = info.default_branch || 'main';
     renderRepoCard();
 
-    setStatus(`已连接 ${info.full_name}，正在获取文件列表…`, 'loading');
+    setStatus(`已连接 ${info.full_name}，正在获取文件列表与 Release…`, 'loading');
 
     const [treeRes, relRes, brRes, tagRes] = await Promise.allSettled([
       api(`/repos/${state.owner}/${state.repo}/git/trees/${encodeURIComponent(state.branch)}?recursive=1`),
-      api(`/repos/${state.owner}/${state.repo}/releases?per_page=100`),
+      fetchAllReleases(),
       api(`/repos/${state.owner}/${state.repo}/branches?per_page=100`),
       api(`/repos/${state.owner}/${state.repo}/tags?per_page=100`)
     ]);
