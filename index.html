@@ -4,75 +4,76 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light dark">
-<meta name="theme-color" content="#f2ecdd">
-<title>卷宗 · GitHub 仓库阅读器</title>
-<meta name="description" content="单文件 GitHub 仓库浏览器：文件树、Markdown 阅读、搜索、发行版、ZIP、分享卡片、批注、收藏、离线缓存与翻译。">
+<meta name="theme-color" content="#e7efec">
+<title>声呐 · GitHub 仓库阅读器</title>
+<meta name="description" content="单文件 GitHub 仓库浏览器：文件树、Markdown 阅读、分支切换、搜索、发行版、ZIP、分享卡片、批注、收藏、离线缓存与翻译。">
 <style>
 /* ============================================================
-   卷宗 — 全新设计系统
-   纸（light） / 墨（dark） · 编辑部排版语言
+   SIGNAL / 声呐 — 深海声呐视觉语言
+   浅海（light） / 深海（dark） · 网格、刻度、信号光
+   一个强调色：信号青；全部界面围绕“接入—扫描—读取”展开
    ============================================================ */
 :root{
-  --paper:#f1ebdc;
-  --paper-2:#e9e2d1;
-  --sheet:#fbf7ee;
-  --sheet-2:#f5efe2;
-  --sheet-3:#eee6d5;
-  --line:#d8ceb8;
-  --line-soft:#e7deca;
-  --line-hard:#c3b699;
-  --ink:#1f1c16;
-  --ink-2:#463f33;
-  --ink-3:#6e6556;
-  --ink-4:#9a9080;
-  --red:#a8362a;
-  --red-deep:#8a2a20;
-  --red-soft:#f2ddd6;
-  --gold:#8a6528;
-  --green:#39654a;
-  --blue:#2d5a7a;
-  --code-bg:#f2ebdb;
-  --shade:rgba(63,47,25,.10);
-  --shade-strong:rgba(63,47,25,.18);
-  --ring:rgba(168,54,42,.28);
-  --scrim:rgba(35,28,18,.48);
-  --sans:"Inter","PingFang SC","Hiragino Sans GB","Microsoft YaHei",system-ui,-apple-system,sans-serif;
-  --serif:"Source Han Serif SC","Noto Serif SC","Songti SC","STSong",Georgia,"Times New Roman",serif;
-  --mono:"JetBrains Mono","SFMono-Regular",Consolas,"Liberation Mono",monospace;
+  --paper:#e7efec;
+  --paper-2:#dde8e4;
+  --sheet:#f9fcfb;
+  --sheet-2:#eef6f3;
+  --sheet-3:#e2eeea;
+  --line:#c4d8d3;
+  --line-soft:#d9e7e2;
+  --line-hard:#9dbcb4;
+  --ink:#07211f;
+  --ink-2:#1d403d;
+  --ink-3:#4b6b67;
+  --ink-4:#79928e;
+  --red:#0a8578;
+  --red-deep:#066a60;
+  --red-soft:#cbeae4;
+  --gold:#b07716;
+  --green:#1d7a4d;
+  --blue:#1f6b8a;
+  --code-bg:#f0f7f4;
+  --shade:rgba(7,33,31,.10);
+  --shade-strong:rgba(7,33,31,.18);
+  --ring:rgba(10,133,120,.28);
+  --scrim:rgba(4,26,25,.5);
+  --sans:"Space Grotesk","Segoe UI Variable Display","Segoe UI","Inter","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --serif:"Space Grotesk","Segoe UI Variable Display","Segoe UI","Inter","PingFang SC","Microsoft YaHei",system-ui,sans-serif;
+  --mono:"JetBrains Mono","Cascadia Code","SFMono-Regular",Consolas,monospace;
   --rail-w:88px;
   --readw:760px;
   --fs-read:17px;
-  --lh-read:1.9;
-  --shadow-sheet:0 1px 0 rgba(255,255,255,.6) inset, 0 18px 40px -28px rgba(63,47,25,.5), 0 2px 8px rgba(63,47,25,.06);
-  --shadow-pop:0 24px 70px -20px rgba(35,28,18,.45), 0 2px 10px rgba(35,28,18,.12);
+  --lh-read:1.85;
+  --shadow-sheet:0 1px 0 rgba(255,255,255,.8) inset, 0 18px 44px -30px rgba(7,33,31,.45), 0 1px 3px rgba(7,33,31,.06);
+  --shadow-pop:0 24px 70px -24px rgba(4,26,25,.4), 0 2px 10px rgba(4,26,25,.10);
   --ease:cubic-bezier(.2,.9,.25,1);
 }
 html[data-theme="ink"]{
-  --paper:#111316;
-  --paper-2:#0c0e10;
-  --sheet:#191c20;
-  --sheet-2:#20242a;
-  --sheet-3:#272c33;
-  --line:#2f353d;
-  --line-soft:#252a30;
-  --line-hard:#3c434c;
-  --ink:#e9e3d5;
-  --ink-2:#cfc8b9;
-  --ink-3:#9d968a;
-  --ink-4:#79736a;
-  --red:#e06a56;
-  --red-deep:#c45541;
-  --red-soft:#3a2622;
-  --gold:#d3a45c;
-  --green:#79b389;
-  --blue:#7fb2d4;
-  --code-bg:#15181c;
-  --shade:rgba(0,0,0,.35);
-  --shade-strong:rgba(0,0,0,.55);
-  --ring:rgba(224,106,86,.3);
-  --scrim:rgba(4,5,7,.68);
-  --shadow-sheet:0 1px 0 rgba(255,255,255,.04) inset, 0 18px 40px -24px rgba(0,0,0,.7), 0 2px 8px rgba(0,0,0,.3);
-  --shadow-pop:0 24px 70px -16px rgba(0,0,0,.7), 0 2px 10px rgba(0,0,0,.35);
+  --paper:#03100f;
+  --paper-2:#020c0b;
+  --sheet:#071b1a;
+  --sheet-2:#0a2422;
+  --sheet-3:#0e2d2a;
+  --line:#163936;
+  --line-soft:#0f2b28;
+  --line-hard:#245450;
+  --ink:#d8f2ed;
+  --ink-2:#a4cdc7;
+  --ink-3:#6f9b95;
+  --ink-4:#4b706b;
+  --red:#39e0c4;
+  --red-deep:#1ec0a6;
+  --red-soft:#0b3532;
+  --gold:#ffc46b;
+  --green:#7fe0a0;
+  --blue:#7fc7ee;
+  --code-bg:#041413;
+  --shade:rgba(0,0,0,.4);
+  --shade-strong:rgba(0,0,0,.6);
+  --ring:rgba(57,224,196,.32);
+  --scrim:rgba(1,8,8,.72);
+  --shadow-sheet:0 1px 0 rgba(255,255,255,.03) inset, 0 18px 44px -26px rgba(0,0,0,.8);
+  --shadow-pop:0 24px 70px -18px rgba(0,0,0,.8), 0 2px 10px rgba(0,0,0,.4);
 }
 *,*::before,*::after{box-sizing:border-box}
 [hidden]{display:none !important}
@@ -86,19 +87,20 @@ body{
   -webkit-tap-highlight-color:transparent;
   overflow-wrap:anywhere;
 }
-/* 纸张纤维 / 噪点 */
+/* 海图网格 / 声呐深度场 */
 body::before{
-  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.5;
+  content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:1;
   background-image:
-    radial-gradient(rgba(110,85,45,.055) .7px,transparent .8px),
-    radial-gradient(rgba(110,85,45,.04) .6px,transparent .7px),
-    radial-gradient(rgba(255,255,255,.5) .5px,transparent .6px);
-  background-size:3px 3px,7px 7px,5px 5px;
-  background-position:0 0,2px 3px,4px 1px;
+    linear-gradient(rgba(10,133,120,.055) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(10,133,120,.055) 1px,transparent 1px),
+    radial-gradient(ellipse 70% 55% at 82% -8%,rgba(10,133,120,.13),transparent 68%);
+  background-size:26px 26px,26px 26px,100% 100%;
+  background-position:0 0,0 0,0 0;
 }
-html[data-theme="ink"] body::before{opacity:.32;background-image:
-  radial-gradient(rgba(255,255,255,.05) .7px,transparent .8px),
-  radial-gradient(rgba(0,0,0,.4) .6px,transparent .7px);}
+html[data-theme="ink"] body::before{opacity:1;background-image:
+  linear-gradient(rgba(57,224,196,.055) 1px,transparent 1px),
+  linear-gradient(90deg,rgba(57,224,196,.045) 1px,transparent 1px),
+  radial-gradient(ellipse 70% 55% at 82% -8%,rgba(57,224,196,.12),transparent 68%);}
 ::selection{background:var(--red-soft);color:var(--ink)}
 :focus-visible{outline:2px solid var(--red);outline-offset:2px}
 ::-webkit-scrollbar{width:11px;height:11px}
@@ -279,7 +281,7 @@ html[data-theme="ink"] .ax-seg button.on{background:var(--sheet-3);color:var(--i
 .ax-range::-webkit-slider-thumb{-webkit-appearance:none;width:14px;height:14px;margin-top:-6px;border-radius:50%;background:var(--red);border:2px solid var(--sheet);box-shadow:0 0 0 1px var(--line-hard)}
 .ax-range::-moz-range-track{height:2px;background:var(--line-hard)}
 .ax-range::-moz-range-thumb{width:12px;height:12px;border-radius:50%;background:var(--red);border:2px solid var(--sheet)}
-/* ---------- 仓库卷宗首页 ---------- */
+/* ---------- 仓库概览 ---------- */
 .ax-hero{
   position:relative;border:1px solid var(--line);background:var(--sheet);
   border-radius:3px;padding:26px 30px 22px;box-shadow:var(--shadow-sheet);overflow:hidden;
@@ -331,67 +333,91 @@ html[data-theme="ink"] .ax-seg button.on{background:var(--sheet-3);color:var(--i
 .ax-hero-alert b{color:var(--red);font-weight:600}
 .ax-hero-alert svg{width:16px;height:16px;flex:0 0 auto;color:var(--red)}
 
-/* ---------- 首页入口：打开即输入 ---------- */
-.ax-entry{max-width:760px;margin:0 auto;padding:clamp(18px,7vh,72px) 0 40px}
-.ax-entry-head{margin-bottom:16px}
-.ax-entry-head .kicker{display:flex;align-items:center;gap:9px;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-4);margin-bottom:7px}
-.ax-entry-head .kicker::before{content:"";width:20px;height:1px;background:var(--red)}
-.ax-entry-head h1{font-family:var(--serif);font-size:clamp(26px,3vw,36px);font-weight:700;line-height:1.1;letter-spacing:-.015em;margin:0}
-.ax-entry-field{
-  display:flex;align-items:stretch;min-height:58px;position:relative;overflow:hidden;
-  border:1px solid var(--line-hard);border-radius:3px;background:var(--sheet);
-  box-shadow:var(--shadow-sheet);transition:border-color .16s,box-shadow .16s;
+/* ---------- 首页：接入信号 ---------- */
+.ax-entry{max-width:920px;margin:0 auto;padding:clamp(8px,4.5vh,44px) 0 36px}
+.ax-entry-deck{
+  position:relative;overflow:hidden;isolation:isolate;
+  background:var(--sheet);border:1px solid var(--line);border-radius:4px;
+  padding:16px 26px 24px;box-shadow:0 1px 0 rgba(255,255,255,.04) inset,var(--shadow-sheet);
 }
-.ax-entry-field::after{
-  content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--red);
-  transform:scaleX(0);transform-origin:left;transition:transform .24s var(--ease);
+.ax-entry-deck::before{
+  content:"";position:absolute;right:-150px;top:-150px;width:430px;height:430px;border-radius:50%;
+  pointer-events:none;z-index:-1;
+  background:repeating-radial-gradient(circle at center,transparent 0 38px,rgba(10,133,120,.14) 38px 39px,transparent 39px 78px);
 }
-.ax-entry-field:focus-within{border-color:var(--red);box-shadow:0 0 0 3px var(--ring),var(--shadow-sheet)}
+html[data-theme="ink"] .ax-entry-deck::before{background:repeating-radial-gradient(circle at center,transparent 0 38px,rgba(57,224,196,.16) 38px 39px,transparent 39px 78px)}
+.ax-entry-deck::after{
+  content:"";position:absolute;right:-62px;top:-62px;width:270px;height:270px;border-radius:50%;
+  pointer-events:none;z-index:-1;opacity:.5;animation:sg-sweep 16s linear infinite;
+  background:conic-gradient(from 0deg,rgba(10,133,120,.26),rgba(10,133,120,0) 30%,rgba(10,133,120,0) 100%);
+}
+html[data-theme="ink"] .ax-entry-deck::after{background:conic-gradient(from 0deg,rgba(57,224,196,.3),rgba(57,224,196,0) 30%,rgba(57,224,196,0) 100%)}
+.ax-entry-bar{position:relative;z-index:1;display:flex;align-items:center;gap:12px;padding-bottom:10px;border-bottom:1px solid var(--line-soft);font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--ink-4)}
+.ax-entry-bar .sig{display:flex;align-items:center;gap:7px;color:var(--red)}
+.ax-entry-bar .sig b{width:6px;height:6px;border-radius:50%;background:var(--red);box-shadow:0 0 0 3px rgba(10,133,120,.18);animation:sg-pulse 2.4s infinite}
+.ax-entry-bar .clock{margin-left:auto;letter-spacing:.1em}
+.ax-entry h1{position:relative;z-index:1;font-family:var(--sans);font-size:clamp(30px,3.6vw,46px);font-weight:800;letter-spacing:-.035em;line-height:1.02;margin:20px 0 4px}
+.ax-entry h1 span{display:block;font-family:var(--mono);font-size:9.5px;letter-spacing:.32em;color:var(--red);font-weight:500;margin-bottom:10px}
+.ax-entry-sub{position:relative;z-index:1;font-family:var(--mono);font-size:10px;letter-spacing:.2em;color:var(--ink-4);margin-bottom:20px}
+.ax-entry-field{position:relative;z-index:1;display:flex;align-items:flex-end;border-bottom:1px solid var(--line-hard);transition:border-color .2s}
+.ax-entry-field::after{content:"";position:absolute;left:0;right:0;bottom:-2px;height:2px;background:var(--red);transform:scaleX(0);transform-origin:left;transition:transform .28s var(--ease);box-shadow:0 0 14px var(--red)}
+.ax-entry-field:focus-within{border-color:var(--red)}
 .ax-entry-field:focus-within::after{transform:scaleX(1)}
-.ax-entry-field .lead{flex:0 0 46px;display:grid;place-items:center;color:var(--ink-4);border-right:1px solid var(--line-soft)}
-.ax-entry-field .lead svg{width:18px;height:18px}
+.ax-entry-field .lead{flex:0 0 auto;padding:0 14px 14px 0;font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:var(--ink-4)}
 .ax-entry-input{
-  flex:1;min-width:0;height:56px;padding:0 14px;border:0;background:transparent;outline:none;
-  font-family:var(--mono);font-size:15px;letter-spacing:.01em;color:var(--ink);
+  flex:1;min-width:0;height:54px;padding:0 4px 8px;border:0;background:transparent;outline:none;
+  font-family:var(--sans);font-size:20px;font-weight:500;letter-spacing:-.01em;color:var(--ink);
 }
-.ax-entry-input::placeholder{font-family:var(--sans);color:var(--ink-4);letter-spacing:0}
+.ax-entry-input::placeholder{color:var(--ink-4);font-weight:400;font-size:16.5px;letter-spacing:0}
 .ax-entry-clip{
-  flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:0 14px;white-space:nowrap;
-  border-left:1px solid var(--line-soft);color:var(--ink-2);font-size:12.5px;
-  transition:background .15s,color .15s;
+  flex:0 0 auto;display:flex;align-items:center;gap:7px;margin:0 16px 10px 0;padding:0 0 3px;
+  border-bottom:1px dashed var(--line-hard);color:var(--ink-3);
+  font-family:var(--mono);font-size:10.5px;letter-spacing:.04em;white-space:nowrap;
+  transition:color .15s,border-color .15s;
 }
-.ax-entry-clip svg{width:15px;height:15px;color:var(--ink-3)}
-.ax-entry-clip:hover{background:var(--sheet-2);color:var(--ink)}
+.ax-entry-clip svg{width:14px;height:14px}
+.ax-entry-clip:hover{color:var(--red);border-color:var(--red)}
 .ax-entry-go{
-  flex:0 0 auto;padding:0 24px;background:var(--red);color:#fdf7ea;
-  font-size:13.5px;font-weight:600;letter-spacing:.08em;transition:background .15s;
+  flex:0 0 auto;height:46px;margin-bottom:4px;padding:0 22px;border-radius:2px;
+  font-family:var(--mono);font-size:11px;font-weight:700;letter-spacing:.2em;text-indent:.2em;
+  background:var(--red);color:#04120f;box-shadow:0 8px 22px -14px var(--red);
+  transition:background .16s,transform .16s;
 }
-.ax-entry-go:hover{background:var(--red-deep)}
-html[data-theme="ink"] .ax-entry-go{color:#181310}
-.ax-entry-status{display:flex;align-items:center;gap:6px;min-height:20px;margin-top:10px;font-size:12px;line-height:1.6;color:var(--ink-3)}
-.ax-entry-status b{color:var(--ink);font-weight:600}
-.ax-entry-status.bad{color:var(--red)}
-.ax-entry-help{display:none;margin-top:12px;padding:13px 15px;border:1px dashed var(--line-hard);background:var(--sheet-2);border-radius:3px;font-size:12.5px;line-height:1.75;color:var(--ink-2)}
+.ax-entry-go:hover{background:var(--red-deep);transform:translateY(-1px)}
+.ax-entry-status{position:relative;z-index:1;margin-top:12px;font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;line-height:1.7;color:var(--ink-3)}
+.ax-entry-status b{color:var(--ink);font-weight:700}
+.ax-entry-status.bad{color:#cf4a5c}
+.ax-entry-help{position:relative;z-index:1;display:none;margin-top:14px;padding:12px 14px;border:1px solid var(--line);border-left:2px solid var(--red);background:var(--paper-2);font-size:12px;line-height:1.75;color:var(--ink-2)}
 .ax-entry-help.on{display:block}
 .ax-entry-help b{color:var(--red)}
 .ax-entry-help ol{margin:7px 0 11px;padding-left:20px}
 .ax-entry-help li{margin:3px 0}
 .ax-entry-help .row{display:flex;gap:8px;flex-wrap:wrap}
-.ax-entry-recent{margin-top:34px}
-.ax-entry-recent-hd{display:flex;align-items:center;gap:10px;margin-bottom:9px}
-.ax-entry-recent-hd .t{font-family:var(--serif);font-size:15px;font-weight:700;letter-spacing:.02em}
+.ax-entry-log{position:relative;z-index:1;margin-top:22px;padding-top:2px}
+.ax-entry-recent-hd{display:flex;align-items:center;gap:10px;margin-bottom:2px;font-family:var(--mono);font-size:9.5px;letter-spacing:.16em;color:var(--ink-4)}
+.ax-entry-recent-hd .t{color:var(--red);font-weight:700}
 .ax-entry-recent-hd .sp{flex:1;height:1px;background:var(--line-soft)}
-.ax-entry-recent-hd .more{font-size:11.5px;color:var(--red)}
-.ax-entry-list{border:1px solid var(--line);background:var(--sheet);border-radius:3px;padding:4px 14px;box-shadow:var(--shadow-sheet)}
-.ax-entry-row{display:flex;align-items:center;gap:11px;width:100%;min-width:0;padding:10px 2px;border-bottom:1px dashed var(--line-soft);text-align:left}
-.ax-entry-row:last-child{border-bottom:0}
+.ax-entry-recent-hd .more{font-family:var(--mono);font-size:10px;color:var(--ink-3);letter-spacing:.04em}
+.ax-entry-recent-hd .more:hover{color:var(--red)}
+.ax-entry-list{counter-reset:sgrow;border-top:1px solid var(--line)}
+.ax-entry-row{
+  counter-increment:sgrow;display:flex;align-items:center;gap:12px;width:100%;min-width:0;
+  padding:10px 8px 10px 0;text-align:left;border-bottom:1px solid var(--line-soft);
+  transition:background .14s;
+}
 .ax-entry-row:hover{background:var(--sheet-2)}
-.ax-entry-row .sig{flex:0 0 auto;width:28px;height:28px;display:grid;place-items:center;border:1px solid var(--line-hard);border-radius:2px;background:var(--sheet-2);font-family:var(--serif);font-size:11px;color:var(--red)}
+.ax-entry-row::before{
+  content:counter(sgrow,decimal-leading-zero);flex:0 0 auto;width:24px;
+  font-family:var(--mono);font-size:10px;color:var(--ink-4);letter-spacing:.04em;
+}
 .ax-entry-row .tx{min-width:0;flex:1}
-.ax-entry-row .tx b{display:block;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ax-entry-row .tx small{display:block;font-family:var(--mono);font-size:10.5px;color:var(--ink-4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.ax-entry-row .ar{flex:0 0 auto;font-size:12px;color:var(--ink-4)}
-.ax-entry-empty{padding:16px 18px;border:1px solid var(--line-soft);border-radius:3px;background:var(--sheet-2);font-size:12.5px;color:var(--ink-3)}
+.ax-entry-row .tx b{display:block;font-family:var(--sans);font-size:14px;font-weight:700;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ax-entry-row .tx small{display:block;font-family:var(--mono);font-size:10px;color:var(--ink-4);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ax-entry-row .ar{flex:0 0 auto;font-family:var(--mono);font-size:11px;color:var(--ink-4);transition:color .14s,transform .14s}
+.ax-entry-row:hover .ar{color:var(--red);transform:translateX(2px)}
+.ax-entry-empty{padding:14px 2px;border-bottom:1px solid var(--line-soft);font-family:var(--mono);font-size:10.5px;letter-spacing:.02em;color:var(--ink-4)}
+@keyframes sg-pulse{0%,100%{opacity:1;box-shadow:0 0 0 3px rgba(10,133,120,.16)}50%{opacity:.55;box-shadow:0 0 0 7px rgba(10,133,120,0)}}
+@keyframes sg-sweep{to{transform:rotate(360deg)}}
 
 .ax-block{margin-top:26px}
 .ax-block-head{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
@@ -1029,6 +1055,334 @@ html[data-theme="ink"] .ax-m-fab{background:var(--red);color:#fff;border-color:v
   .ax-view{position:static;display:block;overflow:visible;padding:0}
   .ax-paper{box-shadow:none;border:0;margin:0;padding:0;max-width:none}
 }
+/* ============================================================
+   SIGNAL 皮肤层 — 统一改写所有面的形状、边框、动效
+   ============================================================ */
+:root{--glow:rgba(10,133,120,.18);--tick:rgba(10,133,120,.5)}
+html[data-theme="ink"]{--glow:rgba(57,224,196,.22);--tick:rgba(57,224,196,.42)}
+@keyframes sg-pulse{0%,100%{opacity:1;box-shadow:0 0 0 3px var(--glow)}50%{opacity:.5;box-shadow:0 0 0 8px transparent}}
+
+/* 侧栏：从“书脊”改为“声呐基座” */
+.ax-rail{background:linear-gradient(180deg,#041311 0,#02100e 100%);border-right:1px solid #12312e;padding:18px 10px 12px}
+.ax-rail::after{display:none}
+.ax-rail .ax-seal{width:46px;height:46px;margin:0 auto 22px;display:grid;place-items:center;position:relative;color:#39e0c4;border:0;border-radius:50%;background:transparent;transform:none;box-shadow:none;font-size:0;letter-spacing:0}
+.ax-rail .ax-seal::before{content:"";position:absolute;inset:2px;border:1px solid #39e0c4;border-radius:50%;opacity:.55}
+.ax-rail .ax-seal::after{content:"";position:absolute;inset:-7px;border:1px dashed #2b5f59;border-radius:50%;opacity:.75}
+.ax-rail .ax-seal span{display:block;width:9px;height:9px;border-radius:50%;background:#39e0c4;box-shadow:0 0 14px rgba(57,224,196,.6);animation:sg-pulse 2.6s infinite}
+.ax-rail-btn{color:#7ea8a3;border-radius:0;font-family:var(--mono);font-size:10px;letter-spacing:.12em;min-height:52px}
+.ax-rail-btn:hover{background:rgba(57,224,196,.07);color:#d8f2ed}
+.ax-rail-btn.on{background:transparent;color:#39e0c4}
+.ax-rail-btn.on::before{left:-10px;top:14px;bottom:14px;width:2px;background:#39e0c4;box-shadow:0 0 10px #39e0c4}
+.ax-rail-btn.on svg{filter:drop-shadow(0 0 6px rgba(57,224,196,.5))}
+.ax-rail-foot{border-top:1px solid #12312e;padding-top:10px}
+
+/* 顶栏：目标锁定条 */
+.ax-mast{min-height:58px;padding:9px 18px;background:color-mix(in srgb,var(--paper) 88%,transparent);border-bottom:1px solid var(--line-hard);backdrop-filter:blur(10px)}
+.ax-crumb{border-radius:0;max-width:36%}
+.ax-crumb .kicker{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--red);padding:1px 5px;border:1px solid var(--red-soft);background:var(--red-soft)}
+.ax-crumb .name{font-family:var(--sans);font-size:16px;font-weight:700;letter-spacing:-.02em}
+.ax-crumb:hover{background:var(--sheet-2);border-color:var(--line-hard)}
+.ax-mast-search{border-radius:0;background:var(--sheet);font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+.ax-mast-search:hover{border-color:var(--red);box-shadow:0 0 0 1px var(--red-soft) inset}
+.ax-icon-btn{border-radius:0}
+.ax-icon-btn:hover{border-color:var(--line-hard);background:var(--sheet)}
+
+/* 通用按钮：硬边、等宽、信号填充 */
+.ax-btn{border-radius:0;border-color:var(--line-hard);background:var(--sheet);font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;box-shadow:none}
+.ax-btn:hover{background:var(--sheet-2);border-color:var(--red);color:var(--ink)}
+.ax-btn:active{transform:none;background:var(--red-soft)}
+.ax-btn.solid{background:var(--red);border-color:var(--red);color:#04120f;font-weight:700}
+.ax-btn.solid:hover{background:var(--red-deep);border-color:var(--red-deep);color:#04120f;box-shadow:0 0 22px -6px var(--red)}
+html[data-theme="ink"] .ax-btn.solid{color:#03100f}
+.ax-btn.ghost{border-color:transparent;background:transparent}
+.ax-btn.on{background:var(--red-soft);border-color:var(--red)}
+.ax-chip{border-radius:0;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase}
+.ax-pill{border-radius:0;font-family:var(--mono);font-size:10px}
+.ax-input,.ax-select,.ax-textarea{border-radius:0;background:var(--sheet)}
+.ax-input:focus,.ax-select:focus,.ax-textarea:focus{border-color:var(--red);box-shadow:0 0 0 2px var(--red-soft) inset}
+.ax-toggle{border-radius:0}
+.ax-seg{border-radius:0}
+.ax-seg button{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em}
+.ax-seg button.on{background:var(--red);color:#04120f}
+html[data-theme="ink"] .ax-seg button.on{background:var(--red);color:#03100f}
+
+/* 视图头：编号 + 细线 + 刻度 */
+.ax-view-head{border-bottom:1px solid var(--line-hard);align-items:center;padding-bottom:10px;margin-bottom:20px}
+.ax-view-head .no{font-size:9.5px;letter-spacing:.24em;color:var(--red);border:1px solid var(--red-soft);background:var(--red-soft);padding:2px 6px}
+.ax-view-head h2{font-family:var(--sans);font-weight:800;letter-spacing:-.035em;font-size:26px}
+.ax-view-head .sub{font-family:var(--mono);font-size:10px;letter-spacing:.1em}
+.ax-block-head h3{font-family:var(--sans);font-weight:700;letter-spacing:-.02em}
+.ax-block-head .idx{font-size:9.5px;letter-spacing:.14em;color:var(--red)}
+.ax-empty .big{font-family:var(--sans);font-weight:800;letter-spacing:-.03em}
+.ax-empty .mark{border-radius:50%;border:1px solid var(--red);color:var(--red);font-family:var(--mono);font-size:18px;box-shadow:0 0 0 8px var(--glow)}
+
+/* 面板：直角 + 角标刻度 */
+.ax-card,.ax-set-card,.ax-shelf-card,.ax-note-card,.ax-rel,.ax-hero,.ax-entry-deck,.ax-m-readme{border-radius:0;box-shadow:none;border-color:var(--line)}
+.ax-hero,.ax-entry-deck,.ax-set-card{background-image:
+  linear-gradient(90deg,var(--tick) 0 14px,transparent 14px) 0 0/100% 1px no-repeat,
+  linear-gradient(180deg,var(--tick) 0 14px,transparent 14px) 0 0/1px 100% no-repeat,
+  linear-gradient(270deg,var(--tick) 0 14px,transparent 14px) 100% 0/100% 1px no-repeat,
+  linear-gradient(180deg,var(--tick) 0 14px,transparent 14px) 100% 0/1px 100% no-repeat,
+  linear-gradient(90deg,var(--tick) 0 14px,transparent 14px) 0 100%/100% 1px no-repeat,
+  linear-gradient(0deg,var(--tick) 0 14px,transparent 14px) 0 100%/1px 100% no-repeat,
+  linear-gradient(270deg,var(--tick) 0 14px,transparent 14px) 100% 100%/100% 1px no-repeat,
+  linear-gradient(0deg,var(--tick) 0 14px,transparent 14px) 100% 100%/1px 100% no-repeat;
+}
+.ax-card.flat{background:var(--sheet-2);box-shadow:none}
+.ax-card h4{font-family:var(--sans);font-weight:700}
+.ax-mini-item .ic{border-radius:0;font-size:9px}
+.ax-mini-item .tt b{font-weight:600}
+.ax-filechip{border-radius:0;background:var(--sheet)}
+.ax-filechip:hover{border-color:var(--red)}
+
+/* 仓库主面板：不再盖章，改为“目标锁定” */
+.ax-hero{padding:24px 28px 20px;background-color:var(--sheet);position:relative;overflow:hidden}
+.ax-hero-dial{position:absolute;right:-84px;top:-104px;width:320px;height:320px;border-radius:50%;pointer-events:none;opacity:.55}
+.ax-hero-main,.ax-stats,.ax-hero-alert{position:relative;z-index:1}
+.ax-hero-dial span{position:absolute;inset:0;border:1px solid var(--line-hard);border-radius:50%}
+.ax-hero-dial span:nth-child(2){inset:46px}
+.ax-hero-dial span:nth-child(3){inset:92px}
+.ax-hero-dial span:nth-child(4){inset:138px;border-color:var(--red);opacity:.55;background:radial-gradient(circle,var(--glow),transparent 72%)}
+.ax-hero-dial::after{content:"";position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 296deg,var(--glow) 338deg,transparent 360deg);animation:sg-sweep 18s linear infinite}
+@media (max-width:1080px){.ax-hero-dial{display:none}}
+.ax-hero::before{height:2px;top:0;background:linear-gradient(90deg,var(--red),transparent 55%);opacity:1}
+.ax-hero::after{display:none}
+.ax-hero .kicker{font-family:var(--mono);font-size:9.5px;letter-spacing:.2em;color:var(--red);margin-bottom:8px}
+.ax-hero .kicker::before{width:6px;height:6px;border-radius:50%;background:var(--red);animation:sg-pulse 2.5s infinite}
+.ax-hero h1{font-family:var(--sans);font-size:clamp(30px,3.2vw,44px);font-weight:800;letter-spacing:-.045em;line-height:1.02}
+.ax-hero .owner{font-size:10.5px;letter-spacing:.08em;color:var(--ink-4)}
+.ax-hero .desc{font-family:var(--sans);font-size:14.5px;line-height:1.75;color:var(--ink-2)}
+.ax-hero-side{display:none}
+.ax-stats{border-top:1px solid var(--line);padding-top:14px}
+.ax-stat{padding:0 20px;border-right:1px solid var(--line-soft)}
+.ax-stat .n{font-family:var(--mono);font-size:19px;font-weight:700;letter-spacing:-.04em}
+.ax-stat .l{font-family:var(--mono);font-size:9px;letter-spacing:.18em;color:var(--ink-4)}
+.ax-hero-alert{border:1px solid var(--line);border-left:2px solid var(--red);background:var(--sheet-2);border-radius:0;font-family:var(--mono);font-size:10.5px;letter-spacing:.02em}
+.ax-hero-alert svg{color:var(--red)}
+.ax-hero-alert b{color:var(--red)}
+
+/* 阅读纸：改为“信号舱”，去掉装订线 */
+.ax-paper{border-radius:0;box-shadow:none;border:1px solid var(--line-hard);background:var(--sheet);padding:40px 48px 50px}
+.ax-paper::before{display:none}
+.ax-paper-head{border-bottom:1px solid var(--line-hard);padding-bottom:12px}
+.ax-paper-head .kind{color:var(--red);letter-spacing:.22em;font-size:9.5px}
+.ax-paper-head h2{font-family:var(--sans);font-weight:800;letter-spacing:-.03em}
+.ax-paper-head .meta{font-size:10px;letter-spacing:.06em}
+.ax-prose{font-family:var(--sans);color:var(--ink-2)}
+.ax-prose h1,.ax-prose h2,.ax-prose h3,.ax-prose h4,.ax-prose h5{font-family:var(--sans);font-weight:800;letter-spacing:-.025em}
+.ax-prose h1{border-bottom:1px solid var(--line-hard);padding-bottom:.3em}
+.ax-prose h2{border-bottom:1px solid var(--line-soft)}
+.ax-prose blockquote{border-left:2px solid var(--red);background:var(--sheet-2);font-style:normal;color:var(--ink-3)}
+.ax-prose code:not(pre code){border-radius:0;background:var(--sheet-2);border-color:var(--line)}
+.ax-prose pre{border-radius:0}
+.ax-code-top{font-size:9.5px;letter-spacing:.14em}
+.ax-prose table{font-family:var(--mono);font-size:.78em}
+.ax-prose th{font-family:var(--mono);letter-spacing:.06em;font-weight:600}
+.ax-empty-reader .seal{border-radius:50%;border:1px solid var(--line-hard);font-family:var(--mono);font-size:16px}
+.ax-empty-reader .t{font-family:var(--sans);font-weight:800}
+
+/* 文件树 / 阅读器 / 大纲 */
+.ax-tree-pane{background:var(--sheet);border-right:1px solid var(--line-hard)}
+.ax-pane-head{border-bottom:1px solid var(--line-hard)}
+.ax-tree-crumb{font-size:10px;letter-spacing:.02em}
+.ax-tree-row{border-radius:0;font-size:12.5px}
+.ax-tree-row:hover{background:var(--sheet-2)}
+.ax-tree-row.on{background:var(--red-soft);color:var(--ink);font-weight:600}
+.ax-tree-row.on::before{width:2px;top:2px;bottom:2px;box-shadow:0 0 8px var(--red)}
+.ax-reader-pane{background:var(--paper-2)}
+.ax-reader-bar{background:var(--sheet);border-bottom:1px solid var(--line-hard)}
+.ax-reader-bar .path{font-size:10.5px;letter-spacing:.04em}
+.ax-outline-pane{background:var(--sheet);border-left:1px solid var(--line-hard)}
+.ax-outline-head .t{font-family:var(--mono);font-size:10px;letter-spacing:.16em;color:var(--red)}
+.ax-outline a{border-radius:0;font-size:11px}
+.ax-outline a.on{border-left-width:2px;background:var(--sheet-2)}
+
+/* 发行版 / 收藏 / 批注 / 设置 / 搜索 */
+.ax-rel{padding:14px 16px;margin-bottom:8px}
+.ax-rel:hover{border-color:var(--red)}
+.ax-rel-top .tag{font-size:12px}
+.ax-rel-top .nm{font-family:var(--sans);font-weight:700}
+.ax-shelf-card{padding:14px;background:var(--sheet)}
+.ax-shelf-card:hover{transform:none;border-color:var(--red)}
+.ax-shelf-card .tag{font-size:9px;letter-spacing:.18em}
+.ax-shelf-card .tt{font-family:var(--sans);font-weight:700}
+.ax-note-card .quote{border-left:2px solid var(--red-soft);font-family:var(--sans);font-size:12.5px}
+.ax-set-card h3{font-family:var(--sans);font-weight:800;letter-spacing:-.02em}
+.ax-set-row .lab{font-family:var(--mono);font-size:11px;letter-spacing:.04em}
+.ax-search-box .ax-input{font-family:var(--mono);font-size:13px}
+.ax-result .av{border-radius:0;font-family:var(--mono);font-size:12px}
+.ax-result .nm{font-family:var(--sans);font-weight:700}
+.ax-result .nm em{font-size:11px}
+
+/* 浮层：命令面板 / 抽屉 */
+.ax-scrim{backdrop-filter:blur(3px)}
+.ax-palette{border-radius:0;border-color:var(--red);box-shadow:var(--shadow-pop)}
+.ax-palette-top{border-bottom:1px solid var(--line-hard);padding:12px 14px}
+.ax-palette-top input{font-family:var(--mono);font-size:14px}
+.ax-pal-item{border-radius:0}
+.ax-pal-item.sel{background:var(--red-soft)}
+.ax-pal-section{font-family:var(--mono);font-size:9px;letter-spacing:.22em;color:var(--red)}
+.ax-pal-foot{font-family:var(--mono);font-size:9.5px;letter-spacing:.06em}
+.ax-sheet{border-radius:0;border:1px solid var(--line-hard)}
+.ax-sheet-head{border-bottom:1px solid var(--line-hard);padding:14px 16px 10px}
+.ax-sheet-head h3{font-family:var(--sans);font-weight:800;letter-spacing:-.02em}
+.ax-sheet-head .sub{font-size:9.5px;letter-spacing:.1em}
+.ax-sheet-close{border-radius:0}
+@media (max-width:900px){.ax-sheet{border-radius:0}}
+.ax-share-preview{border-radius:0}
+.ax-qr-img{border-radius:0}
+.ax-note-quote{font-family:var(--sans);border-left:2px solid var(--red)}
+.ax-sheet-tip{font-family:var(--mono);font-size:10px;line-height:1.7}
+.ax-sheet-tabs button{font-family:var(--mono);font-size:10.5px;letter-spacing:.06em}
+.ax-sel-pill{border-radius:0;background:var(--red);color:#04120f}
+html[data-theme="ink"] .ax-sel-pill{color:#03100f}
+.ax-sel-pill button{color:inherit}
+.ax-toast{border-radius:0;border-left:2px solid var(--red);font-family:var(--mono);font-size:11px;letter-spacing:.02em}
+.ax-toast.err{border-left-color:#e0574f}
+.ax-toast.ok{border-left-color:var(--green)}
+.ax-banner{border-radius:0;border-left-width:2px;font-family:var(--sans)}
+.ax-loader{font-size:10.5px;letter-spacing:.08em}
+.ax-recent-row .seal-mini{border-radius:0;font-family:var(--mono);font-size:10px}
+
+/* 首页：声呐接入台 */
+.ax-entry{margin:0 auto;padding:clamp(6px,3.5vh,34px) 0 30px}
+.ax-entry-deck{padding:14px 26px 24px;border-color:var(--line-hard);background:var(--sheet)}
+.ax-entry-bar{font-size:9px;letter-spacing:.2em;border-bottom:1px solid var(--line-hard)}
+.ax-entry h1{font-family:var(--sans);font-weight:800;letter-spacing:-.05em;font-size:clamp(30px,3.8vw,48px);margin:18px 0 6px}
+.ax-entry h1 span{color:var(--red);letter-spacing:.34em;font-size:9px;margin-bottom:12px}
+.ax-entry-sub{font-size:9.5px;letter-spacing:.24em;margin-bottom:22px}
+.ax-entry-field .lead{font-size:11px;color:var(--red);padding-bottom:16px}
+.ax-entry-input{font-family:var(--sans);font-weight:600;letter-spacing:-.02em}
+.ax-entry-clip{font-size:10px;letter-spacing:.06em}
+.ax-entry-go{font-family:var(--mono);letter-spacing:.24em;text-indent:.24em}
+.ax-entry-status{font-size:10px;letter-spacing:.03em}
+.ax-entry-help{border-radius:0;border-left-width:2px;font-family:var(--sans)}
+.ax-entry-recent-hd .t{letter-spacing:.22em}
+.ax-entry-row .tx b{font-weight:700}
+.ax-entry-row .tx small{letter-spacing:.04em}
+.ax-entry-list{border-top:1px solid var(--line-hard)}
+
+/* 新增：分支选择 */
+.ax-branch-chip{
+  display:inline-flex;align-items:center;gap:7px;height:34px;padding:0 10px;flex:0 1 auto;min-width:0;
+  border:1px solid var(--line-hard);border-radius:0;background:var(--sheet);color:var(--ink-2);
+  font-family:var(--mono);font-size:11px;transition:border-color .15s,color .15s,box-shadow .15s;
+}
+.ax-branch-chip svg{width:14px;height:14px;flex:0 0 auto;color:var(--red)}
+.ax-branch-chip b{max-width:150px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ax-branch-chip .n{flex:0 0 auto;padding-left:7px;border-left:1px solid var(--line-soft);color:var(--ink-4);font-size:9.5px}
+.ax-branch-chip .chev{color:var(--ink-4)}
+.ax-branch-chip:hover{border-color:var(--red);color:var(--ink);box-shadow:0 0 0 1px var(--red-soft) inset}
+.ax-branch-chip[hidden]{display:none}
+.ax-branch-inline{display:inline-flex;align-items:center;gap:5px;margin-left:4px;padding:3px 7px;border:1px solid var(--line-hard);background:var(--sheet-2);color:var(--red);font-family:var(--mono);font-size:9.5px;letter-spacing:.04em;vertical-align:2px}
+.ax-branch-inline svg{width:12px;height:12px}
+.ax-branch-inline:hover{border-color:var(--red);background:var(--red-soft)}
+.ax-tree-branch{font-family:var(--mono);font-size:10px;color:var(--red);padding:2px 4px;border-bottom:1px dashed var(--red)}
+.ax-tree-branch:hover{background:var(--red-soft)}
+.ax-m-crumb-branch{font-family:var(--mono);font-size:10px;color:var(--red);border-bottom:1px dashed var(--red)}
+.ax-branch-sheet{max-width:640px}
+.ax-commit{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-top:12px;padding:8px 10px;border:1px dashed var(--line);background:var(--sheet-2);font-family:var(--mono);font-size:10px;color:var(--ink-3)}
+.ax-commit .sha{flex:0 0 auto;padding:1px 5px;border:1px solid var(--red-soft);color:var(--red);font-weight:700}
+.ax-commit .msg{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:var(--ink-2)}
+.ax-commit .when{flex:0 0 auto;color:var(--ink-4)}
+.ax-branchmiss{border:1px solid var(--line);border-left:2px solid var(--gold);background:var(--sheet-2);padding:13px 16px;margin:0 0 18px}
+.ax-branchmiss .tag{font-family:var(--mono);font-size:8.5px;letter-spacing:.2em;color:var(--gold);text-transform:uppercase}
+.ax-branchmiss b{display:block;font-family:var(--sans);font-size:15px;font-weight:800;letter-spacing:-.02em;margin:3px 0 5px;overflow-wrap:anywhere}
+.ax-branchmiss p{margin:0;font-size:12px;line-height:1.7;color:var(--ink-3)}
+.ax-branchmiss .chips{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 11px}
+.ax-branchmiss .chips button{font-family:var(--mono);font-size:10.5px;padding:3px 7px;border:1px solid var(--line-hard);background:var(--sheet);color:var(--ink-2)}
+.ax-branchmiss .chips button:hover{border-color:var(--red);color:var(--red)}
+.ax-branchmiss .acts{display:flex;gap:7px;flex-wrap:wrap}
+.ax-branch-search{position:relative;margin:0 0 10px}
+.ax-branch-search svg{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:15px;height:15px;color:var(--red);pointer-events:none}
+.ax-branch-search input{width:100%;height:40px;min-height:40px;padding:0 12px 0 32px;border:1px solid var(--line-hard);background:var(--sheet);color:var(--ink);font-family:var(--mono);font-size:13px;outline:none}
+.ax-branch-search input:focus{border-color:var(--red);box-shadow:0 0 0 2px var(--red-soft) inset}
+.ax-branch-search input::placeholder{color:var(--ink-4)}
+.ax-branch-list{display:flex;flex-direction:column;max-height:50vh;overflow:auto;border-top:1px solid var(--line-hard);min-height:60px}
+.ax-branch-row{display:flex;align-items:center;gap:10px;width:100%;padding:10px 6px;border-bottom:1px solid var(--line-soft);text-align:left;transition:background .14s}
+.ax-branch-row:hover{background:var(--sheet-2)}
+.ax-branch-row.on{background:var(--red-soft)}
+.ax-branch-row .ic{width:18px;flex:0 0 auto;display:grid;place-items:center;color:var(--red)}
+.ax-branch-row .ic svg{width:15px;height:15px}
+.ax-branch-row .tt{flex:1;min-width:0}
+.ax-branch-row .tt b{display:block;font-family:var(--mono);font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ax-branch-row .tt small{display:block;font-family:var(--mono);font-size:9.5px;color:var(--ink-4);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ax-branch-row .tag{flex:0 0 auto;font-family:var(--mono);font-size:8px;letter-spacing:.12em;padding:2px 5px;border:1px solid var(--line-hard);color:var(--ink-3);text-transform:uppercase}
+.ax-branch-row .tag.def{color:var(--red);border-color:var(--red)}
+.ax-branch-row .ck{flex:0 0 auto;color:var(--red);font-size:13px}
+.ax-branch-row .ck svg{width:14px;height:14px}
+.ax-branch-empty{padding:26px 14px;text-align:center;font-family:var(--mono);font-size:10.5px;line-height:1.8;color:var(--ink-4)}
+.ax-branch-empty .ax-btn{margin-top:10px}
+.ax-branch-foot{display:flex;align-items:center;gap:8px;margin-top:11px;flex-wrap:wrap}
+.ax-branch-foot .ax-sheet-tip{margin:0;flex:1}
+
+/* 移动端：顶栏 / 底座 / 首页 */
+.ax-m-head{border-bottom:1px solid var(--line-hard);background:color-mix(in srgb,var(--paper) 90%,transparent)}
+.ax-m-seal{border:0;border-radius:50%;width:32px;height:32px;position:relative;transform:none;background:transparent;font-size:0;display:grid;place-items:center;box-shadow:none}
+.ax-m-seal::before{content:"";position:absolute;inset:0;border:1px solid var(--red);border-radius:50%;opacity:.55}
+.ax-m-seal::after{display:none}
+.ax-m-seal span{display:block;width:8px;height:8px;border-radius:50%;background:var(--red);animation:sg-pulse 2.6s infinite}
+.ax-m-repo{border-radius:0;border-color:var(--line-hard);background:var(--sheet)}
+.ax-m-repo b{font-family:var(--sans);font-weight:700;letter-spacing:-.02em}
+.ax-m-branch{
+  display:inline-flex;align-items:center;gap:4px;flex:0 1 auto;min-width:0;max-width:104px;height:34px;padding:0 8px;
+  border:1px solid var(--line-soft);border-radius:0;background:var(--sheet);color:var(--ink-2);
+  font-family:var(--mono);font-size:9.5px;
+}
+.ax-m-branch svg{width:13px;height:13px;flex:0 0 auto;color:var(--red)}
+.ax-m-branch span{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ax-m-branch[hidden]{display:none}
+.ax-m-dock{border-top:1px solid var(--line-hard);background:color-mix(in srgb,var(--sheet) 94%,transparent)}
+.ax-m-dock button{font-family:var(--mono);font-size:9.5px;letter-spacing:.08em;border-radius:0}
+.ax-m-dock button.on{color:var(--red);position:relative}
+.ax-m-dock button.on::after{content:"";position:absolute;left:24%;right:24%;bottom:2px;height:1px;background:var(--red);box-shadow:0 0 8px var(--red)}
+.ax-m-fab{border-radius:50%;background:var(--red);color:#04120f;border-color:var(--red-deep);box-shadow:0 0 24px -4px var(--red)}
+html[data-theme="ink"] .ax-m-fab{color:#03100f}
+.ax-m-hero{border-bottom:1px solid var(--line-hard)}
+.ax-m-hero::before{height:2px;background:linear-gradient(90deg,var(--red),transparent 70%)}
+.ax-m-hero .kick{font-family:var(--mono);font-size:9px;letter-spacing:.2em;color:var(--red)}
+.ax-m-hero h1{font-family:var(--sans);font-weight:800;letter-spacing:-.045em}
+.ax-m-hero .ow{font-family:var(--mono);font-size:10px;letter-spacing:.04em}
+.ax-m-hero .ow button{color:var(--red);font-family:var(--mono);font-size:10px;border-bottom:1px dashed var(--red)}
+.ax-m-hero .ds{font-family:var(--sans);font-size:13.5px}
+.ax-m-stats{border:1px solid var(--line-hard);background:var(--line-hard)}
+.ax-m-stats div{background:var(--sheet)}
+.ax-m-stats .n{font-family:var(--mono);font-weight:700}
+.ax-m-stats .l{font-family:var(--mono);font-size:9px;letter-spacing:.14em}
+.ax-m-act{border-radius:0;background:var(--sheet);font-family:var(--sans)}
+.ax-m-act:active{background:var(--red-soft)}
+.ax-m-readme{border-color:var(--line-hard)}
+.ax-m-block-head h3{font-family:var(--sans);font-weight:800;letter-spacing:-.02em}
+.ax-m-block-head .no{color:var(--red);letter-spacing:.16em}
+.ax-m-frow{border-radius:0;border-color:var(--line)}
+.ax-m-frow .sq{border-radius:0}
+.ax-m-frow:active{background:var(--red-soft)}
+.ax-m-filehead{border-bottom:1px solid var(--line-hard);background:color-mix(in srgb,var(--paper) 94%,transparent)}
+.ax-m-crumb{font-size:10px}
+.ax-m-search input{border-radius:0}
+.ax-mreader-head{border-bottom:1px solid var(--line-hard)}
+.ax-mreader-head .ttl b{font-family:var(--sans);font-weight:700}
+.ax-mreader-bar{border-top:1px solid var(--line-hard);background:color-mix(in srgb,var(--sheet) 95%,transparent)}
+.ax-mreader-bar button{font-family:var(--mono);font-size:9px;letter-spacing:.06em;border-radius:0}
+.ax-commit .when{font-size:9.5px}
+@media (max-width:900px){
+  .ax-m .ax-entry{padding:0 0 24px;max-width:none}
+  .ax-m .ax-entry-deck{padding:12px 15px 20px}
+  .ax-m .ax-entry-bar{font-size:8px;letter-spacing:.14em;gap:8px}
+  .ax-m .ax-entry-bar .clock{display:none}
+  .ax-m .ax-entry h1{font-size:clamp(25px,7.6vw,33px);margin-top:16px}
+  .ax-m .ax-entry-sub{font-size:8.5px;letter-spacing:.16em;margin-bottom:18px}
+  .ax-m .ax-entry-field{flex-wrap:wrap;align-items:stretch}
+  .ax-m .ax-entry-field .lead{display:none}
+  .ax-m .ax-entry-input{flex:1 1 100%;height:50px;padding:0 0 8px;font-size:16px}
+  .ax-m .ax-entry-clip{order:2;flex:1 1 0;min-height:40px;justify-content:center;margin:12px 0 0;padding:0;border-top:0;border-left:0;border-bottom:1px dashed var(--line-hard)}
+  .ax-m .ax-entry-go{order:3;flex:1 1 0;height:44px;margin:12px 0 0;padding:0}
+  .ax-m .ax-entry-status{font-size:10px;margin-top:12px}
+  .ax-m .ax-entry-recent-hd{margin-top:6px}
+  .ax-m .ax-entry-row{padding:12px 2px}
+  .ax-m .ax-entry-help{padding:11px 12px}
+  .ax-m-hero .ax-commit{margin-top:10px}
+}
 
 </style>
 </head>
@@ -1060,12 +1414,14 @@ html[data-theme="ink"] .ax-m-fab{background:var(--red);color:#fff;border-color:v
   <symbol id="i-clock" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8.4"/><path d="M12 7.2v5.2l3.4 2"/></symbol>
   <symbol id="i-check" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="m4.5 12.5 5 5 10-11"/></symbol>
   <symbol id="i-chevron-r" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="m9 6 6 6-6 6"/></symbol>
+  <symbol id="i-branch" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="7" cy="5.6" r="2.1"/><circle cx="7" cy="18.4" r="2.1"/><circle cx="17.4" cy="8.4" r="2.1"/><path d="M7 7.7v8.6M9.1 5.6h3.5a4.8 4.8 0 0 1 4.8 4.8v0"/></symbol>
+  <symbol id="i-sonar" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><path d="M12 12 18 6"/></symbol>
 </svg>
 
 <!-- ============ 桌面端 ============ -->
 <div class="ax-frame" id="axFrame">
   <aside class="ax-rail" aria-label="主导航">
-    <button class="ax-seal" id="railHome" title="回到仓库首页" aria-label="回到仓库首页">卷</button>
+    <button class="ax-seal" id="railHome" title="回到信号台" aria-label="回到仓库首页"><span></span></button>
     <nav class="ax-rail-nav">
       <button class="ax-rail-btn on" data-view="overview" aria-current="page"><svg><use href="#i-home"/></svg><span>概览</span></button>
       <button class="ax-rail-btn" data-view="files"><svg><use href="#i-folder"/></svg><span>文件</span></button>
@@ -1084,8 +1440,14 @@ html[data-theme="ink"] .ax-m-fab{background:var(--red);color:#fff;border-color:v
   <main class="ax-stage">
     <header class="ax-mast">
       <button class="ax-crumb" id="repoBtn" title="切换仓库">
-        <span class="kicker">卷宗</span>
+        <span class="kicker">TARGET</span>
         <span class="name" id="repoName">选择仓库</span>
+        <svg class="chev"><use href="#i-chev"/></svg>
+      </button>
+      <button class="ax-branch-chip" id="branchBtn" data-act="branch-sheet" title="切换分支" hidden>
+        <svg><use href="#i-branch"/></svg>
+        <b id="branchBtnName">main</b>
+        <span class="n" id="branchBtnCount">—</span>
         <svg class="chev"><use href="#i-chev"/></svg>
       </button>
       <button class="ax-mast-search" id="mastSearch">
@@ -1170,10 +1532,13 @@ html[data-theme="ink"] .ax-m-fab{background:var(--red);color:#fff;border-color:v
 <!-- ============ 移动端 ============ -->
 <div class="ax-m" id="axMobile">
   <header class="ax-m-head">
-    <div class="ax-m-seal">卷</div>
+    <div class="ax-m-seal"><span></span></div>
     <button class="ax-m-repo" id="mRepoBtn">
       <span class="n"><b id="mRepoName">选择仓库</b><small id="mRepoBranch">点击切换仓库</small></span>
       <svg><use href="#i-chev"/></svg>
+    </button>
+    <button class="ax-m-branch" id="mBranchBtn" data-act="branch-sheet" aria-label="切换分支" title="切换分支" hidden>
+      <svg><use href="#i-branch"/></svg><span id="mBranchName">main</span>
     </button>
     <button class="ax-m-icon" id="mSearchBtn" aria-label="搜索"><svg><use href="#i-search"/></svg></button>
     <button class="ax-m-icon" id="mMoreBtn" aria-label="更多操作"><svg><use href="#i-more"/></svg></button>
@@ -1238,7 +1603,7 @@ html[data-theme="ink"] .ax-m-fab{background:var(--red);color:#fff;border-color:v
 <!-- 仓库切换抽屉 -->
 <div class="ax-scrim sheet" id="repoScrim" hidden>
   <div class="ax-sheet ax-repo-sheet" role="dialog" aria-modal="true" aria-label="切换仓库">
-    <div class="ax-sheet-head"><h3>打开仓库卷宗</h3><button class="ax-sheet-close" data-close="repoScrim" aria-label="关闭"><svg><use href="#i-x"/></svg></button></div>
+    <div class="ax-sheet-head"><h3>接入一个仓库</h3><button class="ax-sheet-close" data-close="repoScrim" aria-label="关闭"><svg><use href="#i-x"/></svg></button></div>
     <div class="ax-sheet-body">
       <div class="ax-field">
         <label for="repoInput">仓库地址或 owner/repo</label>
@@ -1255,10 +1620,28 @@ html[data-theme="ink"] .ax-m-fab{background:var(--red);color:#fff;border-color:v
   </div>
 </div>
 
+<!-- 分支切换抽屉 -->
+<div class="ax-scrim sheet" id="branchScrim" hidden>
+  <div class="ax-sheet ax-branch-sheet" role="dialog" aria-modal="true" aria-label="切换分支">
+    <div class="ax-sheet-head"><h3>切换分支</h3><span class="sub" id="branchCount">—</span><button class="ax-sheet-close" data-close="branchScrim" aria-label="关闭"><svg><use href="#i-x"/></svg></button></div>
+    <div class="ax-sheet-body">
+      <div class="ax-branch-search">
+        <svg><use href="#i-search"/></svg>
+        <input id="branchSearch" type="search" placeholder="搜索分支…" autocomplete="off" spellcheck="false" aria-label="搜索分支">
+      </div>
+      <div class="ax-branch-list" id="branchList"></div>
+      <div class="ax-branch-foot">
+        <span class="ax-sheet-tip" id="branchTip">切换后文件树、提交信息与分享链接会同步更新。</span>
+        <button class="ax-btn sm" data-act="branch-reload">刷新分支</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <!-- 分享卡片抽屉 -->
 <div class="ax-scrim sheet" id="shareScrim" hidden>
   <div class="ax-sheet" role="dialog" aria-modal="true" aria-label="分享卡片">
-    <div class="ax-sheet-head"><h3>剪报卡片</h3><span class="sub">PNG · 1080×1350</span><button class="ax-sheet-close" data-close="shareScrim" aria-label="关闭"><svg><use href="#i-x"/></svg></button></div>
+    <div class="ax-sheet-head"><h3>信号卡</h3><span class="sub">PNG · 1080×1350</span><button class="ax-sheet-close" data-close="shareScrim" aria-label="关闭"><svg><use href="#i-x"/></svg></button></div>
     <div class="ax-sheet-body">
       <canvas class="ax-share-preview" id="shareCanvas" width="1080" height="1350"></canvas>
       <div class="ax-sheet-tip" id="shareTip">卡片在你的浏览器本地绘制，不会上传任何数据。</div>
@@ -2561,8 +2944,8 @@ const n=e.replace("grmr_","").replace("_","-");He.registerLanguage(n,Ke[e])}
 return He}()
 ;"object"==typeof exports&&"undefined"!=typeof module&&(module.exports=hljs);</script>
 <script>/* ============================================================
-   卷宗 · 应用逻辑（全新实现）
-   单文件、无构建依赖；marked / DOMPurify / highlight.js 内联
+   声呐 · 应用逻辑（单文件实现）
+   深海声呐视觉语言 / 浅海·深海双主题
    ============================================================ */
 (function(){
 'use strict';
@@ -2692,6 +3075,8 @@ var S = {
   searchQuery: '', searchResults: [], searchResultsQuery: '', searchError: '', searchLoading: false,
   mReaderOpen: false,
   rate: null,
+  branches: [], branchQuery: '', branchLoading: false, branchError: '', branchMissing: '',
+  headCommit: null,
   lastError: null
 };
 var bookmarks = store.get(K.bookmarks, []) || [];
@@ -2720,11 +3105,11 @@ function applyTheme(){
   var th = resolvedTheme();
   document.documentElement.setAttribute('data-theme', th);
   var meta = document.querySelector('meta[name="theme-color"]');
-  if (meta) meta.setAttribute('content', th === 'ink' ? '#111316' : '#f1ebdc');
+  if (meta) meta.setAttribute('content', th === 'ink' ? '#03100f' : '#e7efec');
   var use = document.querySelector('#railThemeIcon use');
   if (use) use.setAttribute('href', th === 'ink' ? '#i-sun' : '#i-moon');
   var tgl = $('#themeToggleLabel');
-  if (tgl) tgl.textContent = cfg.theme === 'auto' ? '跟随系统' : (cfg.theme === 'ink' ? '墨色' : '纸色');
+  if (tgl) tgl.textContent = cfg.theme === 'auto' ? '跟随系统' : (cfg.theme === 'ink' ? '深海' : '浅海');
 }
 function applyReadingPrefs(){
   var root = document.documentElement.style;
@@ -2736,7 +3121,7 @@ function applyReadingPrefs(){
 function toggleTheme(){
   var cur = resolvedTheme();
   cfg.theme = cur === 'ink' ? 'paper' : 'ink';
-  saveCfg(); applyTheme(); toast('已切换为' + (cfg.theme === 'ink' ? '墨色' : '纸色') + '主题', 'ok', 1600);
+  saveCfg(); applyTheme(); toast('已切换为' + (cfg.theme === 'ink' ? '深海' : '浅海') + '主题', 'ok', 1600);
   renderSettings();
 }
 if (mqDark && mqDark.addEventListener) {
@@ -3006,7 +3391,7 @@ function renderRecents(){
   }
   list.innerHTML = recent.map(function(x){
     return '<button class="ax-recent-row" data-act="open-repo" data-o="' + esc(x.owner) + '" data-r="' + esc(x.repo) + '">' +
-      '<span class="seal-mini">卷</span>' +
+      '<span class="seal-mini">◎</span>' +
       '<span class="tt">' + esc(x.owner + '/' + x.repo) + '<small>' + esc(x.branch || '') + ' · ' + fmtDate(x.ts, true) + '</small></span>' +
       '<span class="x" data-act="recent-del" data-o="' + esc(x.owner) + '" data-r="' + esc(x.repo) + '" title="移除记录">✕</span>' +
     '</button>';
@@ -3036,22 +3421,21 @@ function parseRepoInput(raw){
   }
   return { owner: owner, repo: repo, branch: branch, path: path, kind: kind };
 }
+function branchSeg(b){ return String(b || 'main').split('/').map(encodeURIComponent).join('/'); }
+function repoHashPath(){
+  var h = '#/' + S.owner + '/' + S.repo;
+  if (S.kind === 'release' || S.kind === 'releases') h += '/releases/tag/' + encodeURIComponent(S.branch);
+  else if (S.path && S.kind !== 'tree') h += '/blob/' + branchSeg(S.branch) + '/' + S.path.split('/').map(encodeURIComponent).join('/');
+  else h += '/tree/' + branchSeg(S.branch || 'main');
+  return h;
+}
 function writeHash(){
   if (!S.owner || !S.repo) return;
-  var h = '#/' + S.owner + '/' + S.repo;
-  if (S.kind === 'release') h += '/releases/tag/' + encodeURIComponent(S.branch);
-  else if (S.path) h += '/blob/' + S.branch.split('/').map(encodeURIComponent).join('/') + '/' + S.path.split('/').map(encodeURIComponent).join('/');
-  try { history.replaceState(null, '', h); } catch(e){}
+  try { history.replaceState(null, '', repoHashPath()); } catch(e){}
 }
 function shareUrl(){
   var base = location.origin + location.pathname;
-  var h = '';
-  if (S.owner && S.repo) {
-    h = '#/' + S.owner + '/' + S.repo;
-    if (S.kind === 'release') h += '/releases/tag/' + encodeURIComponent(S.branch);
-    else if (S.path) h += '/blob/' + S.branch.split('/').map(encodeURIComponent).join('/') + '/' + S.path.split('/').map(encodeURIComponent).join('/');
-  }
-  return base + h;
+  return base + (S.owner && S.repo ? repoHashPath() : '');
 }
 function parseHash(){
   var h = location.hash || '';
@@ -3124,6 +3508,7 @@ async function loadRepo(owner, repo, opts){
   S.releases = []; S.readmePath = ''; S.readmeText = ''; S.readmeHtml = '';
   S.lastError = null; S.loading = true; S.expanded = {}; S.mDir = '';
   S.translated = false; S.trMap = {}; S.outline = [];
+  S.branches = []; S.branchMissing = ''; S.branchError = ''; S.branchQuery = ''; S.headCommit = null;
   S.mobileView = S.mobileView || 'overview';
   closeMobileReader(true);
   resetReader();
@@ -3137,14 +3522,36 @@ async function loadRepo(owner, repo, opts){
     var meta = await gh('/repos/' + encodeURIComponent(owner) + '/' + encodeURIComponent(repo));
     if (token !== S.loadToken) return;
     S.meta = meta;
-    S.branch = opts.branch || meta.default_branch || 'main';
+    var def = meta.default_branch || 'main';
+    try {
+      S.branches = await loadBranches(owner, repo);
+    } catch(be){
+      S.branches = [];
+      S.branchError = (be && be.message) || '';
+    }
+    if (token !== S.loadToken) return;
+    var wanted = opts.branch || '';
+    if (wanted && wanted !== def) {
+      var known = S.branches.some(function(b){ return b.name === wanted; });
+      if (!known && S.branches.length) S.branchMissing = wanted;
+    }
+    S.branch = S.branchMissing ? def : (wanted || def);
     renderChrome();
 
     var results = await Promise.all([
       loadReadme(owner, repo).catch(function(e){ return e; }),
       loadTree(owner, repo, S.branch).catch(function(e){ return e; }),
-      loadReleases(owner, repo).catch(function(e){ return e; })
+      loadReleases(owner, repo).catch(function(e){ return e; }),
+      loadHeadCommit(S.branch).catch(function(e){ return e; })
     ]);
+    if (token !== S.loadToken) return;
+    if (results[1] instanceof Error && !S.branchMissing && wanted && wanted !== def && results[1].status === 404) {
+      S.branchMissing = wanted;
+      S.branch = def;
+      results[0] = await loadReadme(owner, repo).catch(function(e){ return e; });
+      results[1] = await loadTree(owner, repo, def).catch(function(e){ return e; });
+      results[3] = await loadHeadCommit(def);
+    }
     if (token !== S.loadToken) return;
     if (results[0] instanceof Error) S.readmeError = results[0].message; else S.readmeError = '';
     if (results[1] instanceof Error) S.treeError = results[1].message; else S.treeError = '';
@@ -3158,6 +3565,7 @@ async function loadRepo(owner, repo, opts){
     renderTree();
     renderMobileFiles();
     writeHash();
+    renderBranchSheet();
 
     if (opts.path) {
       await openFile(opts.path, { silent: true });
@@ -3203,6 +3611,31 @@ async function loadTree(owner, repo, branch){
   S.root = buildTree(S.tree);
   if (S.path) revealTreeTo(S.path);
   return S.tree;
+}
+async function loadBranches(owner, repo){
+  var all = [];
+  for (var page = 1; page <= 3; page++) {
+    var data = await gh('/repos/' + encodeURIComponent(owner) + '/' + encodeURIComponent(repo) + '/branches?per_page=100&page=' + page);
+    if (!Array.isArray(data) || !data.length) break;
+    data.forEach(function(b){
+      all.push({ name: b.name, sha: (b.commit && b.commit.sha) || '', 'protected': !!b.protected });
+    });
+    if (data.length < 100) break;
+  }
+  return all;
+}
+async function loadHeadCommit(branch){
+  if (!S.owner || !S.repo || !branch) { S.headCommit = null; return null; }
+  try {
+    var data = await gh('/repos/' + encodeURIComponent(S.owner) + '/' + encodeURIComponent(S.repo) + '/commits?sha=' + encodeURIComponent(branch) + '&per_page=1');
+    var c = Array.isArray(data) ? data[0] : null;
+    S.headCommit = c ? {
+      sha: c.sha || '',
+      message: ((c.commit && c.commit.message) || '').split('\n')[0],
+      date: (c.commit && c.commit.author && c.commit.author.date) || ''
+    } : null;
+  } catch(e){ S.headCommit = null; }
+  return S.headCommit;
 }
 async function loadReleases(owner, repo){
   var data = await gh('/repos/' + encodeURIComponent(owner) + '/' + encodeURIComponent(repo) + '/releases?per_page=8');
@@ -3286,14 +3719,26 @@ function renderChrome(){
   var nameEl = $('#repoName');
   var mName = $('#mRepoName');
   var mBranch = $('#mRepoBranch');
+  var chip = $('#branchBtn');
+  var chipName = $('#branchBtnName');
+  var chipCount = $('#branchBtnCount');
+  var mBBtn = $('#mBranchBtn');
+  var mBName = $('#mBranchName');
   if (S.owner) {
     if (nameEl) nameEl.innerHTML = '<em>' + esc(S.owner) + ' /</em> ' + esc(S.repo);
     if (mName) mName.textContent = S.repo;
     if (mBranch) mBranch.textContent = (S.branch || '默认分支') + (S.meta ? ' · ★ ' + fmtNum(S.meta.stargazers_count) : '');
+    if (chip) chip.hidden = false;
+    if (chipName) chipName.textContent = S.branch || '—';
+    if (chipCount) chipCount.textContent = S.branches && S.branches.length ? String(S.branches.length) : '·';
+    if (mBBtn) mBBtn.hidden = false;
+    if (mBName) mBName.textContent = S.branch || 'main';
   } else {
     if (nameEl) nameEl.textContent = '选择仓库';
     if (mName) mName.textContent = '选择仓库';
     if (mBranch) mBranch.textContent = '点击切换仓库';
+    if (chip) chip.hidden = true;
+    if (mBBtn) mBBtn.hidden = true;
   }
   var bmBtn = $('#actBookmark');
   var onRepo = isRepoBookmarked();
@@ -3327,11 +3772,62 @@ function heroStatsHtml(){
   var m = S.meta;
   if (!m) return '';
   return '<div class="ax-stats">' +
-    '<div class="ax-stat"><div class="n">' + fmtNum(m.stargazers_count) + '</div><div class="l">Stars</div></div>' +
-    '<div class="ax-stat"><div class="n">' + fmtNum(m.forks_count) + '</div><div class="l">Forks</div></div>' +
-    '<div class="ax-stat"><div class="n">' + fmtNum(m.open_issues_count) + '</div><div class="l">Issues</div></div>' +
-    '<div class="ax-stat"><div class="n">' + esc(fmtDate(m.updated_at, true)) + '</div><div class="l">Updated</div></div>' +
+    '<div class="ax-stat"><div class="n">' + fmtNum(m.stargazers_count) + '</div><div class="l">STARS</div></div>' +
+    '<div class="ax-stat"><div class="n">' + fmtNum(m.forks_count) + '</div><div class="l">FORKS</div></div>' +
+    '<div class="ax-stat"><div class="n">' + fmtNum(m.open_issues_count) + '</div><div class="l">ISSUES</div></div>' +
+    '<div class="ax-stat"><div class="n">' + (S.branches.length ? String(S.branches.length) : '—') + '</div><div class="l">BRANCHES</div></div>' +
+  '</div>' + commitStripHtml();
+}
+function commitStripHtml(){
+  var c = S.headCommit;
+  if (!c) return '';
+  return '<div class="ax-commit" title="' + esc(c.message) + '">' +
+    '<span class="sha">' + esc(String(c.sha || '').slice(0, 7)) + '</span>' +
+    '<span class="msg">' + esc(c.message || '（无提交说明）') + '</span>' +
+    (c.date ? '<span class="when">' + esc(fmtDate(c.date, true)) + '</span>' : '') +
   '</div>';
+}
+function suggestBranches(name){
+  var q = String(name || '').toLowerCase();
+  if (!q || !S.branches || !S.branches.length) return [];
+  var def = (S.meta && S.meta.default_branch) || '';
+  var scored = [];
+  S.branches.forEach(function(b){
+    if (!b || b.name === def) return;
+    var n = b.name.toLowerCase(), score = 0;
+    if (n === q) score = 100;
+    else if (n.indexOf(q) === 0) score = 70;
+    else if (n.indexOf(q) >= 0) score = 50;
+    else {
+      var pre = 0;
+      while (pre < q.length && pre < n.length && q[pre] === n[pre]) pre++;
+      if (pre >= 2) score = 20 + pre;
+      else if (n.split(/[-_./]/).some(function(seg){ return q.indexOf(seg.slice(0, 3)) >= 0 && seg.length > 2; })) score = 12;
+    }
+    if (score > 0) scored.push({ name: b.name, score: score });
+  });
+  scored.sort(function(a, b){ return b.score - a.score; });
+  if (!scored.length) {
+    return S.branches.filter(function(b){ return b.name !== def; }).slice(0, 5).map(function(b){ return b.name; });
+  }
+  return scored.slice(0, 6).map(function(x){ return x.name; });
+}
+function branchMissingHtml(){
+  if (!S.branchMissing) return '';
+  var def = (S.meta && S.meta.default_branch) || 'main';
+  var sims = suggestBranches(S.branchMissing);
+  return '<div class="ax-branchmiss">' +
+    '<span class="tag">Branch not found</span>' +
+    '<b>分支「' + esc(S.branchMissing) + '」不存在</b>' +
+    '<p>已临时切回默认分支 <span style="font-family:var(--mono);color:var(--red)">' + esc(def) + '</span>。' +
+      (sims.length ? '下面是名字相近的分支，可直接切换：' : '可以从顶部仓库栏浏览全部分支。') + '</p>' +
+    (sims.length ? '<div class="chips">' + sims.map(function(n){
+      return '<button data-act="switch-branch" data-branch="' + esc(n) + '">' + esc(n) + '</button>';
+    }).join('') + '</div>' : '') +
+    '<div class="acts">' +
+      '<button class="ax-btn sm solid" data-act="switch-branch" data-branch="' + esc(def) + '">回到默认分支</button>' +
+      '<button class="ax-btn sm" data-act="branch-sheet">浏览所有分支</button>' +
+    '</div></div>';
 }
 function topicChips(){
   var topics = (S.meta && S.meta.topics) || [];
@@ -3356,10 +3852,14 @@ function overviewHtml(){
   var stars = m.stargazers_count;
 
   var hero = '<section class="ax-hero">' +
+    '<div class="ax-hero-dial" aria-hidden="true"><span></span><span></span><span></span><span></span></div>' +
     '<div class="ax-hero-top"><div class="ax-hero-main">' +
-      '<div class="kicker">Repository Dossier · 公开卷宗</div>' +
+      '<div class="kicker">SIGNAL LOCKED · 已接入公开仓库</div>' +
       '<h1>' + esc(m.name) + '</h1>' +
-      '<div class="owner">' + esc(m.owner ? m.owner.login : S.owner) + ' · ' + esc(S.branch) + ' 分支' + (m.archived ? ' · 已归档' : '') + '</div>' +
+      '<div class="owner">' + esc(m.owner ? m.owner.login : S.owner) + ' · ' +
+        '<button class="ax-branch-inline" data-act="branch-sheet" title="切换分支">' + ic('branch') + '<span>' + esc(S.branch) + '</span> ▾</button>' +
+        (m.archived ? ' · 已归档' : '') + '</div>' +
+      branchMissingHtml() +
       '<p class="desc">' + (m.description ? esc(m.description) : '这个仓库没有填写简介。你仍然可以浏览文件、阅读 Markdown 与下载发行版。') + '</p>' +
       '<div class="topics">' + topicChips() + repoMetaLine() + '</div>' +
       '<div class="ax-hero-actions">' +
@@ -3371,9 +3871,8 @@ function overviewHtml(){
         '<button class="ax-btn" data-act="share">' + ic('share') + '分享</button>' +
       '</div>' +
     '</div>' +
-    '<div class="ax-hero-side"><div class="ax-stamp" aria-hidden="true">卷宗<small>' + esc((m.language || 'REPO').toUpperCase()) + '</small></div></div>' +
     '</div>' + heroStatsHtml() +
-    '<div class="ax-hero-alert">' + ic('spark') + '<span>单文件阅读器 · 数据直连 GitHub API' + (S.rate ? ' · 本小时剩余 <b>' + fmtNum(S.rate.remaining) + '</b> 次请求' : '') + '</span></div>' +
+    '<div class="ax-hero-alert">' + ic('spark') + '<span>单文件阅读器 · 数据直连 GitHub API · 分支 <b>' + esc(S.branch) + '</b>' + (S.rate ? ' · 本小时剩余 <b>' + fmtNum(S.rate.remaining) + '</b> 次请求' : '') + '</span></div>' +
   '</section>';
 
   var readmeSection = '<div class="ax-block-head"><span class="idx">01</span><h3>README</h3><span class="line"></span>' +
@@ -3422,7 +3921,7 @@ function repoErrorHtml(){
   var cached = Object.keys(cache).filter(function(k){ return k.indexOf(S.owner + '/' + S.repo + '@') === 0; }).slice(0, 6);
   return '<div class="ax-empty" style="min-height:48vh;align-items:flex-start;text-align:left;max-width:720px;margin:0 auto">' +
     '<div class="mark">!</div>' +
-    '<div class="big" style="font-size:26px">没能打开这份卷宗</div>' +
+    '<div class="big" style="font-size:26px">没能接入这个仓库</div>' +
     '<p>' + esc(err.message || '未知错误') + '</p>' +
     '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:6px">' +
       '<button class="ax-btn solid" data-act="retry-repo">' + ic('refresh') + '重试</button>' +
@@ -3466,21 +3965,25 @@ function renderMobileOverview(){
   var readme = S.readmeHtml;
 
   var hero = '<div class="ax-m-hero">' +
-    '<div class="kick">Repository Dossier</div>' +
+    '<div class="kick">SIGNAL LOCKED</div>' +
     '<h1>' + esc(m.name) + '</h1>' +
-    '<div class="ow">' + esc(S.owner) + ' · ' + esc(S.branch) + '</div>' +
+    '<div class="ow">' + esc(S.owner) + ' · <button data-act="branch-sheet">' + esc(S.branch) + ' ▾</button></div>' +
+    branchMissingHtml() +
+    commitStripHtml() +
     '<p class="ds">' + (m.description ? esc(m.description) : '这个仓库没有填写简介。') + '</p>' +
     '<div class="tp">' + topicChips() + '</div>' +
     '<div class="ax-m-stats">' +
-      '<div><div class="n">' + fmtNum(m.stargazers_count) + '</div><div class="l">Stars</div></div>' +
-      '<div><div class="n">' + fmtNum(m.forks_count) + '</div><div class="l">Forks</div></div>' +
-      '<div><div class="n">' + fmtNum(m.open_issues_count) + '</div><div class="l">Issues</div></div>' +
+      '<div><div class="n">' + fmtNum(m.stargazers_count) + '</div><div class="l">STARS</div></div>' +
+      '<div><div class="n">' + fmtNum(m.forks_count) + '</div><div class="l">FORKS</div></div>' +
+      '<div><div class="n">' + (S.branches.length ? String(S.branches.length) : '—') + '</div><div class="l">BRANCHES</div></div>' +
     '</div>' +
     '<div class="ax-m-actions">' +
       '<button class="ax-m-act" data-act="view-files"><span>' + ic('folder') + '</span><span><b>浏览文件</b><small>' + (S.tree ? S.tree.length + ' 个文件' : '文件树') + '</small></span></button>' +
       '<button class="ax-m-act" data-act="release-list"><span>' + ic('clock') + '</span><span><b>发行版</b><small>' + (releases.length ? '最新 ' + esc(releases[0].tag_name) : '暂无') + '</small></span></button>' +
       '<button class="ax-m-act" data-act="zip"><span>' + ic('down') + '</span><span><b>下载 ZIP</b><small>' + esc(S.branch) + '</small></span></button>' +
-      '<button class="ax-m-act" data-act="share"><span>' + ic('share') + '</span><span><b>分享卷宗</b><small>卡片 / 二维码</small></span></button>' +
+      '<button class="ax-m-act" data-act="branch-sheet"><span>' + ic('branch') + '</span><span><b>切换分支</b><small>' + esc(S.branch) + '</small></span></button>' +
+      '<button class="ax-m-act" data-act="share"><span>' + ic('share') + '</span><span><b>分享</b><small>卡片 / 二维码</small></span></button>' +
+      '<button class="ax-m-act" data-act="bookmark-repo"><span>' + ic('star') + '</span><span><b>' + (isBm ? '已收藏' : '收藏') + '</b><small>' + esc(S.owner) + '/' + esc(S.repo) + '</small></span></button>' +
     '</div>' +
   '</div>';
 
@@ -3528,7 +4031,7 @@ function renderTree(){
   if (crumb) {
     crumb.innerHTML = S.owner
       ? '<span class="ax-pill" style="padding:2px 7px;font-size:10px;font-family:var(--mono)">' + esc(S.owner) + '/' + esc(S.repo) + '</span>' +
-        '<span class="sep">@</span><span>' + esc(S.branch) + '</span>'
+        '<span class="sep">@</span><button class="ax-tree-branch" data-act="branch-sheet" title="切换分支">' + esc(S.branch) + ' ▾</button>'
       : '<span style="font-family:var(--mono)">未打开仓库</span>';
   }
   var count = $('#treeCount');
@@ -3597,7 +4100,7 @@ function renderMobileFiles(){
   var el = $('#mFilesBody');
   if (!el) return;
   if (!S.owner) {
-    el.innerHTML = '<div class="ax-m-inner"><div class="ax-empty" style="min-height:40vh"><div class="mark">卷</div><div class="big" style="font-size:22px">还没有打开仓库</div><p>从顶部切换仓库后，这里会显示文件树。</p><button class="ax-btn solid" data-act="repo-sheet">打开仓库</button></div></div>';
+    el.innerHTML = '<div class="ax-m-inner"><div class="ax-empty" style="min-height:40vh"><div class="mark">◎</div><div class="big" style="font-size:22px">还没有打开仓库</div><p>从顶部切换仓库后，这里会显示文件树。</p><button class="ax-btn solid" data-act="repo-sheet">打开仓库</button></div></div>';
     return;
   }
   if (!S.root) {
@@ -3630,7 +4133,7 @@ function renderMobileFiles(){
       (!dirs.length && !files.length ? '<div class="ax-tree-note">这个目录是空的。</div>' : '') + '</div>';
   }
   el.innerHTML = '<div class="ax-m-filehead">' +
-      '<div class="ax-m-crumb">' + crumbs + '<span class="sep">·</span><span>' + esc(S.branch) + '</span></div>' +
+      '<div class="ax-m-crumb">' + crumbs + '<span class="sep">·</span><button class="ax-m-crumb-branch" data-act="branch-sheet" title="切换分支">' + esc(S.branch) + ' ▾</button></div>' +
       '<div class="ax-m-search">' + ic('search') + '<input class="ax-input" id="mTreeFilter" type="search" placeholder="搜索当前仓库文件…" value="' + esc(S.mTreeQuery || '') + '" autocomplete="off"></div>' +
       '<div style="display:flex;align-items:center;gap:8px;margin-top:9px"><span class="ax-sheet-tip" style="margin:0;flex:1">' + (S.tree.length ? S.tree.length + ' 个文件' : '') + '</span>' +
         '<button class="ax-btn sm" data-act="zip">ZIP</button><button class="ax-btn sm ghost" data-act="refresh-repo">刷新</button></div>' +
@@ -3825,7 +4328,7 @@ function renderMobileShelf(){
   var rows = bookmarks.map(function(b){
     if (b.type === 'repo') {
       return '<button class="ax-m-frow" data-act="shelf-repo" data-owner="' + esc(b.owner) + '" data-repo="' + esc(b.repo) + '">' +
-        '<span class="sq">卷</span><span class="tt"><b>' + esc(b.title || b.repo) + '</b><small>' + esc(b.owner + '/' + b.repo) + ' · ★ ' + fmtNum(b.stars || 0) + '</small></span><span class="go">›</span></button>';
+        '<span class="sq">◎</span><span class="tt"><b>' + esc(b.title || b.repo) + '</b><small>' + esc(b.owner + '/' + b.repo) + ' · ★ ' + fmtNum(b.stars || 0) + '</small></span><span class="go">›</span></button>';
     }
     return '<button class="ax-m-frow" data-act="shelf-file" data-owner="' + esc(b.owner) + '" data-repo="' + esc(b.repo) + '" data-branch="' + esc(b.branch) + '" data-path="' + esc(b.path) + '">' +
       '<span class="sq">' + esc(extBadge(b.path)) + '</span><span class="tt"><b>' + esc(b.title || baseOf(b.path)) + '</b><small>' + esc(b.repo) + ' · ' + esc(dirOf(b.path) || '/') + '</small></span><span class="go">›</span></button>';
@@ -3842,14 +4345,14 @@ function renderMobileNotes(){
   var total = noteCount();
   if (!total) {
     el.innerHTML = '<div class="ax-m-inner"><div class="ax-empty" style="min-height:45vh">' +
-      '<div class="mark">注</div><div class="big" style="font-size:23px">还没有页边批注</div>' +
+      '<div class="mark">✎</div><div class="big" style="font-size:23px">还没有批注</div>' +
       '<p>打开一份 Markdown，选中文字后点底部的「批注」，高亮与笔记会收在这里。</p>' +
       '<button class="ax-btn solid" data-act="view-files">去选文件</button></div></div>';
     return;
   }
   var keys = Object.keys(notes).filter(function(k){ return notes[k] && notes[k].length; });
   var html = '<div class="ax-m-inner">' +
-    '<div class="ax-m-block-head" style="margin:0 0 12px"><span class="no">MARGINALIA</span><h3>页边批注</h3>' +
+    '<div class="ax-m-block-head" style="margin:0 0 12px"><span class="no">ANNOTATIONS</span><h3>批注</h3>' +
     '<span class="sp"></span><span class="ax-sheet-tip" style="margin:0">' + total + ' 条</span></div>';
   keys.sort(function(a, b){
     var ta = Math.max.apply(null, notes[a].map(function(n){ return n.ts || 0; }));
@@ -4006,8 +4509,8 @@ function renderNotes(){
   if (!el) return;
   var keys = Object.keys(notes).filter(function(k){ return notes[k] && notes[k].length; });
   if (!keys.length) {
-    el.innerHTML = '<div class="ax-view-head"><span class="no">MARGINALIA</span><h2>页边批注</h2><span class="sub">0 条</span></div>' +
-      '<div class="ax-empty"><div class="mark">注</div><div class="big" style="font-size:24px">还没有批注</div>' +
+    el.innerHTML = '<div class="ax-view-head"><span class="no">ANNOTATIONS</span><h2>批注</h2><span class="sub">0 条</span></div>' +
+      '<div class="ax-empty"><div class="mark">✎</div><div class="big" style="font-size:24px">还没有批注</div>' +
       '<p>在阅读器里选中一段文字，浮动工具条上会出现「批注」。高亮与笔记都只保存在本机。</p>' +
       '<button class="ax-btn solid" data-act="view-files">去读一份文件</button></div>';
     return;
@@ -4017,7 +4520,7 @@ function renderNotes(){
     var tb = Math.max.apply(null, notes[b].map(function(n){ return n.ts || 0; }));
     return tb - ta;
   });
-  var html = '<div class="ax-view-head"><span class="no">MARGINALIA</span><h2>页边批注</h2>' +
+  var html = '<div class="ax-view-head"><span class="no">ANNOTATIONS</span><h2>批注</h2>' +
     '<span class="sub">' + noteCount() + ' 条 · ' + keys.length + ' 份文件</span></div>';
   keys.forEach(function(key){
     var info = parseFileKey(key);
@@ -4263,9 +4766,9 @@ function paperHeadHtml(path, file){
   '</div>';
 }
 function readerEmptyHtml(){
-  return '<div class="ax-empty-reader"><div class="seal">卷</div>' +
+  return '<div class="ax-empty-reader"><div class="seal">◎</div>' +
     '<div class="t">从左侧选择一份文件</div>' +
-    '<div class="s">Markdown 会按编辑部排版渲染；代码自动高亮；图片、二进制文件提供下载入口，文本可离线缓存。</div></div>';
+    '<div class="s">Markdown 按阅读版式渲染；代码自动高亮；图片、二进制文件提供下载入口，文本可离线缓存。</div></div>';
 }
 function resetReader(){
   S.path = ''; S.kind = ''; S.text = ''; S.fileHtml = ''; S.outline = []; S.mOutline = [];
@@ -4771,14 +5274,26 @@ function openReleaseByTag(tag){
 
 /* ---------------- 首页：打开即输入 ---------------- */
 function entryRecentHtml(){
-  if (!recent.length) return '<div class="ax-entry-empty">打开过的仓库会留在这里，最多 9 个。</div>';
+  if (!recent.length) return '<div class="ax-entry-empty">还没有信号记录。接入过的仓库会按时间留在这里。</div>';
   return '<div class="ax-entry-list">' + recent.slice(0, 6).map(function(x){
-    var sig = ((x.owner || '?').slice(0, 1) + (x.repo || '?').slice(0, 1)).toUpperCase();
     return '<button class="ax-entry-row" data-act="open-repo" data-o="' + esc(x.owner) + '" data-r="' + esc(x.repo) + '">' +
-      '<span class="sig">' + esc(sig) + '</span>' +
       '<span class="tx"><b>' + esc(x.owner + '/' + x.repo) + '</b><small>' + esc(x.branch || 'main') + ' · ' + fmtDate(x.ts, true) + '</small></span>' +
-      '<span class="ar">→</span></button>';
+      '<span class="ar">↗</span></button>';
   }).join('') + '</div>';
+}
+function entryClockText(){
+  var d = new Date(), p = function(n){ return String(n).padStart(2, '0'); };
+  return p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds()) + ' LOCAL';
+}
+function tickEntryClock(){
+  var t = entryClockText();
+  $$('.ax-entry-clock').forEach(function(el){ el.textContent = t; });
+}
+var entryClockTimer = null;
+function startEntryClock(){
+  tickEntryClock();
+  if (entryClockTimer) return;
+  entryClockTimer = setInterval(tickEntryClock, 1000);
 }
 function refreshEntryRecent(){
   $$('.ax-entry-recent-body').forEach(function(el){ el.innerHTML = entryRecentHtml(); });
@@ -4795,26 +5310,33 @@ function activeEntryRoot(){
 }
 function welcomeHtml(){
   return '<section class="ax-entry">' +
-    '<div class="ax-entry-head">' +
-      '<div class="kicker">Repository Dossier</div>' +
-      '<h1>打开一个 GitHub 仓库</h1>' +
-    '</div>' +
-    '<form class="ax-entry-form" novalidate>' +
-      '<div class="ax-entry-field">' +
-        '<span class="lead">' + ic('search') + '</span>' +
-        '<input class="ax-entry-input" type="text" inputmode="url" ' +
-          'placeholder="粘贴仓库链接，或输入 owner/repo" aria-label="GitHub 仓库地址" ' +
-          'autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">' +
-        '<button type="button" class="ax-entry-clip" data-act="clip-read">' + ic('copy') + '<span>从剪贴板读取</span></button>' +
-        '<button type="submit" class="ax-entry-go">打开</button>' +
+    '<div class="ax-entry-deck">' +
+      '<div class="ax-entry-bar">' +
+        '<span class="sig"><b></b> SIGNAL / 声呐</span>' +
+        '<span>GITHUB REPOSITORY READER</span>' +
+        '<span class="clock ax-entry-clock">' + entryClockText() + '</span>' +
       '</div>' +
-      '<div class="ax-entry-status" role="status" aria-live="polite">支持 github.com/owner/repo 与 owner/repo 简写，回车即打开</div>' +
-    '</form>' +
-    '<div class="ax-entry-help"></div>' +
-    '<div class="ax-entry-recent">' +
-      '<div class="ax-entry-recent-hd"><span class="t">最近打开</span><span class="sp"></span>' +
-        (recent.length ? '<button class="more" data-act="repo-sheet">切换仓库 →</button>' : '') + '</div>' +
-      '<div class="ax-entry-recent-body">' + entryRecentHtml() + '</div>' +
+      '<h1><span>SIGNAL // ACQUIRE</span>打开一个 GitHub 仓库</h1>' +
+      '<div class="ax-entry-sub">PASTE URL · OWNER/REPO · ENTER TO CONNECT</div>' +
+      '<form class="ax-entry-form" novalidate>' +
+        '<div class="ax-entry-field">' +
+          '<span class="lead">›</span>' +
+          '<input class="ax-entry-input" type="text" inputmode="url" ' +
+            'placeholder="粘贴仓库链接，或输入 owner/repo" aria-label="GitHub 仓库地址" ' +
+            'autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">' +
+          '<button type="button" class="ax-entry-clip" data-act="clip-read">' + ic('copy') + '<span>从剪贴板读取</span></button>' +
+          '<button type="submit" class="ax-entry-go">接入 ↵</button>' +
+        '</div>' +
+        '<div class="ax-entry-status" role="status" aria-live="polite">支持链接或 owner/repo 简写 · 回车即接入</div>' +
+      '</form>' +
+      '<div class="ax-entry-help"></div>' +
+    '</div>' +
+    '<div class="ax-entry-log">' +
+      '<div class="ax-entry-recent">' +
+        '<div class="ax-entry-recent-hd"><span class="t">RECENT SIGNALS / 最近接入</span><span class="sp"></span>' +
+          (recent.length ? '<button class="more" data-act="repo-sheet">切换仓库 →</button>' : '') + '</div>' +
+        '<div class="ax-entry-recent-body">' + entryRecentHtml() + '</div>' +
+      '</div>' +
     '</div>' +
   '</section>';
 }
@@ -4826,7 +5348,7 @@ function entryStatus(root, msg, bad, asHtml){
 }
 function previewEntry(root, raw){
   var s = String(raw || '').trim();
-  if (!s) { entryStatus(root, '支持 github.com/owner/repo 与 owner/repo 简写，回车即打开'); return; }
+  if (!s) { entryStatus(root, '支持链接或 owner/repo 简写 · 回车即接入'); return; }
   var p = parseRepoInput(s);
   if (!p) { entryStatus(root, '没认出仓库地址：请输入 owner/repo 或完整的 github.com 链接', true); return; }
   var extra = '';
@@ -4886,6 +5408,121 @@ async function entryReadClipboard(root){
     entryHelpOpen(root);
     toast('无法读取剪贴板：权限被拒绝', 'err', 3000);
   }
+}
+
+/* ---------------- 分支选择 ---------------- */
+function branchRowHtml(b, def){
+  var cur = b.name === S.branch;
+  return '<button class="ax-branch-row ' + (cur ? 'on' : '') + '" data-act="switch-branch" data-branch="' + esc(b.name) + '">' +
+    '<span class="ic">' + ic('branch') + '</span>' +
+    '<span class="tt"><b>' + esc(b.name) + '</b><small>' + esc((b.sha || '').slice(0, 7)) + (b.sha ? ' · ' : '') + (b.name === def ? '默认分支' : '分支') + '</small></span>' +
+    (b.name === def ? '<span class="tag def">Default</span>' : '') +
+    (b['protected'] ? '<span class="tag">Protected</span>' : '') +
+    (cur ? '<span class="ck">' + ic('check') + '</span>' : '') +
+  '</button>';
+}
+function branchListHtml(){
+  if (S.branchLoading) return '<div class="ax-branch-empty">正在扫描分支…</div>';
+  if (S.branchError && !S.branches.length) {
+    return '<div class="ax-branch-empty">分支读取失败：' + esc(S.branchError) + '<br><button class="ax-btn sm" data-act="branch-reload">重试</button></div>';
+  }
+  if (!S.branches.length) {
+    return '<div class="ax-branch-empty">没有读到分支。可能是 API 限流或网络问题。<br><button class="ax-btn sm" data-act="branch-reload">重新读取</button></div>';
+  }
+  var def = (S.meta && S.meta.default_branch) || 'main';
+  var q = String(S.branchQuery || '').trim().toLowerCase();
+  var list = S.branches.filter(function(b){ return !q || b.name.toLowerCase().indexOf(q) >= 0; });
+  if (!list.length) {
+    return '<div class="ax-branch-empty">没有匹配「' + esc(S.branchQuery) + '」的分支。<br><button class="ax-btn sm" data-act="branch-clear">清除搜索</button></div>';
+  }
+  list = list.slice().sort(function(a, b){
+    if (a.name === def) return -1;
+    if (b.name === def) return 1;
+    return a.name.localeCompare(b.name);
+  });
+  return list.map(function(b){ return branchRowHtml(b, def); }).join('');
+}
+function renderBranchSheet(){
+  var list = $('#branchList');
+  if (!list) return;
+  list.innerHTML = branchListHtml();
+  var count = $('#branchCount');
+  if (count) count.textContent = (S.branches.length ? S.branches.length + ' BRANCHES' : 'BRANCHES') + ' · ' + (S.branch || '—');
+  var tip = $('#branchTip');
+  if (tip) {
+    var def = (S.meta && S.meta.default_branch) || 'main';
+    tip.textContent = S.branch === def
+      ? '当前在默认分支 ' + def + '，切换后文件、提交与链接会同步更新。'
+      : '当前在 ' + S.branch + '，切换后文件、提交与链接会同步更新。';
+  }
+}
+async function reloadBranches(){
+  if (!S.owner) return;
+  S.branchLoading = true; S.branchError = '';
+  renderBranchSheet();
+  try {
+    S.branches = await loadBranches(S.owner, S.repo);
+  } catch(e){
+    S.branchError = (e && e.message) || '网络错误';
+  }
+  S.branchLoading = false;
+  renderChrome();
+  renderBranchSheet();
+}
+function openBranchSheet(){
+  if (!S.owner) { openRepoSheet(); return; }
+  S.branchQuery = '';
+  var s = $('#branchSearch');
+  if (s) s.value = '';
+  renderBranchSheet();
+  openScrim('branchScrim');
+  setTimeout(function(){ var el = $('#branchSearch'); if (el) { try { el.focus(); } catch(e){} } }, 160);
+  if (!S.branches.length && !S.branchLoading) reloadBranches();
+}
+async function switchBranch(name){
+  name = String(name || '').trim();
+  if (!S.owner || !name) return;
+  closeScrim('branchScrim');
+  if (name === S.branch) {
+    if (S.branchMissing) {
+      S.branchMissing = '';
+      renderChrome(); renderOverview(); renderMobileOverview(); renderTree(); renderMobileFiles(); writeHash();
+    }
+    return;
+  }
+  var prevPath = S.path;
+  var prevBranch = S.branch;
+  S.branch = name;
+  S.branchMissing = '';
+  S.branchQuery = '';
+  S.path = ''; S.kind = ''; S.text = ''; S.loading = true;
+  S.expanded = {}; S.mDir = ''; S.outline = []; S.translated = false; S.trMap = {};
+  closeMobileReader(true);
+  resetReader();
+  renderChrome(); renderOverview(); renderMobileOverview(); renderTree(); renderMobileFiles();
+  renderBranchSheet();
+  toast('正在接入 ' + name + '…', 'info', 1600);
+  var treeRes = await loadTree(S.owner, S.repo, name).catch(function(e){ return e; });
+  if (treeRes instanceof Error) {
+    S.loading = false;
+    S.branch = prevBranch;
+    S.branchMissing = name;
+    toast('分支「' + name + '」读取失败：' + (treeRes.message || '未知错误'), 'err', 3600);
+    renderChrome(); renderOverview(); renderMobileOverview(); renderTree(); renderMobileFiles(); renderBranchSheet(); writeHash();
+    return;
+  }
+  await loadHeadCommit(name);
+  S.loading = false;
+  pushRecent(S.owner, S.repo, name);
+  if (prevPath && S.tree.some(function(f){ return f.path === prevPath; })) {
+    await openFile(prevPath, { silent: true });
+  } else if (prevPath) {
+    toast('「' + name + '」里没有 ' + prevPath + '，已回到概览', 'info', 2600);
+  }
+  renderChrome(); renderOverview(); renderMobileOverview(); renderTree(); renderMobileFiles();
+  renderBranchSheet();
+  writeHash();
+  toast('已接入 ' + name + ' 分支', 'ok', 1600);
 }
 
 function updateReadmeButtonStates(){
@@ -5070,15 +5707,15 @@ function settingsHtml(){
   var online = navigator.onLine;
   return '<div class="ax-view-head"><span class="no">PREFERENCES</span><h2>阅读室设置</h2><span class="sub">保存于本机 · ' + (online ? '在线' : '离线') + '</span></div>' +
   '<div class="ax-settings">' +
-    '<div class="ax-set-card"><h3>外观与排版</h3><div class="sub">纸色 / 墨色双主题，阅读字号即时生效。</div>' +
+    '<div class="ax-set-card"><h3>外观与排版</h3><div class="sub">浅海 / 深海双主题，阅读字号即时生效。</div>' +
       '<div class="ax-set-row"><span class="lab">主题</span><span class="ctl ax-seg">' +
-        '<button class="' + (cfg.theme === 'paper' ? 'on' : '') + '" data-act="set-theme" data-val="paper">纸色</button>' +
-        '<button class="' + (cfg.theme === 'ink' ? 'on' : '') + '" data-act="set-theme" data-val="ink">墨色</button>' +
+        '<button class="' + (cfg.theme === 'paper' ? 'on' : '') + '" data-act="set-theme" data-val="paper">浅海</button>' +
+        '<button class="' + (cfg.theme === 'ink' ? 'on' : '') + '" data-act="set-theme" data-val="ink">深海</button>' +
         '<button class="' + (cfg.theme === 'auto' ? 'on' : '') + '" data-act="set-theme" data-val="auto">跟随系统</button>' +
       '</span></div>' +
       rangeRow('正文字号', 'fontSize', 14, 24, 1, cfg.fontSize, 'px', 'Markdown 正文的基准字号') +
       rangeRow('行距', 'lineHeight', 1.5, 2.3, 0.05, cfg.lineHeight, '', '越大越松散') +
-      rangeRow('纸张宽度', 'width', 620, 1080, 20, cfg.width, 'px', '阅读纸张最大宽度') +
+      rangeRow('正文宽度', 'width', 620, 1080, 20, cfg.width, 'px', '阅读区最大宽度') +
       '<div class="ax-set-row"><span class="lab">代码换行<small style="display:block;font-size:10.5px;color:var(--ink-4)">长行不再横向滚动</small></span>' +
         '<span class="ctl"><button class="ax-toggle ' + (cfg.codeWrap ? 'on' : '') + '" data-act="toggle-set" data-key="codeWrap" aria-label="代码换行"></button></span></div>' +
     '</div>' +
@@ -5106,7 +5743,7 @@ function settingsHtml(){
         '<button class="ax-btn sm" data-act="reset-all">恢复默认</button>' +
         '<button class="ax-btn sm ghost" data-act="kbd">查看快捷键</button></div>' +
     '</div>' +
-    '<div class="ax-set-card"><h3>关于卷宗</h3><div class="sub">单文件 HTML · 可在 GitHub Pages 子路径下运行。</div>' +
+    '<div class="ax-set-card"><h3>关于声呐</h3><div class="sub">单文件 HTML · 可在 GitHub Pages 子路径下运行。</div>' +
       '<div class="ax-sheet-tip" style="margin-top:0">数据直连 GitHub REST API；原始文件按 raw.githubusercontent.com → jsDelivr → 公共代理依次回退。分享卡片在本地 Canvas 绘制。项目地址：github.com/by654/github-repo-browser</div>' +
       '<div style="display:flex;gap:8px;margin-top:10px"><a class="ax-btn sm" href="https://github.com/by654/github-repo-browser" target="_blank" rel="noopener">' + ic('github') + '仓库</a>' +
         '<button class="ax-btn sm" data-act="clear-token" style="display:none"></button>' +
@@ -5216,7 +5853,7 @@ function drawShareCard(){
   var ownerLine = S.owner ? (S.owner + ' / ' + S.repo) : 'GitHub';
   var desc = S.path
     ? ('来自 ' + S.owner + '/' + S.repo + ' 的文件，分支 ' + S.branch + '。')
-    : ((S.meta && S.meta.description) || '一份公开的 GitHub 仓库卷宗。');
+    : ((S.meta && S.meta.description) || '一个公开的 GitHub 仓库信号。');
   var url = shareUrl();
   var stats = S.meta ? [
     ['STARS', fmtNum(S.meta.stargazers_count)],
@@ -5225,93 +5862,104 @@ function drawShareCard(){
   ] : [];
 
   ctx.clearRect(0, 0, W, H);
-  ctx.fillStyle = '#f1ebdc';
+  ctx.fillStyle = '#04120f';
   ctx.fillRect(0, 0, W, H);
-  for (var i = 0; i < 1600; i++) {
-    ctx.fillStyle = i % 3 === 0 ? 'rgba(120,95,55,.09)' : 'rgba(255,255,255,.45)';
-    ctx.fillRect(Math.random() * W, Math.random() * H, 1.5, 1.5);
-  }
-  ctx.strokeStyle = '#c3b699'; ctx.lineWidth = 3;
+  var grd = ctx.createRadialGradient(W * .84, 0, 40, W * .84, 0, W * .9);
+  grd.addColorStop(0, 'rgba(57,224,196,.16)');
+  grd.addColorStop(1, 'rgba(57,224,196,0)');
+  ctx.fillStyle = grd; ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = 'rgba(57,224,196,.10)'; ctx.lineWidth = 1;
+  for (var gx = 44; gx < W; gx += 44) { ctx.beginPath(); ctx.moveTo(gx, 0); ctx.lineTo(gx, H); ctx.stroke(); }
+  for (var gy = 44; gy < H; gy += 44) { ctx.beginPath(); ctx.moveTo(0, gy); ctx.lineTo(W, gy); ctx.stroke(); }
+  ctx.strokeStyle = '#39e0c4'; ctx.lineWidth = 2;
   ctx.strokeRect(44, 44, W - 88, H - 88);
-  ctx.strokeStyle = '#d8ceb8'; ctx.lineWidth = 1;
+  ctx.strokeStyle = 'rgba(57,224,196,.32)'; ctx.lineWidth = 1;
   ctx.strokeRect(60, 60, W - 120, H - 120);
+  ctx.fillStyle = 'rgba(57,224,196,.5)';
+  for (var t = 0; t < 4; t++) {
+    ctx.fillRect(44, 44 + t * 22, 16, 1);
+    ctx.fillRect(W - 60, 44 + t * 22, 16, 1);
+    ctx.fillRect(44, H - 45 - t * 22, 16, 1);
+    ctx.fillRect(W - 60, H - 45 - t * 22, 16, 1);
+  }
 
-  ctx.fillStyle = '#a8362a';
-  for (var x = 90; x < W - 90; x += 74) ctx.fillRect(x, 84, 42, 5);
-  ctx.fillStyle = '#8a6528';
-  for (var x2 = 132; x2 < W - 90; x2 += 74) ctx.fillRect(x2, 84, 1, 5);
-
+  /* 声呐信号环 */
   ctx.save();
-  ctx.translate(96, 132); ctx.rotate(-0.035);
-  ctx.strokeStyle = '#a8362a'; ctx.lineWidth = 3; ctx.strokeRect(0, 0, 92, 92);
-  ctx.strokeStyle = 'rgba(168,54,42,.55)'; ctx.lineWidth = 1; ctx.strokeRect(6, 6, 80, 80);
-  ctx.fillStyle = '#a8362a'; ctx.font = '600 40px "Songti SC","Noto Serif SC",serif'; ctx.textAlign = 'center';
-  ctx.fillText('卷宗', 46, 56);
+  ctx.translate(142, 148);
+  ctx.strokeStyle = '#39e0c4';
+  [0, 18, 36, 54].forEach(function(r, i){
+    ctx.globalAlpha = i === 0 ? 1 : .5 - i * .1;
+    ctx.lineWidth = i === 0 ? 2 : 1;
+    ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 2); ctx.stroke();
+  });
+  ctx.globalAlpha = 1;
+  ctx.fillStyle = '#39e0c4';
+  ctx.beginPath(); ctx.arc(0, 0, 6, 0, Math.PI * 2); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(46, -42); ctx.strokeStyle = 'rgba(57,224,196,.55)'; ctx.lineWidth = 1; ctx.stroke();
   ctx.restore();
-  ctx.textAlign = 'left';
 
-  ctx.fillStyle = '#8a8272';
-  ctx.font = '500 18px "JetBrains Mono",Consolas,monospace';
-  ctx.fillText('REPOSITORY DOSSIER · 公开卷宗', 218, 172);
+  ctx.fillStyle = '#39e0c4';
+  ctx.font = '600 18px "JetBrains Mono",Consolas,monospace';
+  ctx.fillText('SIGNAL LOCKED · GITHUB REPOSITORY', 224, 148);
 
-  ctx.fillStyle = '#1f1c16';
-  ctx.font = '700 74px "Songti SC","Noto Serif SC",serif';
+  ctx.fillStyle = '#d8f2ed';
+  ctx.font = '800 72px "Segoe UI","Space Grotesk","PingFang SC",sans-serif';
   var titleLines = wrapCanvas(ctx, title, 880, 3);
-  var ty = 290;
-  titleLines.forEach(function(line){ ctx.fillText(line, 92, ty); ty += 86; });
+  var ty = 268;
+  titleLines.forEach(function(line){ ctx.fillText(line, 92, ty); ty += 82; });
 
-  ctx.fillStyle = '#6e6556';
-  ctx.font = '500 24px "JetBrains Mono",Consolas,monospace';
-  ctx.fillText(ownerLine, 94, ty + 8);
-  ty += 52;
+  ctx.fillStyle = '#39e0c4';
+  ctx.font = '500 22px "JetBrains Mono",Consolas,monospace';
+  ctx.fillText(ownerLine + (S.branch ? '  ·  ' + S.branch : ''), 96, ty + 6);
+  ty += 48;
 
-  ctx.fillStyle = '#463f33';
-  ctx.font = '400 30px "Songti SC","Noto Serif SC",serif';
+  ctx.fillStyle = '#a4cdc7';
+  ctx.font = '400 29px "Segoe UI","PingFang SC",sans-serif';
   var descLines = wrapCanvas(ctx, desc, 880, 5);
-  descLines.forEach(function(line){ ctx.fillText(line, 94, ty + 40); ty += 48; });
-  ty += 30;
+  descLines.forEach(function(line){ ctx.fillText(line, 96, ty + 40); ty += 46; });
+  ty += 28;
 
   if (S.meta && (S.meta.topics || []).length) {
-    var tx = 94, chipY = ty + 10;
-    ctx.font = '400 20px "Inter","PingFang SC",sans-serif';
+    var tx = 96, chipY = ty + 10;
+    ctx.font = '500 19px "JetBrains Mono",Consolas,monospace';
     S.meta.topics.slice(0, 5).forEach(function(topic){
-      var tw = ctx.measureText('#' + topic).width + 28;
+      var tw = ctx.measureText('#' + topic).width + 26;
       if (tx + tw > W - 110) return;
-      ctx.strokeStyle = '#d8ceb8'; ctx.lineWidth = 1;
-      ctx.strokeRect(tx, chipY, tw, 38);
-      ctx.fillStyle = '#6e6556';
-      ctx.fillText('#' + topic, tx + 14, chipY + 27);
+      ctx.strokeStyle = 'rgba(57,224,196,.45)'; ctx.lineWidth = 1;
+      ctx.strokeRect(tx, chipY, tw, 36);
+      ctx.fillStyle = '#7fc7ee';
+      ctx.fillText('#' + topic, tx + 13, chipY + 25);
       tx += tw + 12;
     });
-    ty = chipY + 76;
+    ty = chipY + 72;
   }
 
   if (stats.length) {
-    var sy = Math.max(ty + 30, 770);
-    ctx.strokeStyle = '#e7deca'; ctx.lineWidth = 1;
+    var sy = Math.max(ty + 26, 760);
+    ctx.strokeStyle = 'rgba(57,224,196,.28)'; ctx.lineWidth = 1;
     ctx.beginPath(); ctx.moveTo(92, sy); ctx.lineTo(W - 92, sy); ctx.stroke();
     stats.forEach(function(s, i){
       var sx = 96 + i * 300;
-      ctx.fillStyle = '#1f1c16'; ctx.font = '700 42px "Songti SC","Noto Serif SC",serif';
-      ctx.fillText(s[1], sx, sy + 62);
-      ctx.fillStyle = '#9a9080'; ctx.font = '500 16px "JetBrains Mono",Consolas,monospace';
-      ctx.fillText(s[0], sx, sy + 92);
+      ctx.fillStyle = '#d8f2ed'; ctx.font = '700 40px "JetBrains Mono",Consolas,monospace';
+      ctx.fillText(s[1], sx, sy + 60);
+      ctx.fillStyle = '#4b706b'; ctx.font = '500 15px "JetBrains Mono",Consolas,monospace';
+      ctx.fillText(s[0], sx, sy + 88);
     });
-    ty = sy + 120;
+    ty = sy + 116;
   }
 
-  var by = 1160;
-  ctx.strokeStyle = '#d8ceb8'; ctx.lineWidth = 1;
+  var by = 1150;
+  ctx.strokeStyle = 'rgba(57,224,196,.28)'; ctx.lineWidth = 1;
   ctx.beginPath(); ctx.moveTo(92, by); ctx.lineTo(W - 92, by); ctx.stroke();
-  ctx.fillStyle = '#8a8272';
-  ctx.font = '500 17px "JetBrains Mono",Consolas,monospace';
+  ctx.fillStyle = '#6f9b95';
+  ctx.font = '500 16px "JetBrains Mono",Consolas,monospace';
   var urlLines = wrapCanvas(ctx, url, 880, 2);
-  urlLines.forEach(function(line, i){ ctx.fillText(line, 92, by + 44 + i * 28); });
-  ctx.fillStyle = '#9a9080';
-  ctx.font = '400 19px "Songti SC","Noto Serif SC",serif';
-  ctx.fillText('卷宗 · 单文件 GitHub 仓库阅读器', 92, H - 76);
+  urlLines.forEach(function(line, i){ ctx.fillText(line, 92, by + 42 + i * 26); });
+  ctx.fillStyle = '#4b706b';
+  ctx.font = '400 18px "Segoe UI","PingFang SC",sans-serif';
+  ctx.fillText('声呐 · SIGNAL / 单文件 GitHub 仓库阅读器', 92, H - 74);
   ctx.textAlign = 'right';
-  ctx.fillText(todayLabel(), W - 92, H - 76);
+  ctx.fillText(todayLabel(), W - 92, H - 74);
   ctx.textAlign = 'left';
 }
 function openShare(){
@@ -5328,7 +5976,7 @@ function downloadShare(){
       if (!blob) { toast('生成图片失败', 'err'); return; }
       var a = document.createElement('a');
       a.href = URL.createObjectURL(blob);
-      a.download = 'juanzong-' + (S.repo || 'github') + '-' + new Date().toISOString().slice(0, 10) + '.png';
+      a.download = 'signal-' + (S.repo || 'github') + '-' + new Date().toISOString().slice(0, 10) + '.png';
       document.body.appendChild(a);
       a.click();
       setTimeout(function(){ URL.revokeObjectURL(a.href); a.remove(); }, 1200);
@@ -5348,7 +5996,7 @@ function openQr(){
 /* ---------------- 命令面板 ---------------- */
 var PAL_SYMBOLS = {home:1,folder:1,bookmark:1,pen:1,search:1,settings:1,sun:1,moon:1,spark:1,refresh:1,
   down:1,share:1,more:1,star:1,globe:1,qr:1,copy:1,external:1,x:1,chev:1,back:1,list:1,clock:1,check:1,
-  'chevron-r':1,github:1};
+  'chevron-r':1,github:1,branch:1,sonar:1};
 function paletteIcon(name){
   if (PAL_SYMBOLS[name]) return ic(name);
   return esc(name || '·');
@@ -5374,7 +6022,8 @@ function paletteItemsFor(q){
     }),
     paletteItem('refresh', '刷新当前仓库', '重新读取文件树与发行版', 'R', function(){ refreshRepo(); }),
     paletteItem('down', '下载仓库 ZIP', 'codeload.github.com', '', function(){ downloadZip(); }),
-    paletteItem('share', '生成剪报卡片', '1080×1350 PNG', '', function(){ openShare(); }),
+    paletteItem('branch', '切换分支', S.owner ? (S.branch + ' · ' + (S.branches.length || '—') + ' 个分支') : '先打开一个仓库', '', function(){ openBranchSheet(); }),
+    paletteItem('share', '生成分享卡片', '1080×1350 PNG', '', function(){ openShare(); }),
     paletteItem('qr', '显示分享二维码', '扫码在手机上继续读', '', function(){ openQr(); }),
     paletteItem('star', isRepoBookmarked() ? '取消收藏当前仓库' : '收藏当前仓库', S.owner ? (S.owner + '/' + S.repo) : '先打开一个仓库', '', function(){ toggleRepoBookmark(); }),
     paletteItem('copy', '复制当前链接', '带深链的页面地址', '', function(){ copyWithToast(shareUrl(), '链接已复制'); }),
@@ -5384,10 +6033,10 @@ function paletteItemsFor(q){
     paletteItem('bookmark', '打开书架', '收藏的仓库与文件', '', function(){
       if (isMobile()) { setMobileView('shelf'); } else showView('shelf');
     }),
-    paletteItem('pen', '打开批注', '页边笔记与高亮', '', function(){
+    paletteItem('pen', '打开批注', '笔记与高亮', '', function(){
       if (isMobile()) { setMobileView('notes'); } else showView('notes');
     }),
-    paletteItem('sun', '切换明暗主题', '纸色 / 墨色', 'T', function(){ toggleTheme(); }),
+    paletteItem('sun', '切换明暗主题', '浅海 / 深海', 'T', function(){ toggleTheme(); }),
     paletteItem('spark', '键盘快捷键', '查看全部快捷键', '?', function(){ openKbdSheet(); })
   ];
   cmds.forEach(function(c){
@@ -5499,18 +6148,18 @@ function miniRow(icon, title, sub, act, attrs){
 function openMoreSheet(){
   var rows = '';
   if (S.owner) {
-    rows += miniRow('卷', '切换仓库', S.owner + '/' + S.repo + ' · ' + S.branch, 'repo-sheet');
+    rows += miniRow('◎', '切换仓库', S.owner + '/' + S.repo + ' · ' + S.branch, 'repo-sheet');
     rows += miniRow('↻', '刷新当前仓库', '重新读取文件树与发行版', 'refresh-repo');
     rows += miniRow('↓', '下载 ZIP', 'codeload.github.com', 'zip');
-    rows += miniRow('✦', '分享卡片', '1080×1350 PNG 剪报', 'share');
+    rows += miniRow('✦', '分享卡片', '1080×1350 PNG 分享卡', 'share');
     rows += miniRow('▦', '二维码', '手机扫码继续阅读', 'qr');
     rows += miniRow('★', isRepoBookmarked() ? '取消收藏仓库' : '收藏仓库', S.owner + '/' + S.repo, 'bookmark-repo');
-    rows += miniRow('✎', '页边批注', noteCount() + ' 条笔记', 'm-notes');
+    rows += miniRow('✎', '批注', noteCount() + ' 条笔记', 'm-notes');
     rows += miniRow('⌂', '在 GitHub 打开', 'github.com/' + S.owner + '/' + S.repo, 'external', 'data-url="https://github.com/' + esc(S.owner) + '/' + esc(S.repo) + '"');
   } else {
-    rows += miniRow('卷', '打开仓库', '输入 owner/repo 或链接', 'repo-sheet');
+    rows += miniRow('◎', '打开仓库', '输入 owner/repo 或链接', 'repo-sheet');
   }
-  rows += miniRow('☀', '切换明暗主题', '纸色 / 墨色', 'toggle-theme-quick');
+  rows += miniRow('☀', '切换明暗主题', '浅海 / 深海', 'toggle-theme-quick');
   rows += miniRow('✧', '命令面板', '搜索文件与命令', 'palette');
   rows += miniRow('⌨', '键盘快捷键', '查看全部', 'kbd');
   rows += miniRow('⚙', '设置', '主题、字号、Token、缓存', 'view-settings');
@@ -5549,7 +6198,7 @@ function openKbdSheet(){
     ['↑ / ↓', '命令面板中移动选择'],
     ['Enter', '执行选中的命令'],
     ['/', '在文件视图中聚焦筛选框'],
-    ['T', '切换纸色 / 墨色'],
+    ['T', '切换浅海 / 深海'],
     ['R', '刷新当前仓库'],
     ['Ctrl / ⌘ + O', '打开仓库抽屉']
   ];
@@ -5738,6 +6387,22 @@ function onClick(e){
     case 'repo-sheet':
       openRepoSheet();
       break;
+    case 'branch-sheet':
+      openBranchSheet();
+      break;
+    case 'switch-branch':
+      switchBranch(t.getAttribute('data-branch'));
+      break;
+    case 'branch-reload':
+      reloadBranches();
+      break;
+    case 'branch-clear':
+      S.branchQuery = '';
+      var branchInput = $('#branchSearch');
+      if (branchInput) branchInput.value = '';
+      renderBranchSheet();
+      if (branchInput) branchInput.focus();
+      break;
     case 'clip-read':
       entryReadClipboard(entryRoot(t));
       break;
@@ -5824,7 +6489,7 @@ function onClick(e){
     case 'set-theme':
       cfg.theme = t.getAttribute('data-val') || 'paper';
       saveCfg(); applyTheme(); renderSettings();
-      toast('主题：' + (cfg.theme === 'auto' ? '跟随系统' : (cfg.theme === 'ink' ? '墨色' : '纸色')), 'info', 1600);
+      toast('主题：' + (cfg.theme === 'auto' ? '跟随系统' : (cfg.theme === 'ink' ? '深海' : '浅海')), 'info', 1600);
       break;
     case 'toggle-set':
       var sk = t.getAttribute('data-key');
@@ -5948,7 +6613,12 @@ function bindAll(){
     if (e.target && e.target.classList && e.target.classList.contains('ax-entry-input')) {
       previewEntry(entryRoot(e.target), e.target.value);
     }
+    if (e.target && e.target.id === 'branchSearch') {
+      S.branchQuery = e.target.value;
+      renderBranchSheet();
+    }
   });
+  startEntryClock();
 
   var mastSearch = $('#mastSearch'); if (mastSearch) mastSearch.addEventListener('click', function(){ openPalette(); });
   var railPal = $('#railPalette'); if (railPal) railPal.addEventListener('click', function(){ openPalette(); });
