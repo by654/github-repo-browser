@@ -331,6 +331,68 @@ html[data-theme="ink"] .ax-seg button.on{background:var(--sheet-3);color:var(--i
 .ax-hero-alert b{color:var(--red);font-weight:600}
 .ax-hero-alert svg{width:16px;height:16px;flex:0 0 auto;color:var(--red)}
 
+/* ---------- 首页入口：打开即输入 ---------- */
+.ax-entry{max-width:760px;margin:0 auto;padding:clamp(18px,7vh,72px) 0 40px}
+.ax-entry-head{margin-bottom:16px}
+.ax-entry-head .kicker{display:flex;align-items:center;gap:9px;font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--ink-4);margin-bottom:7px}
+.ax-entry-head .kicker::before{content:"";width:20px;height:1px;background:var(--red)}
+.ax-entry-head h1{font-family:var(--serif);font-size:clamp(26px,3vw,36px);font-weight:700;line-height:1.1;letter-spacing:-.015em;margin:0}
+.ax-entry-field{
+  display:flex;align-items:stretch;min-height:58px;position:relative;overflow:hidden;
+  border:1px solid var(--line-hard);border-radius:3px;background:var(--sheet);
+  box-shadow:var(--shadow-sheet);transition:border-color .16s,box-shadow .16s;
+}
+.ax-entry-field::after{
+  content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:var(--red);
+  transform:scaleX(0);transform-origin:left;transition:transform .24s var(--ease);
+}
+.ax-entry-field:focus-within{border-color:var(--red);box-shadow:0 0 0 3px var(--ring),var(--shadow-sheet)}
+.ax-entry-field:focus-within::after{transform:scaleX(1)}
+.ax-entry-field .lead{flex:0 0 46px;display:grid;place-items:center;color:var(--ink-4);border-right:1px solid var(--line-soft)}
+.ax-entry-field .lead svg{width:18px;height:18px}
+.ax-entry-input{
+  flex:1;min-width:0;height:56px;padding:0 14px;border:0;background:transparent;outline:none;
+  font-family:var(--mono);font-size:15px;letter-spacing:.01em;color:var(--ink);
+}
+.ax-entry-input::placeholder{font-family:var(--sans);color:var(--ink-4);letter-spacing:0}
+.ax-entry-clip{
+  flex:0 0 auto;display:flex;align-items:center;gap:7px;padding:0 14px;white-space:nowrap;
+  border-left:1px solid var(--line-soft);color:var(--ink-2);font-size:12.5px;
+  transition:background .15s,color .15s;
+}
+.ax-entry-clip svg{width:15px;height:15px;color:var(--ink-3)}
+.ax-entry-clip:hover{background:var(--sheet-2);color:var(--ink)}
+.ax-entry-go{
+  flex:0 0 auto;padding:0 24px;background:var(--red);color:#fdf7ea;
+  font-size:13.5px;font-weight:600;letter-spacing:.08em;transition:background .15s;
+}
+.ax-entry-go:hover{background:var(--red-deep)}
+html[data-theme="ink"] .ax-entry-go{color:#181310}
+.ax-entry-status{display:flex;align-items:center;gap:6px;min-height:20px;margin-top:10px;font-size:12px;line-height:1.6;color:var(--ink-3)}
+.ax-entry-status b{color:var(--ink);font-weight:600}
+.ax-entry-status.bad{color:var(--red)}
+.ax-entry-help{display:none;margin-top:12px;padding:13px 15px;border:1px dashed var(--line-hard);background:var(--sheet-2);border-radius:3px;font-size:12.5px;line-height:1.75;color:var(--ink-2)}
+.ax-entry-help.on{display:block}
+.ax-entry-help b{color:var(--red)}
+.ax-entry-help ol{margin:7px 0 11px;padding-left:20px}
+.ax-entry-help li{margin:3px 0}
+.ax-entry-help .row{display:flex;gap:8px;flex-wrap:wrap}
+.ax-entry-recent{margin-top:34px}
+.ax-entry-recent-hd{display:flex;align-items:center;gap:10px;margin-bottom:9px}
+.ax-entry-recent-hd .t{font-family:var(--serif);font-size:15px;font-weight:700;letter-spacing:.02em}
+.ax-entry-recent-hd .sp{flex:1;height:1px;background:var(--line-soft)}
+.ax-entry-recent-hd .more{font-size:11.5px;color:var(--red)}
+.ax-entry-list{border:1px solid var(--line);background:var(--sheet);border-radius:3px;padding:4px 14px;box-shadow:var(--shadow-sheet)}
+.ax-entry-row{display:flex;align-items:center;gap:11px;width:100%;min-width:0;padding:10px 2px;border-bottom:1px dashed var(--line-soft);text-align:left}
+.ax-entry-row:last-child{border-bottom:0}
+.ax-entry-row:hover{background:var(--sheet-2)}
+.ax-entry-row .sig{flex:0 0 auto;width:28px;height:28px;display:grid;place-items:center;border:1px solid var(--line-hard);border-radius:2px;background:var(--sheet-2);font-family:var(--serif);font-size:11px;color:var(--red)}
+.ax-entry-row .tx{min-width:0;flex:1}
+.ax-entry-row .tx b{display:block;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ax-entry-row .tx small{display:block;font-family:var(--mono);font-size:10.5px;color:var(--ink-4);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ax-entry-row .ar{flex:0 0 auto;font-size:12px;color:var(--ink-4)}
+.ax-entry-empty{padding:16px 18px;border:1px solid var(--line-soft);border-radius:3px;background:var(--sheet-2);font-size:12.5px;color:var(--ink-3)}
+
 .ax-block{margin-top:26px}
 .ax-block-head{display:flex;align-items:baseline;gap:10px;margin-bottom:12px}
 .ax-block-head h3{font-family:var(--serif);font-size:19px;margin:0;font-weight:700;letter-spacing:.01em}
@@ -933,6 +995,17 @@ html[data-theme="ink"] .ax-m-fab{background:var(--red);color:#fff;border-color:v
   .ax-m .ax-hero .desc{font-size:14px;line-height:1.7}
   .ax-m .ax-hero-actions{gap:6px}
   .ax-m .ax-hero-actions .ax-btn{min-height:38px;padding:0 12px;font-size:12px}
+  .ax-m .ax-entry{padding:6px 0 26px;max-width:none}
+  .ax-m .ax-entry-head{margin-bottom:13px}
+  .ax-m .ax-entry-head h1{font-size:24px}
+  .ax-m .ax-entry-field{flex-wrap:wrap;min-height:0}
+  .ax-m .ax-entry-field .lead{display:none}
+  .ax-m .ax-entry-input{flex:1 1 100%;height:52px;padding:0 14px;font-size:15px}
+  .ax-m .ax-entry-clip{order:2;flex:1 1 0;min-height:46px;justify-content:center;border-left:0;border-top:1px solid var(--line-soft)}
+  .ax-m .ax-entry-go{order:3;flex:1 1 0;min-height:46px;justify-content:center;padding:0}
+  .ax-m .ax-entry-status{font-size:11.5px;margin-top:9px}
+  .ax-m .ax-entry-recent{margin-top:26px}
+  .ax-m .ax-entry-row{padding:12px 2px}
   .ax-m .ax-grid-2{grid-template-columns:1fr;gap:12px}
   .ax-m .ax-card{padding:16px 16px}
   .ax-m .ax-block-head h3{font-size:17px}
@@ -2924,6 +2997,7 @@ function pushRecent(o, r, branch){
   renderRecents();
 }
 function renderRecents(){
+  refreshEntryRecent();
   var list = $('#recentList');
   if (!list) return;
   if (!recent.length) {
@@ -4695,46 +4769,123 @@ function openReleaseByTag(tag){
    第三部分：搜索 / 设置 / 分享 / 命令面板 / 移动端 / 事件 / 启动
    ============================================================ */
 
-/* ---------------- 欢迎页 ---------------- */
+/* ---------------- 首页：打开即输入 ---------------- */
+function entryRecentHtml(){
+  if (!recent.length) return '<div class="ax-entry-empty">打开过的仓库会留在这里，最多 9 个。</div>';
+  return '<div class="ax-entry-list">' + recent.slice(0, 6).map(function(x){
+    var sig = ((x.owner || '?').slice(0, 1) + (x.repo || '?').slice(0, 1)).toUpperCase();
+    return '<button class="ax-entry-row" data-act="open-repo" data-o="' + esc(x.owner) + '" data-r="' + esc(x.repo) + '">' +
+      '<span class="sig">' + esc(sig) + '</span>' +
+      '<span class="tx"><b>' + esc(x.owner + '/' + x.repo) + '</b><small>' + esc(x.branch || 'main') + ' · ' + fmtDate(x.ts, true) + '</small></span>' +
+      '<span class="ar">→</span></button>';
+  }).join('') + '</div>';
+}
+function refreshEntryRecent(){
+  $$('.ax-entry-recent-body').forEach(function(el){ el.innerHTML = entryRecentHtml(); });
+}
+function entryRoot(el){
+  return (el && el.closest) ? el.closest('.ax-entry') : null;
+}
+function activeEntryRoot(){
+  var roots = $$('.ax-entry');
+  for (var i = 0; i < roots.length; i++) {
+    if (roots[i].offsetParent !== null) return roots[i];
+  }
+  return roots[0] || null;
+}
 function welcomeHtml(){
-  var rec = recent.slice(0, 4).map(function(x){
-    return '<button class="ax-mini-item" data-act="open-repo" data-o="' + esc(x.owner) + '" data-r="' + esc(x.repo) + '">' +
-      '<span class="ic">卷</span><span class="tt"><b>' + esc(x.owner + '/' + x.repo) + '</b><small>' + esc(x.branch || '') + ' · ' + fmtDate(x.ts, true) + '</small></span>' +
-      '<span class="go">→</span></button>';
-  }).join('');
-  var picks = ['facebook/react', 'microsoft/vscode', 'rust-lang/rust', 'by654/github-repo-browser'];
-  var chips = picks.map(function(p){
-    var s = p.split('/');
-    return '<button class="ax-chip" data-act="open-repo" data-o="' + esc(s[0]) + '" data-r="' + esc(s[1]) + '">' + esc(p) + '</button>';
-  }).join('');
-  return '<section class="ax-hero">' +
-    '<div class="ax-hero-top"><div class="ax-hero-main">' +
-      '<div class="kicker">Repository Dossier · 编辑部阅读器</div>' +
-      '<h1>把 GitHub 仓库<br>读成一册卷宗。</h1>' +
-      '<div class="owner">文件树 · Markdown 排版 · 代码高亮 · 离线副本</div>' +
-      '<p class="desc">粘贴任意公开仓库地址，或从最近打开里继续。所有偏好、收藏、批注与缓存都留在本机；阅读数据直连 GitHub，不经中间服务器。</p>' +
-      '<div class="ax-hero-actions">' +
-        '<button class="ax-btn solid lg" data-act="repo-sheet">' + ic('bookmark') + '打开仓库</button>' +
-        '<button class="ax-btn lg" data-act="palette">' + ic('spark') + '命令面板</button>' +
-        '<button class="ax-btn lg ghost" data-act="view-settings">' + ic('settings') + '设置</button>' +
+  return '<section class="ax-entry">' +
+    '<div class="ax-entry-head">' +
+      '<div class="kicker">Repository Dossier</div>' +
+      '<h1>打开一个 GitHub 仓库</h1>' +
+    '</div>' +
+    '<form class="ax-entry-form" novalidate>' +
+      '<div class="ax-entry-field">' +
+        '<span class="lead">' + ic('search') + '</span>' +
+        '<input class="ax-entry-input" type="text" inputmode="url" ' +
+          'placeholder="粘贴仓库链接，或输入 owner/repo" aria-label="GitHub 仓库地址" ' +
+          'autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false">' +
+        '<button type="button" class="ax-entry-clip" data-act="clip-read">' + ic('copy') + '<span>从剪贴板读取</span></button>' +
+        '<button type="submit" class="ax-entry-go">打开</button>' +
       '</div>' +
-      '<div class="ax-suggest">' + chips + '</div>' +
+      '<div class="ax-entry-status" role="status" aria-live="polite">支持 github.com/owner/repo 与 owner/repo 简写，回车即打开</div>' +
+    '</form>' +
+    '<div class="ax-entry-help"></div>' +
+    '<div class="ax-entry-recent">' +
+      '<div class="ax-entry-recent-hd"><span class="t">最近打开</span><span class="sp"></span>' +
+        (recent.length ? '<button class="more" data-act="repo-sheet">切换仓库 →</button>' : '') + '</div>' +
+      '<div class="ax-entry-recent-body">' + entryRecentHtml() + '</div>' +
     '</div>' +
-    '<div class="ax-hero-side"><div class="ax-stamp">卷宗<small>READER</small></div></div>' +
-    '</div>' +
-    '<div class="ax-hero-alert">' + ic('spark') + '<span>单文件交付 · 无后端 · 支持 GitHub Pages 子路径运行。填入个人 Token 可把 API 额度提升到 5000 次/小时。</span></div>' +
-  '</section>' +
-  '<div class="ax-grid-2" style="margin-top:22px;align-items:start">' +
-    '<div class="ax-card"><h4>阅读体验</h4><p class="desc">衬线排版、双主题纸张、字号与行距调节。Markdown 表格、代码块、任务列表与相对链接都会被正确解析。</p>' +
-      '<div class="ax-suggest" style="margin:12px 0 0"><span class="ax-chip">Markdown</span><span class="ax-chip">代码高亮</span><span class="ax-chip">大纲</span></div></div>' +
-    '<div class="ax-card"><h4>离线与摘录</h4><p class="desc">打开过的文本会缓存到浏览器；选中文字即可批注、高亮，或生成一张 1080×1350 的剪报卡片。</p>' +
-      '<div class="ax-suggest" style="margin:12px 0 0"><span class="ax-chip">离线缓存</span><span class="ax-chip">批注</span><span class="ax-chip">分享卡片</span></div></div>' +
-  '</div>' +
-  '<div class="ax-block"><div class="ax-block-head"><span class="idx">01</span><h3>最近打开</h3><span class="line"></span>' +
-    (recent.length ? '<button class="act" data-act="repo-sheet">全部 →</button>' : '') + '</div>' +
-    (rec ? '<div class="ax-card" style="padding:8px 18px"><div class="ax-mini-list">' + rec + '</div></div>'
-      : '<div class="ax-card flat"><div class="ax-sheet-tip">还没有记录。打开一个仓库后，这里会保留最近 9 份卷宗。</div></div>') +
-  '</div>';
+  '</section>';
+}
+function entryStatus(root, msg, bad, asHtml){
+  var el = root ? root.querySelector('.ax-entry-status') : null;
+  if (!el) return;
+  el.classList.toggle('bad', !!bad);
+  if (asHtml) el.innerHTML = msg; else el.textContent = msg;
+}
+function previewEntry(root, raw){
+  var s = String(raw || '').trim();
+  if (!s) { entryStatus(root, '支持 github.com/owner/repo 与 owner/repo 简写，回车即打开'); return; }
+  var p = parseRepoInput(s);
+  if (!p) { entryStatus(root, '没认出仓库地址：请输入 owner/repo 或完整的 github.com 链接', true); return; }
+  var extra = '';
+  if (p.kind === 'blob' || p.kind === 'tree') extra = ' · ' + esc(p.branch) + (p.path ? '/' + esc(p.path) : '');
+  else if (p.kind === 'releases') extra = ' · 发行版 ' + esc(p.branch);
+  entryStatus(root, '将打开 ' + esc(p.owner) + '/' + esc(p.repo) + extra + ' · 回车打开', false, true);
+}
+function openEntryRepo(root){
+  root = root || activeEntryRoot();
+  var input = root ? root.querySelector('.ax-entry-input') : null;
+  var raw = input ? input.value : '';
+  var p = parseRepoInput(raw);
+  if (!p) {
+    entryStatus(root, '没能识别「' + esc(String(raw || '').trim().slice(0, 48)) + '」，请输入 owner/repo 或 github.com 链接', true, true);
+    toast('请输入 owner/repo 或完整的 GitHub 链接', 'err');
+    if (input) input.focus();
+    return;
+  }
+  try { if (input) input.blur(); } catch(e){}
+  loadRepo(p.owner, p.repo, { branch: p.branch, path: p.path, release: p.kind === 'releases' ? p.branch : '' });
+}
+function entryHelpOpen(root){
+  var el = root ? root.querySelector('.ax-entry-help') : null;
+  if (!el) return;
+  el.innerHTML = '<div><b>浏览器拒绝了剪贴板读取。</b>可以这样处理：</div>' +
+    '<ol>' +
+      '<li>点地址栏左侧的站点图标（锁 / 滑块），把「剪贴板」权限改成允许，再点一次「从剪贴板读取」；</li>' +
+      '<li>或直接在输入框里按 <span class="kbd">Ctrl</span> / <span class="kbd">⌘</span> + <span class="kbd">V</span> 手动粘贴；</li>' +
+      '<li>Firefox 与部分 Safari 版本不支持网页读取剪贴板，手动粘贴即可。</li>' +
+    '</ol>' +
+    '<div class="row"><button type="button" class="ax-btn sm solid" data-act="entry-focus">手动粘贴</button>' +
+    '<button type="button" class="ax-btn sm ghost" data-act="entry-help-close">知道了</button></div>';
+  el.classList.add('on');
+}
+async function entryReadClipboard(root){
+  root = root || activeEntryRoot();
+  var input = root ? root.querySelector('.ax-entry-input') : null;
+  if (!navigator.clipboard || typeof navigator.clipboard.readText !== 'function') {
+    entryStatus(root, '当前浏览器不支持读取剪贴板，请在输入框内手动粘贴', true);
+    entryHelpOpen(root);
+    return;
+  }
+  try {
+    var text = String((await navigator.clipboard.readText()) || '').trim();
+    if (!text) { entryStatus(root, '剪贴板里没有文本，先复制仓库链接再试一次', true); toast('剪贴板是空的', 'err'); return; }
+    if (input) {
+      input.value = text;
+      input.focus();
+      try { input.setSelectionRange(text.length, text.length); } catch(e){}
+    }
+    var help = root ? root.querySelector('.ax-entry-help') : null;
+    if (help) help.classList.remove('on');
+    previewEntry(root, text);
+    toast('已从剪贴板填入', 'ok', 1800);
+  } catch(e) {
+    entryStatus(root, '读取剪贴板被拒绝，按下方说明处理后即可使用', true);
+    entryHelpOpen(root);
+    toast('无法读取剪贴板：权限被拒绝', 'err', 3000);
+  }
 }
 
 function updateReadmeButtonStates(){
@@ -5587,6 +5738,17 @@ function onClick(e){
     case 'repo-sheet':
       openRepoSheet();
       break;
+    case 'clip-read':
+      entryReadClipboard(entryRoot(t));
+      break;
+    case 'entry-focus':
+      var entryField = entryRoot(t) ? entryRoot(t).querySelector('.ax-entry-input') : null;
+      if (entryField) entryField.focus();
+      break;
+    case 'entry-help-close':
+      var entryHelpEl = entryRoot(t) ? entryRoot(t).querySelector('.ax-entry-help') : null;
+      if (entryHelpEl) entryHelpEl.classList.remove('on');
+      break;
     case 'retry-repo':
       if (S.owner) loadRepo(S.owner, S.repo, {});
       break;
@@ -5778,6 +5940,16 @@ function bindAll(){
   var sBtn = $('#repoInputSearch'); if (sBtn) sBtn.addEventListener('click', function(){ submitRepoInput(true); });
   var rIn = $('#repoInput'); if (rIn) rIn.addEventListener('keydown', function(e){ if (e.key === 'Enter') { e.preventDefault(); submitRepoInput(false); } });
 
+  document.addEventListener('submit', function(e){
+    var er = e.target && e.target.closest ? e.target.closest('.ax-entry') : null;
+    if (er) { e.preventDefault(); openEntryRepo(er); }
+  });
+  document.addEventListener('input', function(e){
+    if (e.target && e.target.classList && e.target.classList.contains('ax-entry-input')) {
+      previewEntry(entryRoot(e.target), e.target.value);
+    }
+  });
+
   var mastSearch = $('#mastSearch'); if (mastSearch) mastSearch.addEventListener('click', function(){ openPalette(); });
   var railPal = $('#railPalette'); if (railPal) railPal.addEventListener('click', function(){ openPalette(); });
   var railTheme = $('#railTheme'); if (railTheme) railTheme.addEventListener('click', toggleTheme);
@@ -5884,6 +6056,10 @@ function boot(){
     renderMobileOverview();
     resetReader();
     updateReadmeButtonStates();
+    if (!isMobile()) setTimeout(function(){
+      var entryInput = $$('.ax-entry-input').filter(function(x){ return x.offsetParent !== null; })[0];
+      if (entryInput) { try { entryInput.focus({preventScroll:true}); } catch(e){} }
+    }, 140);
   }
   renderRecents();
   window.addEventListener('resize', debounce(function(){
