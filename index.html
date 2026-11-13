@@ -4163,15 +4163,32 @@ mark,.doc-hit{background:color-mix(in srgb, var(--accent) 18%, transparent); col
 @keyframes flash{0%,100%{background:transparent;}40%{background:var(--accent-soft);}}
 
 /* 发布版本 */
-.release-assets{display:flex; flex-direction:column; gap:6px; margin-top:10px;}
+.release-assets{display:flex; flex-direction:column; gap:6px; margin:14px 0 18px; padding:14px !important; border:1px solid var(--border); border-radius:14px; background:var(--panel-2);}
+.release-assets h3{
+  margin:0 0 10px; font-size:12px; font-weight:700; letter-spacing:.02em; color:var(--text);
+  display:flex; align-items:center; gap:6px;
+}
+.md-body .release-assets ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:6px;}
+.md-body .release-assets li{
+  margin:0; display:flex; align-items:center; gap:9px; min-width:0;
+  padding:9px 12px; border:1px solid var(--border); border-radius:10px; background:var(--panel);
+}
 .asset-row,.asset-item{display:flex; align-items:center; gap:9px; padding:9px 12px; border:1px solid var(--border); border-radius:10px; background:var(--panel-2);}
 .asset-icon{width:26px; height:26px; display:grid; place-items:center; border-radius:8px; background:var(--panel-3); color:var(--muted); flex:0 0 auto;}
 .asset-icon svg{width:13px; height:13px;}
-.asset-info{flex:1; min-width:0;}
-.asset-name{font-size:12px; font-weight:650; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.asset-info{flex:1; min-width:0; display:flex; flex-direction:column; gap:2px;}
+.asset-name{display:block; font-size:12px; font-weight:650; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
+.asset-name a{color:var(--text); text-decoration:none;}
+.asset-name a:hover{color:var(--accent); text-decoration:underline;}
 .asset-meta{font-size:10px; color:var(--muted);}
-.asset-dl{width:30px; height:30px; display:grid; place-items:center; border-radius:8px; border:1px solid var(--border); background:var(--panel); color:var(--text-2);}
-.asset-dl:hover{background:var(--accent-soft); color:var(--accent);}
+.asset-dl{
+  flex:0 0 auto; display:inline-flex; align-items:center; justify-content:center; gap:5px;
+  height:30px; min-width:30px; padding:0 10px; white-space:nowrap;
+  border-radius:8px; border:1px solid var(--border); background:var(--panel);
+  color:var(--text-2); font-size:11px; font-weight:700; text-decoration:none;
+}
+.asset-dl svg{width:13px; height:13px; flex:0 0 auto;}
+.asset-dl:hover{background:var(--accent-soft); color:var(--accent); border-color:var(--accent); text-decoration:none;}
 
 /* ============================================================
    弹层系统
